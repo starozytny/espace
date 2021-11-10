@@ -54,7 +54,6 @@ class SyncData
             $updated        = $result[5];
             $noUpdated      = $result[6];
 
-
             $this->em->flush();
 
             $io->newLine();

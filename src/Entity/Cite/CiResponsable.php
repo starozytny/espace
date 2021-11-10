@@ -3,6 +3,8 @@
 namespace App\Entity\Cite;
 
 use App\Repository\Cite\CiResponsableRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -126,6 +128,21 @@ class CiResponsable
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $commentPay;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $nbEleves = 0;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CiEleve::class, mappedBy="responsable", orphanRemoval=true)
+     */
+    private $eleves;
+
+    public function __construct()
+    {
+        $this->eleves = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -392,6 +409,48 @@ class CiResponsable
     public function setCommentPay(?string $commentPay): self
     {
         $this->commentPay = $commentPay;
+
+        return $this;
+    }
+
+    public function getNbEleves(): ?int
+    {
+        return $this->nbEleves;
+    }
+
+    public function setNbEleves(int $nbEleves): self
+    {
+        $this->nbEleves = $nbEleves;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CiEleve[]
+     */
+    public function getEleves(): Collection
+    {
+        return $this->eleves;
+    }
+
+    public function addElefe(CiEleve $elefe): self
+    {
+        if (!$this->eleves->contains($elefe)) {
+            $this->eleves[] = $elefe;
+            $elefe->setResponsable($this);
+        }
+
+        return $this;
+    }
+
+    public function removeElefe(CiEleve $elefe): self
+    {
+        if ($this->eleves->removeElement($elefe)) {
+            // set the owning side to null (unless already changed)
+            if ($elefe->getResponsable() === $this) {
+                $elefe->setResponsable(null);
+            }
+        }
 
         return $this;
     }
