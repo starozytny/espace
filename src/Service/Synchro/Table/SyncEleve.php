@@ -72,20 +72,4 @@ class SyncEleve extends Sync
 
         return ['code' => 1, 'status' => $status, 'data' => $msg];
     }
-
-    /**
-     * @param $data
-     * @param $correspondance
-     * @return null
-     */
-    private function getExisteFromOldId($data, $correspondance)
-    {
-        foreach($data as $el){
-            if($el->getOldId() == $correspondance){
-                return $el;
-            }
-        }
-
-        return null;
-    }
 }

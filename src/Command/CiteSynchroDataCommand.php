@@ -12,6 +12,7 @@ use App\Windev\WindevCycle;
 use App\Windev\WindevNiveau;
 use App\Windev\WindevPersonne;
 use App\Windev\WindevProfs;
+use App\Windev\WindevSalle;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -44,6 +45,7 @@ class CiteSynchroDataCommand extends Command
         $this->syncData->synchroData($output, $io, $this->getData($io, WindevActivite::class,   "activites"),    "activites");
         $this->syncData->synchroData($output, $io, $this->getData($io, WindevCycle::class,      "cycles"),       "cycles");
         $this->syncData->synchroData($output, $io, $this->getData($io, WindevNiveau::class,     "niveaux"),      "niveaux");
+        $this->syncData->synchroData($output, $io, $this->getData($io, WindevSalle::class,      "salles"),       "salles");
 
         return Command::SUCCESS;
     }

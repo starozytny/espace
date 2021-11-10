@@ -68,12 +68,33 @@ class Sync
         }
     }
 
+    /**
+     * @param $data
+     * @param $correspondance
+     * @return null
+     */
+    protected function getExisteFromOldId($data, $correspondance)
+    {
+        foreach($data as $el){
+            if($el->getOldId() == $correspondance){
+                return $el;
+            }
+        }
+
+        return null;
+    }
+
     protected function checkExiste($type, $entity, $data, $item, $diff0, $diff1 = null): array
     {
         $msg = "";
         if($elem = $this->getExiste($data, $item)){
             $same = false;
             switch ($type){
+                case "num":
+                    if($elem->getName() == $diff0 && $elem->getNum() == $diff1){
+                        $same = true;
+                    }
+                    break;
                 case "fullname":
                     if($elem->getLastname() == $diff0 && $elem->getFirstname() == $diff1){
                         $same = true;

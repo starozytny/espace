@@ -4,6 +4,7 @@ namespace App\Service\Synchro;
 
 use App\Entity\Cite\CiActivity;
 use App\Entity\Cite\CiCenter;
+use App\Entity\Cite\CiClassroom;
 use App\Entity\Cite\CiCycle;
 use App\Entity\Cite\CiEleve;
 use App\Entity\Cite\CiLevel;
@@ -12,6 +13,7 @@ use App\Entity\Cite\CiTeacher;
 use App\Service\DatabaseService;
 use App\Service\Synchro\Table\SyncActivity;
 use App\Service\Synchro\Table\SyncCenter;
+use App\Service\Synchro\Table\SyncClassroom;
 use App\Service\Synchro\Table\SyncCycle;
 use App\Service\Synchro\Table\SyncEleve;
 use App\Service\Synchro\Table\SyncLevel;
@@ -33,11 +35,12 @@ class SyncData
     private $syncActivity;
     private $syncCycle;
     private $syncLevel;
+    private $syncClassroom;
 
     public function __construct(DatabaseService $databaseService, Sync $sync,
                                 SyncCenter $syncCenter, SyncTeacher $syncTeacher, SyncResponsable $syncResponsable,
                                 SyncEleve $syncEleve, SyncActivity $syncActivity, SyncCycle $syncCycle,
-                                SyncLevel $syncLevel)
+                                SyncLevel $syncLevel, SyncClassroom $syncClassroom)
     {
         $this->em = $databaseService->getEm();
         $this->emWindev = $databaseService->getEmWindev();
@@ -50,6 +53,7 @@ class SyncData
         $this->syncActivity = $syncActivity;
         $this->syncCycle = $syncCycle;
         $this->syncLevel = $syncLevel;
+        $this->syncClassroom = $syncClassroom;
     }
 
     public function synchroData($output, $io, $items, $name)
@@ -64,6 +68,11 @@ class SyncData
             $data1 = [];
             $isAncien = false;
             switch ($name){
+                case "salles":
+                    $data1 = $this->em->getRepository(CiCenter::class)->findAll();
+                    $data0 = $this->em->getRepository(CiClassroom::class)->findAll();
+                    $syncFunction = $this->syncClassroom;
+                    break;
                 case "niveaux":
                     $data0 = $this->em->getRepository(CiLevel::class)->findAll();
                     $syncFunction = $this->syncLevel;
