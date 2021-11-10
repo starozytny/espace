@@ -68,5 +68,35 @@ class Sync
         }
     }
 
+    protected function checkExiste($type, $entity, $data, $item, $diff0, $diff1 = null): array
+    {
+        $msg = "";
+        if($elem = $this->getExiste($data, $item)){
+            $same = false;
+            switch ($type){
+                case "fullname":
+                    if($elem->getLastname() == $diff0 && $elem->getFirstname() == $diff1){
+                        $same = true;
+                    }
+                    break;
+                default:
+                    if($elem->getName() == $diff0){
+                        $same = true;
+                    }
+                    break;
+            }
 
+            if($same){
+                $status = 3;
+            }else{
+                $status = 2;
+                $msg = "Changement : " . $elem->getId();
+            }
+        }else{
+            $status = 1;
+            $elem = $entity;
+        }
+
+        return [$elem, $status, $msg];
+    }
 }

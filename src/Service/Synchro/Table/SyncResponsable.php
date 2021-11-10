@@ -17,21 +17,14 @@ class SyncResponsable extends Sync
     public function synchronize(WindevPersonne $item, bool $isAncien, $responsables): array
     {
         /** @var CiResponsable $responsable */
-        $msg = "";
         $lastname = $this->helper->getFirstnameAndLastname($item)[0];
         $firstname = $this->helper->getFirstnameAndLastname($item)[1];
 
-        if($responsable = $this->getExiste($responsables, $item)){
-            if($responsable->getLastname() == $lastname && $responsable->getFirstname() == $firstname){
-                $status = 3;
-            }else{
-                $status = 2;
-                $msg = "Changement : " . $responsable->getId();
-            }
-        }else{
-            $status = 1;
-            $responsable = new CiResponsable();
-        }
+        $result = $this->checkExiste("fullname", new CiResponsable(), $responsables, $item, $lastname, $firstname);
+
+        $responsable = $result[0];
+        $status = $result[1];
+        $msg = $result[2];
 
         $responsable = $this->helper->setCommonData($responsable, $item);
 

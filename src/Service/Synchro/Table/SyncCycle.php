@@ -17,22 +17,15 @@ class SyncCycle extends Sync
     public function synchronize(WindevCycle $item, bool $isAncien, $cycles): array
     {
         /** @var CiCycle $cycle */
-        $msg = "";
         if($item->getPlusutilise() == 0){
 
             $name = mb_strtoupper($item->getDesignation());
 
-            if($cycle = $this->getExiste($cycles, $item)){
-                if($cycle->getName() == $name){
-                    $status = 3;
-                }else{
-                    $status = 2;
-                    $msg = "Changement : " . $cycle->getId();
-                }
-            }else{
-                $status = 1;
-                $cycle = new CiCycle();
-            }
+            $result = $this->checkExiste("name", new CiCycle(), $cycles, $item, $name);
+
+            $cycle = $result[0];
+            $status = $result[1];
+            $msg = $result[2];
 
             $cycle = ($cycle)
                 ->setOldId($item->getId())

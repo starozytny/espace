@@ -17,22 +17,15 @@ class SyncActivity extends Sync
     public function synchronize(WindevActivite $item, bool $isAncien, $activities): array
     {
         /** @var CiActivity $activity */
-        $msg = "";
         if($item->getPlusutilise() == 0){
 
             $name = $item->getDesignation();
 
-            if($activity = $this->getExiste($activities, $item)){
-                if($activity->getName() == $name){
-                    $status = 3;
-                }else{
-                    $status = 2;
-                    $msg = "Changement : " . $activity->getId();
-                }
-            }else{
-                $status = 1;
-                $activity = new CiActivity();
-            }
+            $result = $this->checkExiste("name", new CiActivity(), $activities, $item, $name);
+
+            $activity = $result[0];
+            $status = $result[1];
+            $msg = $result[2];
 
             $mode = $item->getMode();
             $departement = intval($item->getDpcleunik());

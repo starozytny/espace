@@ -18,7 +18,6 @@ class SyncTeacher extends Sync
     public function synchronize(WindevProfs $item, bool $isAncien, $teachers, $persons): array
     {
         /** @var CiTeacher $teacher */
-        $msg = "";
         if($item->getPlusutilise() == 0){
             //Récupération des données du prof
             $person = $this->getPersonne($persons, $item);
@@ -26,17 +25,11 @@ class SyncTeacher extends Sync
             $lastname = $this->helper->getFirstnameAndLastname($person)[0];
             $firstname = $this->helper->getFirstnameAndLastname($person)[1];
 
-            if($teacher = $this->getExiste($teachers, $item)){
-                if($teacher->getLastname() == $lastname && $teacher->getFirstname() == $firstname){
-                    $status = 3;
-                }else{
-                    $status = 2;
-                    $msg = "Changement ci id : " . $teacher->getId() . ' - wi id : ' . $item->getId();
-                }
-            }else{
-                $status = 1;
-                $teacher = new CiTeacher();
-            }
+            $result = $this->checkExiste("fullname", new CiTeacher(), $teachers, $item, $lastname, $firstname);
+
+            $teacher = $result[0];
+            $status = $result[1];
+            $msg = $result[2];
 
             //Création que si le professeur est lié à une ligne windev personne
             if($person == null){

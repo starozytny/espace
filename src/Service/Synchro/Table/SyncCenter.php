@@ -17,23 +17,16 @@ class SyncCenter extends Sync
     public function synchronize(WindevCentre $item, bool $isAncien, array $centres): array
     {
         /** @var CiCenter $center */
-        $msg = "";
         if($item->getPlusutilise() == 0){
             //Normalize data
             $name = mb_strtoupper($item->getNomCentre());
 
             //Check l'existance du centre
-            if($center = $this->getExiste($centres, $item)){
-                if($center->getName() == $name){
-                    $status = 3;
-                }else{
-                    $status = 2;
-                    $msg = "Changement de nom : " . $center->getName() . ' -> ' . $item->getNomCentre();
-                }
-            }else{
-                $center = new CiCenter();
-                $status = 1;
-            }
+            $result = $this->checkExiste("name", new CiCenter(), $centres, $item, $name);
+
+            $center = $result[0];
+            $status = $result[1];
+            $msg = $result[2];
 
             $center = ($center)
                 ->setOldId($item->getId())
