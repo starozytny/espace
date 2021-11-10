@@ -34,12 +34,12 @@ class DatabaseService
         $io->text('Reset [OK]');
     }
 
-    public function getEntityManagerWindev(): ObjectManager
+    public function getEmWindev(): ObjectManager
     {
         return $this->emWindev;
     }
 
-    public function getEntityManager(): ObjectManager
+    public function getEm(): ObjectManager
     {
         return $this->em;
     }
