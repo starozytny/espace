@@ -42,7 +42,7 @@ class Sync
      * @param $windevItem
      * @return mixed|null
      */
-    public function getExiste(array $windevData, $windevItem)
+    protected function getExiste(array $windevData, $windevItem)
     {
         foreach($windevData as $item){
             if($item->getOldId() == $windevItem->getId()){

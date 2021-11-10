@@ -4,6 +4,8 @@ namespace App\Command;
 
 use App\Service\DatabaseService;
 use App\Service\Synchro\SyncData;
+use App\Windev\WindevAdherent;
+use App\Windev\WindevAncien;
 use App\Windev\WindevCentre;
 use App\Windev\WindevPersonne;
 use App\Windev\WindevProfs;
@@ -34,6 +36,8 @@ class CiteSynchroDataCommand extends Command
         $this->syncData->synchroData($output, $io, $this->getData($io, WindevCentre::class, "centres"), "centres");
         $this->syncData->synchroData($output, $io, $this->getData($io, WindevProfs::class, "professeurs"), "professeurs");
         $this->syncData->synchroData($output, $io, $this->getData($io, WindevPersonne::class, "responsables"), "responsables");
+        $this->syncData->synchroData($output, $io, $this->getData($io, WindevAdherent::class, "eleves"), "eleves");
+        $this->syncData->synchroData($output, $io, $this->getData($io, WindevAncien::class, "anciens"), "anciens");
 
         return Command::SUCCESS;
     }

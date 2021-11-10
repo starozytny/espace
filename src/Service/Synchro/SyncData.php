@@ -4,6 +4,7 @@ namespace App\Service\Synchro;
 
 use App\Service\DatabaseService;
 use App\Service\Synchro\Table\SyncCenter;
+use App\Service\Synchro\Table\SyncEleve;
 use App\Service\Synchro\Table\SyncResponsable;
 use App\Service\Synchro\Table\SyncTeacher;
 
@@ -15,9 +16,11 @@ class SyncData
     private $syncCenter;
     private $syncTeacher;
     private $syncResponsable;
+    private $syncEleve;
 
     public function __construct(DatabaseService $databaseService, Sync $sync,
-                                SyncCenter $syncCenter, SyncTeacher $syncTeacher, SyncResponsable $syncResponsable)
+                                SyncCenter $syncCenter, SyncTeacher $syncTeacher, SyncResponsable $syncResponsable,
+                                SyncEleve $syncEleve)
     {
         $this->em = $databaseService->getEm();
         $this->sync = $sync;
@@ -25,12 +28,21 @@ class SyncData
         $this->syncCenter = $syncCenter;
         $this->syncTeacher = $syncTeacher;
         $this->syncResponsable = $syncResponsable;
+        $this->syncEleve = $syncEleve;
     }
 
     public function synchroData($output, $io, $items, $name)
     {
         if($this->sync->haveData($io, $items)){
+            $isAncien = false;
             switch ($name){
+                case "anciens":
+                    $isAncien = true;
+                    $syncFunction = $this->syncEleve;
+                    break;
+                case "eleves":
+                    $syncFunction = $this->syncEleve;
+                    break;
                 case "responsables":
                     $syncFunction = $this->syncResponsable;
                     break;
@@ -44,7 +56,7 @@ class SyncData
                     return;
             }
 
-            $result = $syncFunction->synchronize($output, $items);
+            $result = $syncFunction->synchronize($output, $items, $isAncien);
 
             $total          = $result[0];
             $errors         = $result[1];
