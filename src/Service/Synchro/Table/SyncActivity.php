@@ -5,77 +5,57 @@ namespace App\Service\Synchro\Table;
 use App\Entity\Cite\CiActivity;
 use App\Service\Synchro\Sync;
 use App\Windev\WindevActivite;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class SyncActivity extends Sync
 {
     /**
-     * @param OutputInterface $output
-     * @param WindevActivite[] $items
+     * @param WindevActivite $item
+     * @param bool $isAncien
+     * @param $activities
      * @return array
      */
-    public function synchronize(OutputInterface $output, array $items): array
+    public function synchronize(WindevActivite $item, bool $isAncien, $activities): array
     {
-//        $errors = []; $updatedArray = [];
-//        $total = 0; $created = 0; $notUsed = 0; $updated = 0; $noUpdated = 0;
-//
-//        $activities = $this->em->getRepository(CiActivity::class)->findAll();
-//
-//        $progressBar = new ProgressBar($output, count($items));
-//        $progressBar->start();
-//
-//        /** @var CiActivity $activity */
-//        foreach($items as $item){
-//
-//            $progressBar->advance();
-//
-//            $isNew = false;
-//
-//            $isUse = $item->getPlusutilise() == 0;
-//            $name = $item->getDesignation();
-//
-//            if($activity = $this->getExiste($activities, $item)){
-//                if($activity->getName() == $name && $activity->getIsUse() == $isUse){
-//                    $noChanged++;
-//                }else{
-//                    array_push($updatedArray, "Changement : " . $activity->getId());
-//                    $updated++;
-//                }
-//            }else{
-//                $isNew = true;
-//                $activity = new CiActivity();
-//                if($isUse) $count++;
-//            }
-//
-//            $mode = $item->getMode();
-//            $departement = intval($item->getDpcleunik());
-//            if($departement == CiActivity::DEP_COLLECTIVES){
-//                $mode = 2;
-//            }
-//
-//            if($isUse){
-//                $activity->setOldId($item->getId());
-//                $activity->setName($name);
-//                $activity->setDurationTotal($this->helper->createTime($item->getDuree()));
-//                $activity->setDuration($this->helper->getDuration($item, $mode));
-//                $activity->setMax($item->getEffectifmax());
-//                $activity->setType(intval($item->getType()));
-//                $activity->setMode($mode);
-//                $activity->setIsUse(true);
-//                $activity->setDepartement($departement);
-//
-//                $this->em->persist($activity);
-//            }else{
-//                if(!$isNew){
-//                    $activity->setIsUse(false);
-//                }
-//                $notUsed++;
-//            }
-//        }
-//
-//        $progressBar->finish();
-//
-//        return [$total, $errors, $created, $notUsed, $updatedArray, $updated, $noUpdated];
+        /** @var CiActivity $activity */
+        $msg = "";
+        if($item->getPlusutilise() == 0){
+
+            $name = $item->getDesignation();
+
+            if($activity = $this->getExiste($activities, $item)){
+                if($activity->getName() == $name){
+                    $status = 3;
+                }else{
+                    $status = 2;
+                    $msg = "Changement : " . $activity->getId();
+                }
+            }else{
+                $status = 1;
+                $activity = new CiActivity();
+            }
+
+            $mode = $item->getMode();
+            $departement = intval($item->getDpcleunik());
+            if($departement == CiActivity::DEP_COLLECTIVES){
+                $mode = 2;
+            }
+
+            $activity = ($activity)
+                ->setOldId($item->getId())
+                ->setName($name)
+                ->setDurationTotal($this->helper->createTime($item->getDuree()))
+                ->setDuration($this->helper->getDuration($item, $mode))
+                ->setMax($item->getEffectifmax())
+                ->setType(intval($item->getType()))
+                ->setMode($mode)
+                ->setDepartement($departement)
+            ;
+
+            $this->em->persist($activity);
+
+            return ['code' => 1, 'status' => $status, 'data' => $msg];
+        }else{
+            return ['code' => 0];
+        }
     }
 }

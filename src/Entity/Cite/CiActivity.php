@@ -10,6 +10,21 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CiActivity
 {
+    const TYPE_INSTRUMENT = 1;
+    const TYPE_FM = 2;
+    const TYPE_AUTRE = 3;
+    const TYPE_DIVERS = 4;
+
+    const DEP_CLAVIER = 1;
+    const DEP_VENTS = 2;
+    const DEP_CORDES = 3;
+    const DEP_GUITARE = 4;
+    const DEP_JAZZ = 5;
+    const DEP_COLLECTIVES = 6;
+    const DEP_FM = 7;
+    const DEP_ECRITURE = 8;
+    const DEP_MONDE = 9;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue

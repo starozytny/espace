@@ -2,11 +2,13 @@
 
 namespace App\Service\Synchro;
 
+use App\Entity\Cite\CiActivity;
 use App\Entity\Cite\CiCenter;
 use App\Entity\Cite\CiEleve;
 use App\Entity\Cite\CiResponsable;
 use App\Entity\Cite\CiTeacher;
 use App\Service\DatabaseService;
+use App\Service\Synchro\Table\SyncActivity;
 use App\Service\Synchro\Table\SyncCenter;
 use App\Service\Synchro\Table\SyncEleve;
 use App\Service\Synchro\Table\SyncResponsable;
@@ -24,10 +26,11 @@ class SyncData
     private $syncTeacher;
     private $syncResponsable;
     private $syncEleve;
+    private $syncActivity;
 
     public function __construct(DatabaseService $databaseService, Sync $sync,
                                 SyncCenter $syncCenter, SyncTeacher $syncTeacher, SyncResponsable $syncResponsable,
-                                SyncEleve $syncEleve)
+                                SyncEleve $syncEleve, SyncActivity $syncActivity)
     {
         $this->em = $databaseService->getEm();
         $this->emWindev = $databaseService->getEmWindev();
@@ -37,6 +40,7 @@ class SyncData
         $this->syncTeacher = $syncTeacher;
         $this->syncResponsable = $syncResponsable;
         $this->syncEleve = $syncEleve;
+        $this->syncActivity = $syncActivity;
     }
 
     public function synchroData($output, $io, $items, $name)
@@ -48,9 +52,13 @@ class SyncData
             $progressBar = new ProgressBar($output, count($items));
             $progressBar->start();
 
-            $data0 = []; $data1 = [];
+            $data1 = [];
             $isAncien = false;
             switch ($name){
+                case "activites":
+                    $data0 = $this->em->getRepository(CiActivity::class)->findAll();
+                    $syncFunction = $this->syncActivity;
+                    break;
                 case "anciens":
                     $isAncien = true;
                     $data1 = $this->em->getRepository(CiResponsable::class)->findAll();

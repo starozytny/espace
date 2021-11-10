@@ -33,7 +33,6 @@ class SyncTeacher extends Sync
                     $status = 2;
                     $msg = "Changement ci id : " . $teacher->getId() . ' - wi id : ' . $item->getId();
                 }
-
             }else{
                 $status = 1;
                 $teacher = new CiTeacher();
