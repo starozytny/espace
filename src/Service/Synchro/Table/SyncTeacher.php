@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Service\Synchro;
+namespace App\Service\Synchro\Table;
 
 use App\Entity\Cite\CiTeacher;
+use App\Service\Synchro\Sync;
 use App\Windev\WindevPersonne;
 use App\Windev\WindevProfs;
 
@@ -18,7 +19,6 @@ class SyncTeacher extends Sync
         $persons = $this->getPersonnes($items);
         $teachers = $this->em->getRepository(CiTeacher::class)->findAll();
 
-        //Création des professeurs qui sont utilisés
         $errors = []; $updatedArray = [];
         $total = 0; $created = 0; $notUsed = 0; $updated = 0; $noUpdated = 0;
 
@@ -49,8 +49,8 @@ class SyncTeacher extends Sync
                     array_push($errors, sprintf('Windev Prof : %d n\'a pas d\'infos pour être rempli.' , $item->getId()));
                 }else{
                     $teacher = ($teacher)
-                        ->setPhoneMobile($this->helper->formattedPhone($person->getTelephone1()))
-                        ->setPhoneDomicile($this->helper->formattedPhone($person->getTelephone2()))
+                        ->setPhoneMobile($person->getTelephone1())
+                        ->setPhoneDomicile($person->getTelephone2())
                         ->setQuotaInstru($this->helper->createTime($item->getNbheure()))
                         ->setQuotaFm($this->helper->createTime($item->getNbheure2()))
                         ->setComment($item->getComment())

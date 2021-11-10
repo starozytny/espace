@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Service\Synchro;
+namespace App\Service\Synchro\Table;
 
 use App\Entity\Cite\CiCenter;
+use App\Service\Synchro\Sync;
 use App\Windev\WindevCentre;
 
 class SyncCenter extends Sync

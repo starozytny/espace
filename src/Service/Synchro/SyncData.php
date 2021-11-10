@@ -3,6 +3,9 @@
 namespace App\Service\Synchro;
 
 use App\Service\DatabaseService;
+use App\Service\Synchro\Table\SyncCenter;
+use App\Service\Synchro\Table\SyncResponsable;
+use App\Service\Synchro\Table\SyncTeacher;
 
 class SyncData
 {
@@ -11,23 +14,26 @@ class SyncData
 
     private $syncCenter;
     private $syncTeacher;
+    private $syncResponsable;
 
     public function __construct(DatabaseService $databaseService, Sync $sync,
-                                SyncCenter $syncCenter, SyncTeacher $syncTeacher)
+                                SyncCenter $syncCenter, SyncTeacher $syncTeacher, SyncResponsable $syncResponsable)
     {
         $this->em = $databaseService->getEm();
         $this->sync = $sync;
 
         $this->syncCenter = $syncCenter;
         $this->syncTeacher = $syncTeacher;
+        $this->syncResponsable = $syncResponsable;
     }
 
     public function synchroData($io, $items, $name)
     {
         if($this->sync->haveData($io, $items)){
-            $total = count($items);
-
             switch ($name){
+                case "responsables":
+                    $syncFunction = $this->syncResponsable;
+                    break;
                 case "professeurs":
                     $syncFunction = $this->syncTeacher;
                     break;
