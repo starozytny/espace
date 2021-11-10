@@ -2,6 +2,7 @@
 
 namespace App\Service\Synchro;
 
+use App\Entity\Cite\CiCycle;
 use DateTime;
 
 class Helper
@@ -247,24 +248,24 @@ class Helper
         return $array;
     }
 
-//    public function getCatCycle($name): int
-//    {
-//        if($name == "CYCLE EVEIL"){
-//            return CiCycle::CAT_EVEIL;
-//        }elseif($name == "CYCLE 1" || $name == "CYCLE 1A" || $name == "CYCLE 1B"){
-//            return CiCycle::CAT_CYCLE_ONE;
-//        }elseif($name == "CYCLE 2" || $name == "CYCLE 2A" || $name == "CYCLE 2B"){
-//            return CiCycle::CAT_CYCLE_TWO;
-//        }elseif($name == "ATELIER"){
-//            return CiCycle::CAT_ATELIER;
-//        }elseif($name == "PRE-ATELIER"){
-//            return CiCycle::CAT_PREATELIER;
-//        }elseif($name == "PAS DE CYCLE" || $name == "COURS SEMI-COLLECTIFS" || $name == "PRATIQUE AMATEUR"){
-//            return CiCycle::CAT_NO_CYCLE;
-//        }else{
-//            return CiCycle::CAT_UNKNOWN;
-//        }
-//    }
+    public function getCatCycle($name): int
+    {
+        if($name == "CYCLE EVEIL"){
+            return CiCycle::CAT_EVEIL;
+        }elseif($name == "CYCLE 1" || $name == "CYCLE 1A" || $name == "CYCLE 1B"){
+            return CiCycle::CAT_CYCLE_ONE;
+        }elseif($name == "CYCLE 2" || $name == "CYCLE 2A" || $name == "CYCLE 2B"){
+            return CiCycle::CAT_CYCLE_TWO;
+        }elseif($name == "ATELIER"){
+            return CiCycle::CAT_ATELIER;
+        }elseif($name == "PRE-ATELIER"){
+            return CiCycle::CAT_PREATELIER;
+        }elseif($name == "PAS DE CYCLE" || $name == "COURS SEMI-COLLECTIFS" || $name == "PRATIQUE AMATEUR"){
+            return CiCycle::CAT_NO_CYCLE;
+        }else{
+            return CiCycle::CAT_UNKNOWN;
+        }
+    }
 
     public function notUsed($emWindev, $classe, $searchId, $id, $msg): array
     {
