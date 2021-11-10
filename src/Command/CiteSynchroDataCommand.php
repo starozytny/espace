@@ -3,8 +3,9 @@
 namespace App\Command;
 
 use App\Service\DatabaseService;
-use App\Service\Synchro\SyncCenter;
+use App\Service\Synchro\SyncData;
 use App\Windev\WindevCentre;
+use App\Windev\WindevProfs;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,30 +16,29 @@ class CiteSynchroDataCommand extends Command
     protected static $defaultName = 'cite:synchro:data';
     protected static $defaultDescription = 'Synchronise data';
     protected $emWindev;
-    protected $syncCenter;
+    protected $syncData;
 
-    public function __construct(DatabaseService $databaseService, SyncCenter $syncCenter)
+    public function __construct(DatabaseService $databaseService, SyncData $syncData)
     {
         parent::__construct();
 
         $this->emWindev = $databaseService->getEmWindev();
-        $this->syncCenter = $syncCenter;
-    }
-
-    protected function getData($io, $windevClass, $title): array
-    {
-        $io->title("Synchronisation des " . $title);
-        return $this->emWindev->getRepository($windevClass)->findAll();
+        $this->syncData = $syncData;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        $data = $this->getData($io, WindevCentre::class, "centres");
-        $this->syncCenter->synchronize($io, $data);
-
+        $this->syncData->synchroData($io, $this->getData($io, WindevCentre::class, "centres"), "centres");
+        $this->syncData->synchroData($io, $this->getData($io, WindevProfs::class, "professeurs"), "professeurs");
 
         return Command::SUCCESS;
+    }
+
+    protected function getData($io, $windevClass, $title): array
+    {
+        $io->title("Synchronisation des " . $title);
+        return $this->emWindev->getRepository($windevClass)->findAll();
     }
 }

@@ -2,16 +2,20 @@
 
 namespace App\Service\Synchro;
 
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\DatabaseService;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class Sync
 {
     protected $em;
+    protected $emWindev;
+    protected $helper;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(DatabaseService $databaseService, Helper $helper)
     {
-        $this->em = $em;
+        $this->em = $databaseService->getEm();
+        $this->emWindev = $databaseService->getEmWindev();
+        $this->helper = $helper;
     }
 
     /**
@@ -21,7 +25,7 @@ class Sync
      * @param array $items
      * @return bool
      */
-    protected function haveData(SymfonyStyle $io, array $items): bool
+    public function haveData(SymfonyStyle $io, array $items): bool
     {
         if(count($items) != 0){
             return true;
@@ -38,7 +42,7 @@ class Sync
      * @param $windevItem
      * @return mixed|null
      */
-    protected function getExiste(array $windevData, $windevItem)
+    public function getExiste(array $windevData, $windevItem)
     {
         foreach($windevData as $item){
             if($item->getOldId() == $windevItem->getId()){
@@ -55,7 +59,7 @@ class Sync
      * @param SymfonyStyle $io
      * @param array $data
      */
-    protected function displayDataArray(SymfonyStyle $io, array $data)
+    public function displayDataArray(SymfonyStyle $io, array $data)
     {
         if(count($data) > 0){
             foreach($data as $item){
@@ -63,4 +67,6 @@ class Sync
             }
         }
     }
+
+
 }
