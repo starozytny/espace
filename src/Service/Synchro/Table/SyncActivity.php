@@ -22,10 +22,7 @@ class SyncActivity extends Sync
             $name = $item->getDesignation();
 
             $result = $this->checkExiste("name", new CiActivity(), $activities, $item, $name);
-
             $activity = $result[0];
-            $status = $result[1];
-            $msg = $result[2];
 
             $mode = $item->getMode();
             $departement = intval($item->getDpcleunik());
@@ -46,7 +43,7 @@ class SyncActivity extends Sync
 
             $this->em->persist($activity);
 
-            return ['code' => 1, 'status' => $status, 'data' => $msg];
+            return ['code' => 1, 'status' => $result[1], 'data' => $result[2]];
         }else{
             return ['code' => 0];
         }

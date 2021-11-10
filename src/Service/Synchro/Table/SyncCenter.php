@@ -23,10 +23,7 @@ class SyncCenter extends Sync
 
             //Check l'existance du centre
             $result = $this->checkExiste("name", new CiCenter(), $centres, $item, $name);
-
             $center = $result[0];
-            $status = $result[1];
-            $msg = $result[2];
 
             $center = ($center)
                 ->setOldId($item->getId())
@@ -35,7 +32,7 @@ class SyncCenter extends Sync
 
             $this->em->persist($center);
 
-            return ['code' => 1, 'status' => $status, 'data' => $msg];
+            return ['code' => 1, 'status' => $result[1], 'data' => $result[2]];
         }else{
             return ['code' => 0];
         }

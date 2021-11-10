@@ -21,10 +21,7 @@ class SyncResponsable extends Sync
         $firstname = $this->helper->getFirstnameAndLastname($item)[1];
 
         $result = $this->checkExiste("fullname", new CiResponsable(), $responsables, $item, $lastname, $firstname);
-
         $responsable = $result[0];
-        $status = $result[1];
-        $msg = $result[2];
 
         $responsable = $this->helper->setCommonData($responsable, $item);
 
@@ -44,6 +41,6 @@ class SyncResponsable extends Sync
 
         $this->em->persist($responsable);
 
-        return ['code' => 1, 'status' => $status, 'data' => $msg];
+        return ['code' => 1, 'status' => $result[1], 'data' => $result[2]];
     }
 }

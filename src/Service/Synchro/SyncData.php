@@ -6,6 +6,7 @@ use App\Entity\Cite\CiActivity;
 use App\Entity\Cite\CiCenter;
 use App\Entity\Cite\CiCycle;
 use App\Entity\Cite\CiEleve;
+use App\Entity\Cite\CiLevel;
 use App\Entity\Cite\CiResponsable;
 use App\Entity\Cite\CiTeacher;
 use App\Service\DatabaseService;
@@ -13,6 +14,7 @@ use App\Service\Synchro\Table\SyncActivity;
 use App\Service\Synchro\Table\SyncCenter;
 use App\Service\Synchro\Table\SyncCycle;
 use App\Service\Synchro\Table\SyncEleve;
+use App\Service\Synchro\Table\SyncLevel;
 use App\Service\Synchro\Table\SyncResponsable;
 use App\Service\Synchro\Table\SyncTeacher;
 use App\Windev\WindevPersonne;
@@ -30,10 +32,12 @@ class SyncData
     private $syncEleve;
     private $syncActivity;
     private $syncCycle;
+    private $syncLevel;
 
     public function __construct(DatabaseService $databaseService, Sync $sync,
                                 SyncCenter $syncCenter, SyncTeacher $syncTeacher, SyncResponsable $syncResponsable,
-                                SyncEleve $syncEleve, SyncActivity $syncActivity, SyncCycle $syncCycle)
+                                SyncEleve $syncEleve, SyncActivity $syncActivity, SyncCycle $syncCycle,
+                                SyncLevel $syncLevel)
     {
         $this->em = $databaseService->getEm();
         $this->emWindev = $databaseService->getEmWindev();
@@ -45,6 +49,7 @@ class SyncData
         $this->syncEleve = $syncEleve;
         $this->syncActivity = $syncActivity;
         $this->syncCycle = $syncCycle;
+        $this->syncLevel = $syncLevel;
     }
 
     public function synchroData($output, $io, $items, $name)
@@ -59,8 +64,12 @@ class SyncData
             $data1 = [];
             $isAncien = false;
             switch ($name){
+                case "niveaux":
+                    $data0 = $this->em->getRepository(CiLevel::class)->findAll();
+                    $syncFunction = $this->syncLevel;
+                    break;
                 case "cycles":
-                    $data0 =  $this->em->getRepository(CiCycle::class)->findAll();
+                    $data0 = $this->em->getRepository(CiCycle::class)->findAll();
                     $syncFunction = $this->syncCycle;
                     break;
                 case "activites":

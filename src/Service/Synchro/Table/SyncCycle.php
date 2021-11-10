@@ -22,10 +22,7 @@ class SyncCycle extends Sync
             $name = mb_strtoupper($item->getDesignation());
 
             $result = $this->checkExiste("name", new CiCycle(), $cycles, $item, $name);
-
             $cycle = $result[0];
-            $status = $result[1];
-            $msg = $result[2];
 
             $cycle = ($cycle)
                 ->setOldId($item->getId())
@@ -39,7 +36,7 @@ class SyncCycle extends Sync
 
             $this->em->persist($cycle);
 
-            return ['code' => 1, 'status' => $status, 'data' => $msg];
+            return ['code' => 1, 'status' => $result[1], 'data' => $result[2]];
         }else{
             return ['code' => 0];
         }

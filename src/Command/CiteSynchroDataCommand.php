@@ -9,6 +9,7 @@ use App\Windev\WindevAdherent;
 use App\Windev\WindevAncien;
 use App\Windev\WindevCentre;
 use App\Windev\WindevCycle;
+use App\Windev\WindevNiveau;
 use App\Windev\WindevPersonne;
 use App\Windev\WindevProfs;
 use Symfony\Component\Console\Command\Command;
@@ -35,13 +36,14 @@ class CiteSynchroDataCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $this->syncData->synchroData($output, $io, $this->getData($io, WindevCentre::class, "centres"), "centres");
-        $this->syncData->synchroData($output, $io, $this->getData($io, WindevProfs::class, "professeurs"), "professeurs");
-        $this->syncData->synchroData($output, $io, $this->getData($io, WindevPersonne::class, "responsables"), "responsables");
-        $this->syncData->synchroData($output, $io, $this->getData($io, WindevAdherent::class, "eleves"), "eleves");
-        $this->syncData->synchroData($output, $io, $this->getData($io, WindevAncien::class, "anciens"), "anciens");
-        $this->syncData->synchroData($output, $io, $this->getData($io, WindevActivite::class, "activites"), "activites");
-        $this->syncData->synchroData($output, $io, $this->getData($io, WindevCycle::class, "cycles"), "cycles");
+        $this->syncData->synchroData($output, $io, $this->getData($io, WindevCentre::class,     "centres"),      "centres");
+        $this->syncData->synchroData($output, $io, $this->getData($io, WindevProfs::class,      "professeurs"),  "professeurs");
+        $this->syncData->synchroData($output, $io, $this->getData($io, WindevPersonne::class,   "responsables"), "responsables");
+        $this->syncData->synchroData($output, $io, $this->getData($io, WindevAdherent::class,   "eleves"),       "eleves");
+        $this->syncData->synchroData($output, $io, $this->getData($io, WindevAncien::class,     "anciens"),      "anciens");
+        $this->syncData->synchroData($output, $io, $this->getData($io, WindevActivite::class,   "activites"),    "activites");
+        $this->syncData->synchroData($output, $io, $this->getData($io, WindevCycle::class,      "cycles"),       "cycles");
+        $this->syncData->synchroData($output, $io, $this->getData($io, WindevNiveau::class,     "niveaux"),      "niveaux");
 
         return Command::SUCCESS;
     }
