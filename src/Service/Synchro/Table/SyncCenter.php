@@ -5,63 +5,46 @@ namespace App\Service\Synchro\Table;
 use App\Entity\Cite\CiCenter;
 use App\Service\Synchro\Sync;
 use App\Windev\WindevCentre;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class SyncCenter extends Sync
 {
     /**
-     * @param OutputInterface $output
-     * @param WindevCentre[] $items
-     * @return array
+     * @param WindevCentre $item
+     * @param boolean $isAncien
+     * @param array $centres
+     * @return array|int[]
      */
-    public function synchronize(OutputInterface $output, array $items): array
+    public function synchronize(WindevCentre $item, bool $isAncien, array $centres): array
     {
-        $errors = []; $updatedArray = [];
-        $total = 0; $created = 0; $notUsed = 0; $updated = 0; $noUpdated = 0;
-
-        $centres = $this->em->getRepository(CiCenter::class)->findAll();
-
-        $progressBar = new ProgressBar($output, count($items));
-        $progressBar->start();
-
         /** @var CiCenter $center */
-        foreach($items as $item){
+        $msg = "";
+        if($item->getPlusutilise() == 0){
+            //Normalize data
+            $name = mb_strtoupper($item->getNomCentre());
 
-            $progressBar->advance();
-
-            if($item->getPlusutilise() == 0){
-                //Normalize data
-                $name = mb_strtoupper($item->getNomCentre());
-
-                //Check l'existance du centre
-                if($center = $this->getExiste($centres, $item)){
-                    if($center->getName() == $name){
-                        $noUpdated++;
-                    }else{
-                        $updated++;
-                        array_push($updatedArray, "Changement de nom : " . $center->getName() . ' -> ' . $item->getNomCentre());
-                    }
+            //Check l'existance du centre
+            if($center = $this->getExiste($centres, $item)){
+                if($center->getName() == $name){
+                    $status = 3;
                 }else{
-                    $created++;
-                    $center = new CiCenter();
+                    $status = 2;
+                    $msg = "Changement de nom : " . $center->getName() . ' -> ' . $item->getNomCentre();
                 }
-
-                $center = ($center)
-                    ->setOldId($item->getId())
-                    ->setName($name)
-                ;
-
-                $this->em->persist($center);
-
-                $total++;
             }else{
-                $notUsed++;
+                $center = new CiCenter();
+                $status = 1;
             }
+
+            $center = ($center)
+                ->setOldId($item->getId())
+                ->setName($name)
+            ;
+
+            $this->em->persist($center);
+
+            return ['code' => 1, 'status' => $status, 'data' => $msg];
+        }else{
+            return ['code' => 0];
         }
-
-        $progressBar->finish();
-
-        return [$total, $errors, $created, $notUsed, $updatedArray, $updated, $noUpdated];
     }
 }
