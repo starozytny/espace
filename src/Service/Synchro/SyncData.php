@@ -27,7 +27,7 @@ class SyncData
         $this->syncResponsable = $syncResponsable;
     }
 
-    public function synchroData($io, $items, $name)
+    public function synchroData($output, $io, $items, $name)
     {
         if($this->sync->haveData($io, $items)){
             switch ($name){
@@ -44,7 +44,7 @@ class SyncData
                     return;
             }
 
-            $result = $syncFunction->synchronize($items);
+            $result = $syncFunction->synchronize($output, $items);
 
             $total          = $result[0];
             $errors         = $result[1];
@@ -57,6 +57,7 @@ class SyncData
 
             $this->em->flush();
 
+            $io->newLine();
             $this->sync->displayDataArray($io, $errors);
             $io->comment(sprintf("%d %s non utilisés.", $notUsed, $name));
             $io->comment(sprintf("%d %s mis à jour.", $updated, $name));

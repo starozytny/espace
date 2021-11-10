@@ -31,9 +31,9 @@ class CiteSynchroDataCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $this->syncData->synchroData($io, $this->getData($io, WindevCentre::class, "centres"), "centres");
-        $this->syncData->synchroData($io, $this->getData($io, WindevProfs::class, "professeurs"), "professeurs");
-        $this->syncData->synchroData($io, $this->getData($io, WindevPersonne::class, "responsables"), "responsables");
+        $this->syncData->synchroData($output, $io, $this->getData($io, WindevCentre::class, "centres"), "centres");
+        $this->syncData->synchroData($output, $io, $this->getData($io, WindevProfs::class, "professeurs"), "professeurs");
+        $this->syncData->synchroData($output, $io, $this->getData($io, WindevPersonne::class, "responsables"), "responsables");
 
         return Command::SUCCESS;
     }

@@ -6,24 +6,33 @@ use App\Entity\Cite\CiTeacher;
 use App\Service\Synchro\Sync;
 use App\Windev\WindevPersonne;
 use App\Windev\WindevProfs;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class SyncTeacher extends Sync
 {
     /**
+     * @param OutputInterface $output
      * @param $items WindevProfs[]
      * @return array
      */
-    public function synchronize(array $items): array
+    public function synchronize(OutputInterface $output, array $items): array
     {
+        $errors = []; $updatedArray = [];
+        $total = 0; $created = 0; $notUsed = 0; $updated = 0; $noUpdated = 0;
+
         //Récupération des données des professeurs contenues dans la table windev personne
         $persons = $this->getPersonnes($items);
         $teachers = $this->em->getRepository(CiTeacher::class)->findAll();
 
-        $errors = []; $updatedArray = [];
-        $total = 0; $created = 0; $notUsed = 0; $updated = 0; $noUpdated = 0;
+        $progressBar = new ProgressBar($output, count($items));
+        $progressBar->start();
 
         /** @var CiTeacher $teacher */
         foreach($items as $item){
+
+            $progressBar->advance();
+
             if($item->getPlusutilise() == 0){
                 //Récupération des données du prof
                 $person = $this->getPersonne($persons, $item);
@@ -69,6 +78,8 @@ class SyncTeacher extends Sync
                 $notUsed++;
             }
         }
+
+        $progressBar->finish();
 
         return [$total, $errors, $created, $notUsed, $updatedArray, $updated, $noUpdated];
     }

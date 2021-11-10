@@ -5,22 +5,30 @@ namespace App\Service\Synchro\Table;
 use App\Entity\Cite\CiResponsable;
 use App\Service\Synchro\Sync;
 use App\Windev\WindevPersonne;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class SyncResponsable extends Sync
 {
     /**
+     * @param OutputInterface $output
      * @param WindevPersonne[] $items
      * @return array
      */
-    public function synchronize(array $items): array
+    public function synchronize(OutputInterface $output, array $items): array
     {
         $errors = []; $updatedArray = [];
         $total = 0; $created = 0; $notUsed = 0; $updated = 0; $noUpdated = 0;
 
         $responsables = $this->em->getRepository(CiResponsable::class)->findAll();
 
+        $progressBar = new ProgressBar($output, count($items));
+        $progressBar->start();
+
         /** @var CiResponsable $responsable */
         foreach($items as $item){
+
+            $progressBar->advance();
 
             $lastname = $this->helper->getFirstnameAndLastname($item)[0];
             $firstname = $this->helper->getFirstnameAndLastname($item)[1];
@@ -58,6 +66,8 @@ class SyncResponsable extends Sync
 
             $total++;
         }
+
+        $progressBar->finish();
 
         return [$total, $errors, $created, $notUsed, $updatedArray, $updated, $noUpdated];
     }
