@@ -24,7 +24,9 @@
 
 {% block main_content %}
     <div class="main-content">
-        <div id="myBooking" data-user="{{ app.user ? app.user.id : null }}"></div>
+        <div id="myBooking" data-user="{{ app.user ? app.user.id : null }}">
+            {% include "dashboard/layout/components/spinner.html.twig" %}
+        </div>
     </div>
 {% endblock %}
 

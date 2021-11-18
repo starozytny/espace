@@ -1,25 +1,32 @@
 {% extends 'app/pages/security/template.html.twig' %}
 
-{% block title %}Connexion à son espace{% endblock %}
+{% block title %}Me connecter  {{ parent() }}{% endblock %}
+{% block h1 %}
+    <h1>
+        Connexion à mon espace
+    </h1>
+    <p>
+        Votre espace vous permet de consulter vos informations concernant la Cité de la Musique de Marseille,
+        connaître votre emploi du temps et transmettre des informations.
+    </p>
+{% endblock %}
 
 {% block main_content %}
     <div class="main-content">
-        <h1>Se connecter</h1>
-
         <form method="post" class="form-login">
             {% if error %}
                 <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
             {% endif %}
 
-           <div class="line">
-               <label for="inputUsername">Nom utilisateur</label>
-               <input type="text" value="{{ last_username }}" name="username" id="inputUsername" required autofocus>
-           </div>
+            <div class="line">
+                <label for="inputUsername">Nom utilisateur</label>
+                <input type="text" value="{{ last_username }}" name="username" id="inputUsername" required autofocus>
+            </div>
             <div class="line">
                 <label for="inputPassword">Mot de passe</label>
-                <div class="see-password">
+                <div class="password-see">
                     <input type="password" name="password" id="inputPassword" required>
-                    <span class="icon-vision btn-see-password"></span>
+                    <span class="btn-see-password icon-vision"></span>
                 </div>
             </div>
 

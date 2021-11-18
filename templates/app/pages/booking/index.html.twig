@@ -22,7 +22,10 @@
         <div class="alert alert-danger" style="justify-content: center; background: #f5655a;">
             <p style="color: #FFF;">Un <b>PASS SANITAIRE</b> valide vous sera demandé à l’entrée.</p>
         </div>
-        <div id="booking" data-user="{{ app.user ? app.user.id : null }}" data-donnees="{{ donnees }}"></div>
+        <div id="booking" data-user="{{ app.user ? app.user.id : null }}" data-donnees="{{ donnees }}">
+            {% include "dashboard/layout/components/spinner.html.twig" %}
+        </div>
+
     </div>
 {% endblock %}
 
