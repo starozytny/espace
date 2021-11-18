@@ -37,5 +37,3 @@ winpty.exe.stackdump
 /bin/original/*.csv
 /bin/traiter/*.csv
 /bin/test/*.csv
-
-/documents/*
