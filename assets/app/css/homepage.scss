@@ -1,0 +1,138 @@
+@import "vars/vars";
+
+.cite-logo{
+  display: none;
+}
+
+nav{
+  position: relative;
+  z-index: 3;
+  background-color: transparent;
+
+  .nav-header-logo{
+    a{
+      color: var(--alpha);
+    }
+  }
+}
+
+.nav-body{
+  a{
+    color: var(--alpha);
+    font-size: 18px;
+  }
+}
+
+header{
+  position: relative;
+  margin-top: -70px;
+  background: url("../images/bg.jpg") center no-repeat;
+  background-size: cover;
+  min-height: calc(100vh + 70px);
+  @include flex(row, center, center);
+  color: var(--alpha);
+
+  &:before{
+    content: '';
+    background-color: var(--txt);
+    opacity: 0.6;
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+  }
+
+  .header{
+    position: relative;
+    z-index: 3;
+    padding: 0 10px;
+    text-align: center;
+
+    h1{
+      font-size: 3.3em;
+    }
+    .subtitle{
+      margin-top: 15px;
+      font-size: 1.6em;
+    }
+    .header-title{
+      margin-bottom: 70px;
+    }
+  }
+
+  .header-actions{
+    .btn{
+      margin-bottom: 12px;
+      opacity: 1;
+    }
+  }
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  header{
+    padding-top: 140px;
+  }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .header{
+    .header-actions{
+      .btn{
+        margin-bottom: 0;
+      }
+
+      .btn:first-child{
+        margin-right: 12px;
+      }
+    }
+  }
+}
+
+//                      __   _  ___ ____  _  _     __
+//                     | _| / |/ _ \___ \| || |   |_ |
+//    _____ _____ _____| |  | | | | |__) | || |_   | |_____ _____ _____
+//   |_____|_____|_____| |  | | |_| / __/|__   _|  | |_____|_____|_____|
+//                     | |  |_|\___/_____|  |_|    | |
+//                     |__|                       |__|
+@media (min-width: 1024px) {
+  header{
+    .header{
+      h1{
+        font-size: 5em;
+        @include flex(column, center, center)
+      }
+      .subtitle{
+        font-size: 2.2em;
+      }
+      .btn{
+        padding: 18px 50px;
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+//                      __   _ ____  ___   ___    __
+//                     | _| / |___ \( _ ) / _ \  |_ |
+//    _____ _____ _____| |  | | __) / _ \| | | |  | |_____ _____ _____
+//   |_____|_____|_____| |  | |/ __/ (_) | |_| |  | |_____|_____|_____|
+//                     | |  |_|_____\___/ \___/   | |
+//                     |__|                      |__|
+@media (min-width:1280px) {
+  header{
+    margin-top: -118px;
+    min-height: calc(100vh + 118px);
+  }
+
+  @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    header{
+      padding-top: 50px;
+    }
+  }
+}

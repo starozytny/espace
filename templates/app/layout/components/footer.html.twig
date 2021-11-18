@@ -2,24 +2,29 @@
     <div class="footer">
         <div class="footer-menu">
             <div class="footer-logo">
-                <a href="{{ path('app_homepage') }}" title="Logilink">
-                    <img src="{{ asset('build/dashboard/images/logilink-logo.svg') }}" alt="Logo"/>
-                </a>
-                <span>Website </span>
+                <span>Espace Cité de la Musique de Marseille </span>
             </div>
             <div class="footer-items">
                 <a rel="nofollow" href="{{ path('app_mentions') }}">Mentions légales</a>
                 <a rel="nofollow" href="{{ path('app_politique') }}">Politique de confidentialité</a>
                 <a rel="nofollow" href="{{ path('app_cookies') }}">Gestion des cookies</a>
-                <a rel="nofollow" href="{{ path('app_contact') }}">Nous contacter</a>
                 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                    <a rel="nofollow" href="{{ path('app_login') }}">Mon espace</a>
-                    <a rel="nofollow" href="{{ path('app_logout') }}">Me déconnecter</a>
+                    <a rel="nofollow" href="{{ path('app_logout') }}">Se déconnecter</a>
                 {% else %}
                     <a rel="nofollow" href="{{ path('app_login') }}">Mon espace</a>
                 {% endif %}
+                {% if is_granted("ROLE_ADMIN") %}
+                    <a rel="nofollow" href="{{ path('teacher_homepage') }}">Espace Prof</a>
+                {% endif %}
             </div>
+            {% if is_granted("ROLE_DEVELOPER") %}
+                <div class="footer-items">
+                    <a rel="nofollow" href="{{ path('admin_styleguide_react') }}">Styleguide</a>
+                    <a rel="nofollow" href="{{ path('app.swagger_ui') }}">API</a>
+                </div>
+            {% endif %}
+
         </div>
-        <div class="copyright">Copyright 2020 - <a href="https://logilink.fr" target="_blank">Logilink</a></div>
+        <div class="copyright">Copyright 2021 - <a href="https://logilink.fr" target="_blank">Logilink</a></div>
     </div>
 </footer>

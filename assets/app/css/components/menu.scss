@@ -1,23 +1,66 @@
 @import "../vars/vars";
 
+nav{
+  position: relative;
+  overflow: hidden;
+
+  &:before{
+    content: '';
+    background-color: var(--color1);
+    width: 200px;
+    height: 200px;
+    border-radius: 800px;
+    position: absolute;
+    top: -50px;
+    right: -35px;
+    z-index: -1;
+    opacity: 0.7;
+  }
+}
+
 nav.fixed{
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  background-color: var(--alpha);
   z-index: 1000;
+  background: var(--alpha);
+  box-shadow: 0 4px 12px var(--greyShadow);
 
   & + main{
-    margin-top: 52px;
+    margin-top: 45px;
+  }
+
+  &.homepage{
+    background: transparent;
+    box-shadow: none;
+    position: relative;
+
+    & + main{
+      margin-top: 25px;
+    }
+
+    &:before{
+      display: none;
+    }
+
+    .nav-mobile{
+      color: var(--alpha);
+
+      .icon-cancel{
+        color: var(--txt);
+      }
+    }
   }
 }
 
 .nav-header-logo{
+  position: relative;
   padding: 12px;
 
-  img{
-    width: 82px;
+  a{
+    @include fontBold();
+    color: var(--txt);
   }
 }
 
@@ -26,6 +69,7 @@ nav.fixed{
   top: 0; right: 0;
   padding: 14px 14px 12px 12px;
   cursor: pointer;
+  z-index: 2;
 }
 
 .nav-body{
@@ -84,6 +128,22 @@ nav.fixed{
       &:hover{
         transform: translateY(0);
       }
+    }
+  }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  nav{
+    &:before {
+      width: 300px;
+      height: 300px;
+      right: -40px;
     }
   }
 }
@@ -190,6 +250,14 @@ nav.fixed{
 //                     | |  |_|_____\___/ \___/   | |
 //                     |__|                      |__|
 @media (min-width:1280px) {
+  nav{
+    &:before {
+      width: 500px;
+      height: 500px;
+      top: -100px;
+      right: -75px;
+    }
+  }
   .nav-container{
     padding: 0 32px;
   }
@@ -202,7 +270,32 @@ nav.fixed{
 //                     | |  |_|\___/ \___/ \___/   | |
 //                     |__|                       |__|
 @media (min-width: 1600px){
+  nav{
+    &:before{
+      width: 600px;
+      height: 600px;
+      top: -175px;
+      right: -95px;
+    }
+  }
   .nav-container{
     @include maxscreen();
+  }
+}
+
+//                      __   _  ___ ____   ___    __
+//                     | _| / |/ _ \___ \ / _ \  |_ |
+//    _____ _____ _____| |  | | (_) |__) | | | |  | |_____ _____ _____
+//   |_____|_____|_____| |  | |\__, / __/| |_| |  | |_____|_____|_____|
+//                     | |  |_|  /_/_____|\___/   | |
+//                     |__|                      |__|
+@media (min-width: 1920px){
+  nav{
+    &:before{
+      width: 900px;
+      height: 900px;
+      top: -255px;
+      right: -225px;
+    }
   }
 }

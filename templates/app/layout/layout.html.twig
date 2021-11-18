@@ -14,20 +14,14 @@
             'name': 'accueil'
         },
         {
-            'dropdown': true,
-            'label': 'Dropdown',
-            'items': [
-                {
-                    'path': path('app_homepage'),
-                    'label': 'Item 1',
-                    'name': 'item-2'
-                },
-                {
-                    'path': path('app_homepage'),
-                    'label': 'Item 2',
-                    'name': 'item-2'
-                }
-            ]
+            'path': path('app_homepage'),
+            'label': 'Réserver mon ticket',
+            'name': 'inscriptions'
+        },
+        {
+            'path': path('app_homepage'),
+            'label': 'Ma réservation',
+            'name': 'ma-reservation'
         }
     ] %}
 
@@ -57,12 +51,12 @@
     {% endif %}
 
     <div class="body">
-        <nav class="fixed">
+        <nav class="fixed {% block pageMenu %}{% endblock %}">
             <div class="nav-container">
                 <div class="nav-header">
                     <div class="nav-header-logo">
                         <a href="{{ path("app_homepage") }}">
-                            <img src="{{ asset('build/dashboard/images/logilink-logo.svg') }}" alt="Logo du site">
+                            Cité de la musique Marseille
                         </a>
                     </div>
                 </div>
@@ -71,6 +65,19 @@
         </nav>
 
         <main>
+
+            {% if errorPage is not defined %}
+                <div class="cite-logo">
+                    <div class="cite-logo-container">
+                        <a href="{{ path('app_homepage') }}">
+                            <img src="{{ asset('build/app/images/logo-ca.png') }}" alt="Logo du site">
+                        </a>
+                        <div>
+                            {% block h1 %}{% endblock %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
 
             <div>
                 {% block main_content %}{% endblock %}
