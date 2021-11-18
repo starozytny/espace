@@ -84,7 +84,7 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/utilisateurs", options={"expose"=true}, name="users_index_full")
+     * @Route("/tous-les-utilisateurs", options={"expose"=true}, name="users_index_full")
      */
     public function usersFull(Request $request, SerializerInterface $serializer): Response
     {

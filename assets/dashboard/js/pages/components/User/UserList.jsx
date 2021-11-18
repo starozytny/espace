@@ -27,8 +27,8 @@ export class UserList extends Component {
         const { taille, data, perPage, onChangeContext, onGetFilters, filters, onSearch, onDeleteAll, onPerPage,
             onPaginationClick, currentPage, sorters, onSorter } = this.props;
 
-        let filtersLabel = ["Utilisateur", "Développeur", "Administrateur", "Enseignant", "Responsable", "Eleve", "Manager",];
-        let filtersId    = ["f-user", "f-dev", "f-admin", "f-enseignant", 'f-responsable', 'f-eleve', 'f-manager',];
+        let filtersLabel = ["Utilisateur", "Développeur", "Administrateur", "Enseignant", "Responsable", "Manager"];
+        let filtersId    = ["f-user", "f-dev", "f-admin", "f-enseignant", 'f-responsable', 'f-manager',];
 
         let itemsFilter = [
             { value: 0, id: filtersId[0], label: filtersLabel[0]},
@@ -50,6 +50,11 @@ export class UserList extends Component {
 
         return <>
             <div>
+                <div className="toolbar">
+                    <div className="item create">
+                        <Button element="a" type="default" onClick={Routing.generate('admin_users_index_full')}>Afficher les comptes des anciens</Button>
+                    </div>
+                </div>
                 <div className="toolbar">
                     <div className="item create">
                         <Button onClick={() => onChangeContext("create")}>Ajouter un utilisateur</Button>
