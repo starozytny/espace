@@ -43,11 +43,17 @@ security:
 
     role_hierarchy:
         ROLE_DEVELOPER: [ ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH ]
-        ROLE_ADMIN: ROLE_USER
+        ROLE_ADMIN: [ ROLE_MANAGER ]
+        ROLE_MANAGER: [ ROLE_USER, ROLE_TEACHER, ROLE_RESPONSABLE ]
+        ROLE_TEACHER: [ ROLE_USER ]
+        ROLE_RESPONSABLE: [ ROLE_USER ]
 
     access_control:
-         - { path: ^/api/login_check,        roles: PUBLIC_ACCESS }
-         - { path: ^/api/users/password,     roles: PUBLIC_ACCESS }
-         - { path: ^/api/contact,            roles: PUBLIC_ACCESS }
-         - { path: ^/api,                    roles: ROLE_USER }
-         - { path: ^/admin,                  roles: ROLE_ADMIN }
+        - { path: ^/api/login_check,        roles: PUBLIC_ACCESS }
+        - { path: ^/api/users/password,     roles: PUBLIC_ACCESS }
+        - { path: ^/api/contact,            roles: PUBLIC_ACCESS }
+        - { path: ^/api/booking,            roles: PUBLIC_ACCESS }
+        - { path: ^/api/visio,              roles: PUBLIC_ACCESS }
+        - { path: ^/api/renew/export,       roles: ROLE_MANAGER }
+        - { path: ^/api,                    roles: ROLE_USER }
+        - { path: ^/admin,                  roles: ROLE_ADMIN }
