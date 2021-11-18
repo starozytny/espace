@@ -1,4 +1,5 @@
-
+/bin/backup/*
+/.env.local~
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -33,5 +34,8 @@ winpty.exe.stackdump
 /public/annonces/*
 /public/articles/*
 /public/avatars/*
+/bin/original/*.csv
+/bin/traiter/*.csv
+/bin/test/*.csv
 
 /documents/*
