@@ -26,10 +26,7 @@ export class UserItem extends Component {
             <Selector id={elem.id} onSelectors={onSelectors} />
 
             <div className="item-content">
-                <div className="item-body item-body-image">
-                    <div className="item-image" onClick={() => onChangeContext('read', elem)}>
-                        <img src={avatar} alt={`Avatar de ${elem.username}`}/>
-                    </div>
+                <div className="item-body">
                     <div className="infos infos-col-3">
                         <div className="col-1">
                             <div className="name">
@@ -41,11 +38,11 @@ export class UserItem extends Component {
                         <div className="col-2">
                             <div className="sub sub-username">{elem.username}</div>
                             {elem.email ? <div className="sub">{elem.email}</div> : <div className="sub txt-danger"><span className="icon-warning" /> {elem.email}</div>}
+                            {elem.fullAncien && <div className="sub">Ancien</div>}
                         </div>
                         <div className="col-3 actions">
                             {elem.highRoleCode !== 1 &&
                             <>
-                                {/*<ButtonIcon icon="vision" onClick={() => onChangeContext("read", elem)}>Profil</ButtonIcon>*/}
                                 <ButtonIcon icon="pencil" onClick={() => onChangeContext("update", elem)}>Modifier</ButtonIcon>
                                 <ButtonIcon icon="trash" onClick={() => onDelete(elem)}>Supprimer</ButtonIcon>
                                 {developer === 1 && <ButtonIcon icon="share" element="a" target="_blank" onClick={url}>Imiter</ButtonIcon>}

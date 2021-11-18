@@ -44,18 +44,19 @@ class User extends DataEntity implements UserInterface, PasswordAuthenticatedUse
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank()
-     * @Assert\Type(type="alnum")
      * @Groups({"admin:read", "user:read"})
      */
     private $username;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"admin:read"})
      */
     private $fullAncien = false;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"admin:read"})
      */
     private $who = 0;
 
@@ -141,6 +142,7 @@ class User extends DataEntity implements UserInterface, PasswordAuthenticatedUse
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"admin:read"})
      */
     private $center;
 
