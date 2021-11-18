@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}JITSI visioconférence | Espace élève{% endblock %}
+
+{% block noindex %}
+    <meta name="robots" content="noindex">
+    <meta name="googlebot" content="noindex">
+{% endblock %}
+
+{% block stylesheets %}
+    <script src='https://meet.jit.si/external_api.js'></script>
+{% endblock %}
+
+{% block body %}
+    <style>
+        html, body {
+            margin: 0!important;
+            padding: 0!important;
+            text-align: center;
+            background-color: var(--color0);
+        }
+    </style>
+
+    <div id="meet" style="height: 100vh;" data-username="{{ username ? username : "Visiteur"}}" data-name-room="{{ nameRoom }}"></div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        let meet = document.querySelector('#meet');
+
+        if(meet != null) {
+            const roomName = meet.dataset.nameRoom;
+            const username = meet.dataset.username;
+            const pass = roomName;
+            const toolbarStudent = ['microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen', 'fodeviceselection', 'chat', 'etherpad', 'raisehand', 'videoquality', 'filmstrip', 'shortcuts', 'tileview','download', 'help', 'mute-everyone','hangup']
+
+            const domain = 'meet.jit.si';
+            const options = {
+                roomName: roomName,
+                parentNode: meet,
+                userInfo: {
+                    displayName: username,
+                },
+                configOverwrite: {
+                    disableRemoteMute: true,
+                    remoteVideoMenu: {
+                        // If set to true the 'Kick out' button will be disabled.
+                        disableKick: true
+                    },
+                    interfaceConfigOverwrite: {
+                        TOOLBAR_BUTTONS: toolbarStudent, //SET FEATURES ACCORDING TO THE ROLE OF STUDENT
+                    },
+                }
+            };
+
+            const api = new JitsiMeetExternalAPI(domain, options);
+            // join a protected channel
+            api.on('passwordRequired', function ()
+            {
+                api.executeCommand('password', pass);
+            });
+
+        }
+    </script>
+{% endblock %}

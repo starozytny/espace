@@ -1,0 +1,34 @@
+{% extends 'app/layout/layout.html.twig' %}
+
+{% block noindex %}
+    <meta name="robots" content="noindex">
+    <meta name="googlebot" content="noindex">
+{% endblock %}
+
+{% block title %}Ma réservation {{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('booking') }}
+{% endblock %}
+
+{% block h1 %}
+    <h1>
+        Ma réservation
+    </h1>
+    <p>
+        Les inscriptions aux cours et ateliers de musique auront lieu à la Cité de la musique
+        de Marseille, 4 rue Bernard du Bois, Marseille 1er arrondissement.
+    </p>
+{% endblock %}
+
+{% block main_content %}
+    <div class="main-content">
+        <div id="myBooking" data-user="{{ app.user ? app.user.id : null }}"></div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('booking') }}
+{% endblock %}

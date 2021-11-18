@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Service\Booking\BookingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class AppController extends AbstractController
 {
@@ -14,6 +17,27 @@ class AppController extends AbstractController
     public function index(): Response
     {
         return $this->render('app/pages/index.html.twig');
+    }
+
+    /**
+     * @Route("/inscriptions", options={"expose"=true}, name="app_booking")
+     */
+    public function register(SerializerInterface $serializer, BookingService $bookingService): Response
+    {
+        $obj = $bookingService->checkDaysOpenable();
+        $obj = $serializer->serialize($obj, "json", ['groups' => User::VISITOR_READ]);
+
+        return $this->render('app/pages/booking/index.html.twig', [
+            'donnees' => $obj
+        ]);
+    }
+
+    /**
+     * @Route("/inscriptions/ma-reservation", options={"expose"=true}, name="app_my_booking")
+     */
+    public function myBooking(): Response
+    {
+        return $this->render('app/pages/booking/booking.html.twig');
     }
 
     /**

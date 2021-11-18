@@ -1,0 +1,25 @@
+@import "../../../vars/vars";
+
+//                      __   _  ___ ____  _  _     __
+//                     | _| / |/ _ \___ \| || |   |_ |
+//    _____ _____ _____| |  | | | | |__) | || |_   | |_____ _____ _____
+//   |_____|_____|_____| |  | | |_| / __/|__   _|  | |_____|_____|_____|
+//                     | |  |_|\___/_____|  |_|    | |
+//                     |__|                       |__|
+@media (min-width: 1024px) {
+  .responsable-content{
+
+    section{
+      @include flex(row, flex-start, flex-start);
+    }
+
+    .step-col-1{
+      width: calc(50% - 48px);
+      margin-right: 48px;
+    }
+
+    form{
+      width: 50%;
+    }
+  }
+}

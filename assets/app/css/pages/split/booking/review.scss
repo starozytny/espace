@@ -1,0 +1,58 @@
+@import "../../../vars/vars";
+
+.liste-review-responsable{
+  margin-bottom: 24px;
+}
+
+.liste-review-title {
+  font-size: 18px;
+  margin-bottom: 12px;
+  @include fontSemibold();
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .liste-review{
+    @include flex(row, flex-start, flex-start);
+
+    & > div{
+      width: calc(50% - 12px);
+    }
+
+    .liste-review-responsable{
+      margin-right: 12px;
+    }
+    .liste-review-eleves{
+      margin-left: 12px;
+    }
+  }
+}
+
+//                      __   _  ___ ____  _  _     __
+//                     | _| / |/ _ \___ \| || |   |_ |
+//    _____ _____ _____| |  | | | | |__) | || |_   | |_____ _____ _____
+//   |_____|_____|_____| |  | | |_| / __/|__   _|  | |_____|_____|_____|
+//                     | |  |_|\___/_____|  |_|    | |
+//                     |__|                       |__|
+@media (min-width: 1024px) {
+  .liste-review-eleves{
+    @include flex(row, flex-start, flex-start);
+    flex-wrap: wrap;
+    width: 50%;
+
+    .liste-review-title{
+      width: 100%;
+    }
+
+    .eleve{
+      width: calc(50% - 36px);
+      margin-bottom: 12px;
+      margin-right: 12px;
+    }
+  }
+}

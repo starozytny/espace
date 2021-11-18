@@ -1,0 +1,171 @@
+@import "../vars/vars";
+
+@import "./split/booking/step_path";
+@import "./split/booking/profil";
+@import "./split/booking/responsable";
+@import "./split/booking/eleve";
+@import "./split/booking/review";
+@import "./split/booking/ticket";
+
+.huge-ticket{
+  font-size: 22px;
+}
+
+.line{
+  label{
+    color: #7b7b7b;
+  }
+}
+
+.alert{
+  width: calc(100% - 24px);
+}
+
+.explain, .starter{
+  margin-bottom: 24px;
+}
+
+.already-book{
+  @include flex(column, flex-start, flex-start);
+
+  button{
+    width: 100%;
+  }
+
+  button:first-child{
+    margin-bottom: 12px;
+  }
+}
+
+.step-title{
+  font-size: 18px;
+  @include fontBold();
+  margin-bottom: 12px;
+}
+
+.step-title-infos{
+  max-width: 530px;
+  margin-bottom: 24px;
+}
+
+.step-content{
+  margin-bottom: 48px;
+}
+
+.step-actions{
+  display: flex;
+  position: fixed;
+  bottom: 0; left: 0;
+  z-index: 5;
+  width: 100%;
+  box-shadow: 0 -6px 10px var(--greyShadow);
+
+  .btn{
+    opacity: 1;
+    border-radius: 0;
+    width: 50%;
+  }
+}
+
+.form-resp-infos{
+  & > div{
+    background-color: var(--fond);
+    padding: 12px;
+    margin-bottom: 24px;
+    border-radius: 4px;
+
+    .line:last-child{
+      margin-bottom: 0;
+    }
+  }
+
+  .btn-add-phone{
+    padding: 4px 12px;
+    background-color: var(--alpha);
+    border-radius: 12px;
+    border: 1px solid var(--grey);
+    cursor: pointer;
+    box-shadow: 0 2px 6px var(--greyShadow);
+    color: var(--grey2);
+    transition: all 0.2s ease-in-out;
+    max-width: 146px;
+
+    &:hover{
+      border-color: var(--grey2);
+      color: var(--txt);
+    }
+  }
+}
+
+.link-to-myBooking{
+  margin-top: 24px;
+}
+
+.edit-booking{
+  .liste-review{
+    margin-bottom: 24px;
+  }
+}
+
+.search-booking{
+  margin: 0 auto;
+  max-width: 768px;
+  text-align: center;
+
+  h2{
+    margin-bottom: 8px;
+  }
+
+  .search-booking-infos{
+    margin-bottom: 48px;
+  }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .already-book{
+    flex-direction: row;
+
+    button{
+      width: auto
+    }
+
+    button:first-child{
+      margin-bottom: 0;
+      margin-right: 12px;
+    }
+  }
+}
+
+//                      __   _  ___ ____  _  _     __
+//                     | _| / |/ _ \___ \| || |   |_ |
+//    _____ _____ _____| |  | | | | |__) | || |_   | |_____ _____ _____
+//   |_____|_____|_____| |  | | |_| / __/|__   _|  | |_____|_____|_____|
+//                     | |  |_|\___/_____|  |_|    | |
+//                     |__|                       |__|
+@media (min-width: 1024px) {
+  .launch{
+    @include flex(row, flex-start, flex-start);
+    padding-top: 24px;
+  }
+
+  .explain{
+    width: 50%;
+  }
+  .starter{
+    margin-left: 48px;
+    width: calc(50% - 48px);
+  }
+
+  .step-actions{
+    position: relative;
+    bottom: auto; left: auto;
+    z-index: 1;
+    box-shadow: none;
+  }
+}

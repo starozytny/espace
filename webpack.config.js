@@ -56,6 +56,8 @@ Encore
     .addEntry('homepage', './assets/app/js/homepage.js')
     .addEntry('security', './assets/app/js/pages/security.js')
     .addEntry('contact', './assets/app/js/pages/contact.js')
+    .addEntry('booking', './assets/app/js/pages/booking.js')
+    .addEntry('visio', './assets/app/js/pages/visio.js')
 
     .addEntry('dashboard', './assets/dashboard/js/app.js')
     .addEntry('dashboard_homepage', './assets/dashboard/js/pages/homepage.js')

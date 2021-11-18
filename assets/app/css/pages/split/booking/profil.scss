@@ -1,0 +1,71 @@
+@import "../../../vars/vars";
+
+.choice-profil{
+  .item{
+    padding: 12px;
+    width: calc(100% - 24px);
+    text-align: center;
+    border: 1px dashed var(--grey);
+    color: var(--grey2);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    margin-bottom: 12px;
+    border-radius: 4px;
+    background-color: var(--alpha);
+
+    span{
+      display: inline-block;
+      transition: all 0.2s ease-in-out;
+    }
+
+    &.true, &:hover{
+      border-style: solid;
+      border-color: var(--txt);
+      color: var(--txt);
+    }
+    &.true{
+      border-color: var(--color0);
+      color: var(--color0);
+      background: var(--alpha);
+    }
+  }
+}
+
+.profil-content{
+  .form-group-error{
+    text-align: right;
+    width: 100%;
+
+    .error{
+      padding-right: 0;
+    }
+
+    .alert{
+      margin-bottom: 0;
+    }
+  }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .profil-content{
+    @include flex(row, flex-start, flex-start);
+    flex-wrap: wrap;
+
+    section{
+      width: calc(50% - 24px);
+    }
+
+    section:first-child{
+      margin-right: 24px;
+    }
+    section:nth-child(2){
+      margin-left: 24px;
+    }
+  }
+}

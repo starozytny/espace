@@ -1,0 +1,145 @@
+@import "../../../vars/vars";
+
+.role{
+  font-size: 12px;
+  background-color: var(--primaryShadow2);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-top: 8px;
+  display: inline-block;
+}
+
+input:disabled {
+  border: none;
+  padding-left: 0;
+}
+
+.add-eleve{
+  width: 100%;
+  min-height: calc(133px - 24px);
+  padding: 12px;
+  border-radius: 4px;
+  border: 1px dashed var(--txt);
+  background: var(--alpha);
+  box-shadow: 0 4px 10px var(--greyShadow);
+  opacity: 0.8;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  div{
+    @include flex(row, center, center);
+    transition: all 0.2s ease-in-out;
+
+    [class^="icon-"] {
+      font-size: 14px;
+      & + span{
+        display: inline-block;
+        margin-left: 4px;
+      }
+    }
+  }
+
+  &:hover{
+    opacity: 1;
+    border-style: solid;
+    box-shadow: 0 8px 16px var(--greyShadow);
+
+    div{
+      transform: scale(0.95);
+    }
+  }
+}
+
+.eleve, .responsable{
+  padding: 12px 12px 8px 12px;
+  background: var(--alpha);
+  border-radius: 4px;
+  box-shadow: 0 0 10px var(--greyShadow);
+  margin-bottom: 12px;
+
+  .eleve-infos{
+    .name{
+      @include fontSemibold();
+      margin-bottom: 4px;
+      word-break: break-all;
+    }
+
+    .email, .phone, .age{
+      opacity: 0.7;
+      font-size: 14px;
+      word-break: break-all;
+    }
+
+    .email + .phone{
+      margin-top: 2px;
+    }
+
+    .age{
+      margin-top: 4px;
+    }
+  }
+
+  .eleve-actions{
+    @include flex(row, center, space-between);
+    padding-top: 12px;
+    margin-top: 8px;
+    border-top: 1px solid var(--grey);
+
+    button{
+      width: 50%;
+    }
+  }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .liste-eleves{
+    overflow: hidden;
+  }
+  .eleve, .responsable{
+
+    .eleve-infos{
+      min-height: 76px;
+    }
+  }
+
+  .liste-eleves-container{
+    @include flex(row, stretch, flex-start);
+    flex-wrap: wrap;
+    width: calc(100% + 12px);
+
+    & > .eleve{
+      width: calc(33% - 34px);
+      margin-right: 12px;
+    }
+
+    .add-eleve{
+      width: calc(33% - 12px);
+      margin-right: 12px;
+      margin-bottom: 12px;
+    }
+  }
+}
+
+//                      __   _ ____  ___   ___    __
+//                     | _| / |___ \( _ ) / _ \  |_ |
+//    _____ _____ _____| |  | | __) / _ \| | | |  | |_____ _____ _____
+//   |_____|_____|_____| |  | |/ __/ (_) | |_| |  | |_____|_____|_____|
+//                     | |  |_|_____\___/ \___/   | |
+//                     |__|                      |__|
+@media (min-width:1280px) {
+  .liste-eleves-container{
+    & > .eleve{
+      width: calc(25% - 36px);
+    }
+
+    .add-eleve{
+      width: calc(25% - 12px);
+    }
+  }
+}

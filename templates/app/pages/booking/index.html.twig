@@ -1,0 +1,32 @@
+{% extends 'app/layout/layout.html.twig' %}
+
+{% block title %}Inscriptions {{ parent() }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('booking') }}
+{% endblock %}
+
+{% block h1 %}
+    <h1>
+        Réservation de tickets
+    </h1>
+    <p>
+        Les inscriptions aux cours et ateliers de musique auront lieu à la Cité de la musique
+        de Marseille, 4 rue Bernard du Bois, Marseille 1er arrondissement.
+    </p>
+{% endblock %}
+
+{% block main_content %}
+    <div class="main-content">
+        <div class="alert alert-danger" style="justify-content: center; background: #f5655a;">
+            <p style="color: #FFF;">Un <b>PASS SANITAIRE</b> valide vous sera demandé à l’entrée.</p>
+        </div>
+        <div id="booking" data-user="{{ app.user ? app.user.id : null }}" data-donnees="{{ donnees }}"></div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('booking') }}
+{% endblock %}

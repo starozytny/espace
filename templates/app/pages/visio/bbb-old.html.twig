@@ -1,0 +1,26 @@
+{% extends 'app/layout/layout.html.twig' %}
+
+{% block title %}BBB visioconférence{% endblock %}
+
+{% block noindex %}
+    <meta name="robots" content="noindex">
+    <meta name="googlebot" content="noindex">
+{% endblock %}
+
+{% block h1 %}
+    <h1>
+        Rejoindre {{ nameRoom }}
+    </h1>
+{#    <p>#}
+{#        {{ lesson ? "Cours de " ~ lesson.startString ~ " à " ~ (lesson.endString ? lesson.endString : "?") : ""}}#}
+{#    </p>#}
+{% endblock %}
+
+{% block main_content %}
+    <div id="join-bbb" data-name-room="{{ nameRoom }}" data-context="old"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('visio') }}
+{% endblock %}
