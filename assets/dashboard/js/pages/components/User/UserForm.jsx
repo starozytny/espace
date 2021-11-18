@@ -4,7 +4,7 @@ import axios                   from "axios";
 import toastr                  from "toastr";
 import Routing                 from '@publicFolder/bundles/fosjsrouting/js/router.min.js';
 
-import { Input, Checkbox }     from "@dashboardComponents/Tools/Fields";
+import {Input, Checkbox, Radiobox} from "@dashboardComponents/Tools/Fields";
 import { Alert }               from "@dashboardComponents/Tools/Alert";
 import { Button }              from "@dashboardComponents/Tools/Button";
 import { Drop }                from "@dashboardComponents/Tools/Drop";
@@ -38,7 +38,9 @@ export function UserFormulaire ({ type, onChangeContext, onUpdateList, element }
         lastname={element ? element.lastname : ""}
         email={element ? element.email : ""}
         avatar={element ? element.avatar : null}
-        roles={element ? element.roles : []}
+        center={element ? element.center : ""}
+        role={element ? element.highRoleCode : ""}
+        who={element ? (element.who ? element.who : "") : ""}
         onUpdateList={onUpdateList}
         onChangeContext={onChangeContext}
         messageSuccess={msg}
@@ -56,8 +58,10 @@ class Form extends Component {
             firstname: props.firstname,
             lastname: props.lastname,
             email: props.email,
-            roles: props.roles,
+            role: props.role,
             avatar: props.avatar,
+            center: props.center,
+            who: props.who,
             password: '',
             passwordConfirm: '',
             errors: [],
@@ -80,11 +84,6 @@ class Form extends Component {
         let name = e.currentTarget.name;
         let value = e.currentTarget.value;
 
-        const {roles} = this.state
-        if(name === "roles"){
-            value = Formulaire.updateValueCheckbox(e, roles, value);
-        }
-
         this.setState({[name]: value})
     }
 
@@ -92,7 +91,7 @@ class Form extends Component {
         e.preventDefault();
 
         const { context, url, messageSuccess } = this.props;
-        const { username, firstname, lastname, password, passwordConfirm, email, roles } = this.state;
+        const { username, firstname, lastname, password, passwordConfirm, email, role, center, who } = this.state;
 
         this.setState({ success: false})
 
@@ -101,7 +100,7 @@ class Form extends Component {
             {type: "text", id: 'firstname', value: firstname},
             {type: "text", id: 'lastname',  value: lastname},
             {type: "email", id: 'email',    value: email},
-            {type: "array", id: 'roles',    value: roles}
+            {type: "text",  id: 'role',     value: role}
         ];
         if(context === "create"){
             if(password !== ""){
@@ -109,6 +108,18 @@ class Form extends Component {
                     ...[{type: "password", id: 'password', value: password, idCheck: 'passwordConfirm', valueCheck: passwordConfirm}]
                 ];
             }
+        }
+
+        if(parseInt(role) === 6){
+            paramsToValidate = [...paramsToValidate,
+                ...[{type: "text", id: 'center', value: center}]
+            ];
+        }
+
+        if(parseInt(role) === 4){
+            paramsToValidate = [...paramsToValidate,
+                ...[{type: "text", id: 'who', value: who}]
+            ];
         }
 
         let avatar = this.inputAvatar.current.drop.current.files;
@@ -140,9 +151,11 @@ class Form extends Component {
                             firstname: '',
                             lastname: '',
                             email: '',
-                            roles: [],
+                            role: [],
                             password: '',
                             passwordConfirm: '',
+                            center: '',
+                            who: ''
                         })
                     }
                 })
@@ -158,17 +171,40 @@ class Form extends Component {
 
     render () {
         const { context } = this.props;
-        const { errors, success, username, firstname, lastname, email, password, passwordConfirm, roles, avatar } = this.state;
+        const { errors, success, username, firstname, lastname, email, password, passwordConfirm, role, avatar, center, who } = this.state;
 
         let rolesItems = [
-            { value: 'ROLE_ADMIN', label: 'Admin',          identifiant: 'admin' },
-            { value: 'ROLE_USER',  label: 'Utilisateur',    identifiant: 'utilisateur' },
-        ]
+            { value: 2,  label: 'Admin',          identifiant: 'admin' },
+            { value: 6,  label: 'Manager',        identifiant: 'manager' },
+            { value: 3,  label: 'Enseignant',     identifiant: 'enseignant' },
+            { value: 4,  label: 'Responsable',    identifiant: 'responsable' },
+        ];
+
+        let choiceCenter;
+        if(parseInt(role) === 6){
+            choiceCenter = [
+                { 'value': 1,  'label': 'Espace Velten', 'identifiant': 'espace-velten' },
+                { 'value': 2,  'label': 'Copello', 'identifiant': 'copello' },
+                { 'value': 3,  'label': 'Magalone', 'identifiant': 'magalone' },
+                { 'value': 4,  'label': 'Trois Lucs', 'identifiant': 'trois-lucs' },
+                { 'value': 5,  'label': 'Oasis', 'identifiant': 'oasis' },
+                { 'value': 6,  'label': 'Echelle 13', 'identifiant': 'echelle-13' },
+                { 'value': 7,  'label': 'Opus', 'identifiant': 'opus' },
+                { 'value': 8,  'label': 'Pauline', 'identifiant': 'pauline' },
+                { 'value': 9,  'label': 'Baille-sainte Cecile', 'identifiant': 'Baille-st-cecile' },
+                { 'value': 10, 'label': 'Velten-Cite', 'identifiant': 'velten-cite' },
+            ];
+        }
 
         return <>
             <p className="form-infos">
                 Le nom d'utilisateur est automatiquement formaté, les espaces et les accents sont supprimés ou remplacés.
             </p>
+
+            <Alert type="reverse">
+                Les ajouts et modifications via ce formulaire ne sont pas répercutées sur le logiciel Cursus.
+            </Alert>
+
             <form onSubmit={this.handleSubmit}>
 
                 {success !== false && <Alert type="info">{success}</Alert>}
@@ -184,7 +220,7 @@ class Form extends Component {
                 </div>
 
                 <div className="line line-2">
-                    <Checkbox items={rolesItems} identifiant="roles" valeur={roles} errors={errors} onChange={this.handleChange}>Roles</Checkbox>
+                    <Radiobox items={rolesItems} identifiant="role" valeur={role} errors={errors} onChange={this.handleChange}>Role</Radiobox>
 
                     <Drop ref={this.inputAvatar} identifiant="avatar" file={avatar} folder="avatars" errors={errors} accept={"image/*"} maxFiles={1}
                           label="Téléverser un avatar" labelError="Seules les images sont acceptées.">Fichier</Drop>
@@ -212,6 +248,14 @@ class Form extends Component {
                         <Input type="password" valeur={passwordConfirm} identifiant="passwordConfirm" errors={errors} onChange={this.handleChange} >Confirmer le mot de passe</Input>
                     </div>
                 </> : <Alert type="warning">Le mot de passe est modifiable exclusivement par l'utilisateur lui même grâce à la fonction <u>Mot de passe oublié ?</u></Alert>}
+
+                {choiceCenter && <div className="line">
+                    <Radiobox items={choiceCenter} identifiant="center" valeur={center} errors={errors} onChange={this.handleChange}>Centre</Radiobox>
+                </div>}
+
+                {parseInt(role) === 4 && <div className="line">
+                    <Input valeur={who} identifiant="who" errors={errors} onChange={this.handleChange} type="number">Qui ?</Input>
+                </div>}
 
                 <div className="line">
                     <div className="form-button">

@@ -28,6 +28,10 @@ class User extends DataEntity implements UserInterface, PasswordAuthenticatedUse
     const CODE_ROLE_USER = 0;
     const CODE_ROLE_DEVELOPER = 1;
     const CODE_ROLE_ADMIN = 2;
+    const CODE_ROLE_TEACHER = 3;
+    const CODE_ROLE_RESPONSABLE = 4;
+    const CODE_ROLE_STUDENT = 5;
+    const CODE_ROLE_MANAGER = 6;
 
     /**
      * @ORM\Id
@@ -46,8 +50,17 @@ class User extends DataEntity implements UserInterface, PasswordAuthenticatedUse
     private $username;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank()
+     * @ORM\Column(type="boolean")
+     */
+    private $fullAncien = false;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $who = 0;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\Email()
      * @Groups({"admin:read", "user:read"})
      */
@@ -117,6 +130,21 @@ class User extends DataEntity implements UserInterface, PasswordAuthenticatedUse
     private $notifications;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $fromWeb = true;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isSync = false;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $center;
+
+    /**
      * @throws Exception
      */
     public function __construct()
@@ -175,8 +203,8 @@ class User extends DataEntity implements UserInterface, PasswordAuthenticatedUse
      */
     public function getHighRole(): string
     {
-        $rolesSortedByImportance = ['ROLE_DEVELOPER', 'ROLE_ADMIN', 'ROLE_USER'];
-        $rolesLabel = ['Développeur', 'Administrateur', 'Utilisateur'];
+        $rolesSortedByImportance = ['ROLE_DEVELOPER', 'ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_TEACHER', 'ROLE_RESPONSABLE', 'ROLE_STUDENT', 'ROLE_USER'];
+        $rolesLabel = ['Développeur', 'Administrateur', 'Manager', 'Enseignant', 'Responsable', 'Eleve', 'Utilisateur'];
         $i = 0;
         foreach ($rolesSortedByImportance as $role)
         {
@@ -203,6 +231,15 @@ class User extends DataEntity implements UserInterface, PasswordAuthenticatedUse
                 return self::CODE_ROLE_DEVELOPER;
             case 'Administrateur':
                 return self::CODE_ROLE_ADMIN;
+            case 'Enseignant':
+                return self::CODE_ROLE_TEACHER;
+            case 'Responsable':
+            case 'Responsable ancien':
+                return self::CODE_ROLE_RESPONSABLE;
+            case 'Eleve':
+                return self::CODE_ROLE_STUDENT;
+            case 'Manager':
+                return self::CODE_ROLE_MANAGER;
             default:
                 return self::CODE_ROLE_USER;
         }
@@ -245,7 +282,7 @@ class User extends DataEntity implements UserInterface, PasswordAuthenticatedUse
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
 
@@ -425,5 +462,65 @@ class User extends DataEntity implements UserInterface, PasswordAuthenticatedUse
     public function getUserIdentifier(): string
     {
         return (string) $this->username;
+    }
+
+    public function getFromWeb(): ?bool
+    {
+        return $this->fromWeb;
+    }
+
+    public function setFromWeb(bool $fromWeb): self
+    {
+        $this->fromWeb = $fromWeb;
+
+        return $this;
+    }
+
+    public function getFullAncien(): ?bool
+    {
+        return $this->fullAncien;
+    }
+
+    public function setFullAncien(bool $fullAncien): self
+    {
+        $this->fullAncien = $fullAncien;
+
+        return $this;
+    }
+
+    public function getWho(): ?int
+    {
+        return $this->who;
+    }
+
+    public function setWho(int $who): self
+    {
+        $this->who = $who;
+
+        return $this;
+    }
+
+    public function getIsSync(): ?bool
+    {
+        return $this->isSync;
+    }
+
+    public function setIsSync(bool $isSync): self
+    {
+        $this->isSync = $isSync;
+
+        return $this;
+    }
+
+    public function getCenter(): ?int
+    {
+        return $this->center;
+    }
+
+    public function setCenter(?int $center): self
+    {
+        $this->center = $center;
+
+        return $this;
     }
 }

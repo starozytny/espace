@@ -7,16 +7,20 @@ import { Selector }     from "@dashboardComponents/Layout/Selector";
 
 export class UserItem extends Component {
     render () {
-        const { developer, elem, onChangeContext, onDelete, onSelectors } = this.props
+        const { developer, elem, onChangeContext, onDelete, onSelectors, onRegenerate } = this.props
 
         let routeName = 'user_homepage'
         if(elem.highRoleCode === 2){
             routeName = 'admin_homepage'
+        }else if(elem.highRoleCode === 3){
+            routeName = 'teacher_homepage'
+        }else if(elem.highRoleCode === 4){
+            routeName = 'responsable_homepage'
         }
 
         let url = Routing.generate(routeName, {'_switch_user' : elem.username})
 
-        let avatar = (elem.avatar) ? avatar = "/avatars/" + elem.avatar : `https://robohash.org/${elem.username}?size=64x64`;
+        let avatar = (elem.avatar) ? "/avatars/" + elem.avatar : `https://robohash.org/${elem.username}?size=64x64`;
 
         return <div className="item">
             <Selector id={elem.id} onSelectors={onSelectors} />
@@ -36,15 +40,16 @@ export class UserItem extends Component {
                         </div>
                         <div className="col-2">
                             <div className="sub sub-username">{elem.username}</div>
-                            {elem.email !== "undefined@undefined.fr" ? <div className="sub">{elem.email}</div> : <div className="sub txt-danger"><span className="icon-warning" /> {elem.email}</div>}
+                            {elem.email ? <div className="sub">{elem.email}</div> : <div className="sub txt-danger"><span className="icon-warning" /> {elem.email}</div>}
                         </div>
                         <div className="col-3 actions">
                             {elem.highRoleCode !== 1 &&
                             <>
-                                <ButtonIcon icon="vision" onClick={() => onChangeContext("read", elem)}>Profil</ButtonIcon>
+                                {/*<ButtonIcon icon="vision" onClick={() => onChangeContext("read", elem)}>Profil</ButtonIcon>*/}
                                 <ButtonIcon icon="pencil" onClick={() => onChangeContext("update", elem)}>Modifier</ButtonIcon>
                                 <ButtonIcon icon="trash" onClick={() => onDelete(elem)}>Supprimer</ButtonIcon>
                                 {developer === 1 && <ButtonIcon icon="share" element="a" target="_blank" onClick={url}>Imiter</ButtonIcon>}
+                                <ButtonIcon icon="settings" onClick={() => onRegenerate(elem)}>Regénérer un mot de passe</ButtonIcon>
                             </>
                             }
                         </div>

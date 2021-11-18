@@ -141,6 +141,7 @@ export class User extends Component {
                          sorters={sorters}
                          onSorter={this.handleSorter}
                          //data
+                         onRegenerate={this.handleRegenPassword}
                          data={currentData} />
     }
 

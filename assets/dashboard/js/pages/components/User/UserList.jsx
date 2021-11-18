@@ -27,13 +27,16 @@ export class UserList extends Component {
         const { taille, data, perPage, onChangeContext, onGetFilters, filters, onSearch, onDeleteAll, onPerPage,
             onPaginationClick, currentPage, sorters, onSorter } = this.props;
 
-        let filtersLabel = ["Utilisateur", "Développeur", "Administrateur"];
-        let filtersId    = ["f-user", "f-dev", "f-admin"];
+        let filtersLabel = ["Utilisateur", "Développeur", "Administrateur", "Enseignant", "Responsable", "Eleve", "Manager",];
+        let filtersId    = ["f-user", "f-dev", "f-admin", "f-enseignant", 'f-responsable', 'f-eleve', 'f-manager',];
 
         let itemsFilter = [
             { value: 0, id: filtersId[0], label: filtersLabel[0]},
-            { value: 1, id: filtersId[1], label: filtersLabel[1] },
-            { value: 2, id: filtersId[2], label: filtersLabel[2]}
+            { value: 1, id: filtersId[1], label: filtersLabel[1]},
+            { value: 2, id: filtersId[2], label: filtersLabel[2]},
+            { value: 3, id: filtersId[3], label: filtersLabel[3]},
+            { value: 4, id: filtersId[4], label: filtersLabel[4]},
+            { value: 5, id: filtersId[5], label: filtersLabel[5]},
         ];
 
         let dropdownItems = [

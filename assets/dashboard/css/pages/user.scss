@@ -43,6 +43,12 @@
   .sub.txt-danger{
     opacity: 1;
   }
+
+  .actions{
+    .icon-settings + .tooltip{
+      width: 144px;
+    }
+  }
 }
 
 .user-read-infos{

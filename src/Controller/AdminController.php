@@ -84,11 +84,33 @@ class AdminController extends AbstractController
     }
 
     /**
+     * @Route("/utilisateurs", options={"expose"=true}, name="users_index_full")
+     */
+    public function usersFull(Request $request, SerializerInterface $serializer): Response
+    {
+        return $this->getRenderView($request, $serializer, User::class, 'admin/pages/user/index.html.twig');
+    }
+
+    /**
      * @Route("/utilisateurs", name="users_index")
      */
     public function users(Request $request, SerializerInterface $serializer): Response
     {
-        return $this->getRenderView($request, $serializer, User::class, 'admin/pages/user/index.html.twig');
+        $em = $this->getDoctrine()->getManager();
+        $objs = $em->getRepository(User::class)->findBy(['fullAncien' => false]);
+
+        $objs =  $serializer->serialize($objs, 'json', ['groups' => User::ADMIN_READ]);
+        $search = $request->query->get('search');
+        if($search){
+            return $this->render('admin/pages/user/index.html.twig', [
+                'donnees' => $objs,
+                'search' => $search
+            ]);
+        }
+
+        return $this->render('admin/pages/user/index.html.twig', [
+            'donnees' => $objs
+        ]);
     }
 
     /**

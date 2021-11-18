@@ -12,7 +12,6 @@ function switchFunction(type, search, v) {
     switch (type) {
         case "user":
             if(v.username.toLowerCase().startsWith(search)
-                || v.email.toLowerCase().startsWith(search)
                 || v.firstname.toLowerCase().startsWith(search)
                 || v.lastname.toLowerCase().startsWith(search)
             ){
