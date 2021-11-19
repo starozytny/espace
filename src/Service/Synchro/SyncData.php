@@ -21,6 +21,7 @@ use App\Service\Synchro\Table\SyncClasseSlot;
 use App\Service\Synchro\Table\SyncClassroom;
 use App\Service\Synchro\Table\SyncCycle;
 use App\Service\Synchro\Table\SyncEleve;
+use App\Service\Synchro\Table\SyncLesson;
 use App\Service\Synchro\Table\SyncLevel;
 use App\Service\Synchro\Table\SyncResponsable;
 use App\Service\Synchro\Table\SyncSlot;
@@ -51,13 +52,14 @@ class SyncData
     private $syncClasse;
     private $syncClasseSlot;
     private $syncClasseSemi;
+    private $syncLesson;
 
     public function __construct(DatabaseService $databaseService, Sync $sync,
                                 SyncCenter $syncCenter, SyncTeacher $syncTeacher, SyncResponsable $syncResponsable,
                                 SyncEleve $syncEleve, SyncActivity $syncActivity, SyncCycle $syncCycle,
                                 SyncLevel $syncLevel, SyncClassroom $syncClassroom, SyncSlot $syncSlot,
                                 SyncSlotMissing $syncSlotMissing, SyncClasse $syncClasse,
-                                SyncClasseSlot $syncClasseSlot, SyncClasseSemi $syncClasseSemi)
+                                SyncClasseSlot $syncClasseSlot, SyncClasseSemi $syncClasseSemi, SyncLesson $syncLesson)
     {
         $this->em = $databaseService->getEm();
         $this->emWindev = $databaseService->getEmWindev();
@@ -76,6 +78,7 @@ class SyncData
         $this->syncClasse = $syncClasse;
         $this->syncClasseSlot = $syncClasseSlot;
         $this->syncClasseSemi = $syncClasseSemi;
+        $this->syncLesson = $syncLesson;
     }
 
     /**
@@ -102,20 +105,22 @@ class SyncData
             $data0 = $this->em->getRepository(CiSlot::class)->findAll();
             $windevData = $items;
             switch ($name){
+                case "lessons":
+                    $data0 = [];
+                    $syncFunction = $this->syncLesson;
+                    break;
                 case "classesSemi":
                     $cycle = $this->em->getRepository(CiCycle::class)->findOneBy(['oldId' => 1]);
                     $cycleSemi = $this->em->getRepository(CiCycle::class)->findOneBy(['oldId' => 5]);
                     $items = $this->em->getRepository(CiClasse::class)->findBy(['cycle' => $cycle]);
                     $data1 = $this->em->getRepository(CiClasse::class)->findAll();
                     $data0 = $this->em->getRepository(CiClasse::class)->findBy(['cycle' => $cycleSemi]);
-
                     $syncFunction = $this->syncClasseSemi;
                     break;
                 case "classes":
                     $data0 = $this->em->getRepository(CiClasse::class)->findAll();
                     $windevData = $this->emWindev->getRepository(WindevAdhact::class)->findAll();
                     $noDuplication = $usedData;
-
                     $syncFunction = $this->syncClasse;
                     break;
                 case "classesSlots":

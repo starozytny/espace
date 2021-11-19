@@ -52,13 +52,14 @@ class SyncSlotMissing extends Sync
 
         /** @var WindevCours $cours */
         $cours = $this->getExisteFromId($items, $item->getCocleunik());
-        $planning = $plannings[1];
-        
-        // Check des slots déjà créés par adhact existe
-        /** @var CiSlot $slot */
-        $slot = $this->getExisteFromOldAdhactId($slots, $oldId);
+        $planning = $plannings[1]; //actual
 
         if($cours && $cours->getJour() != -1){
+            // Check des slots déjà créés par adhact existe
+
+            /** @var CiSlot $slot */
+            $slot = $this->getExisteFromOldAdhactId($slots, $oldId);
+
             //si existe, on met à jours les infos
             if($slot){
                 $slot = $this->createSlotIfNoExiste($oldId, $slot, $slot->getIdentifiant(), $cours, $planning, $slots,

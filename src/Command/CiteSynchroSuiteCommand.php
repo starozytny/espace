@@ -3,9 +3,11 @@
 namespace App\Command;
 
 use App\Entity\Cite\CiClasse;
+use App\Entity\Cite\CiPlanning;
 use App\Entity\Cite\CiSlot;
 use App\Service\DatabaseService;
 use App\Service\Synchro\SyncData;
+use App\Windev\WindevAdhact;
 use App\Windev\WindevCours;
 use Exception;
 use Symfony\Component\Console\Command\Command;
@@ -40,6 +42,9 @@ class CiteSynchroSuiteCommand extends Command
         $used = $this->syncData->synchroSpecial($output, $io, $this->getDataEm($io, CiSlot::class,"classesSlots"),"classesSlots");
         $this->syncData->synchroSpecial($output, $io, $this->getData($io, WindevCours::class,"classes"),"classes", [], $used);
         $this->syncData->synchroSpecial($output, $io, $this->getDataEm($io, CiClasse::class,"classesSemi"),"classesSemi");
+
+        $planning = $this->em->getRepository(CiPlanning::class)->findOneBy(['isActual' => true]);
+        $this->syncData->synchroSpecial($output, $io, $this->getData($io, WindevAdhact::class,"lessons"),"lessons", [null, $planning]);
 
         return Command::SUCCESS;
     }
