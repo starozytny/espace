@@ -65,25 +65,6 @@ class AdminController extends AbstractController
     }
 
     /**
-     * @Route("/styleguide/html", name="styleguide_html")
-     */
-    public function styleguideHtml(): Response
-    {
-        return $this->render('admin/pages/styleguide/index.html.twig');
-    }
-
-    /**
-     * @Route("/styleguide/react", options={"expose"=true}, name="styleguide_react")
-     */
-    public function styleguideReact(Request  $request): Response
-    {
-        if($request->isMethod("POST")){
-            return new JsonResponse(['code' => true]);
-        }
-        return $this->render('admin/pages/styleguide/react.html.twig');
-    }
-
-    /**
      * @Route("/tous-les-utilisateurs", options={"expose"=true}, name="users_index_full")
      */
     public function usersFull(Request $request, SerializerInterface $serializer): Response
@@ -111,6 +92,25 @@ class AdminController extends AbstractController
         return $this->render('admin/pages/user/index.html.twig', [
             'donnees' => $objs
         ]);
+    }
+
+    /**
+     * @Route("/styleguide/html", name="styleguide_html")
+     */
+    public function styleguideHtml(): Response
+    {
+        return $this->render('admin/pages/styleguide/index.html.twig');
+    }
+
+    /**
+     * @Route("/styleguide/react", options={"expose"=true}, name="styleguide_react")
+     */
+    public function styleguideReact(Request  $request): Response
+    {
+        if($request->isMethod("POST")){
+            return new JsonResponse(['code' => true]);
+        }
+        return $this->render('admin/pages/styleguide/react.html.twig');
     }
 
     /**
