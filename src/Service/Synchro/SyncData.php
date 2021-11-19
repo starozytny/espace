@@ -118,6 +118,7 @@ class SyncData
                     $syncFunction = $this->syncClasse;
                     break;
                 case "classesSlots":
+                    dump(count($items));
                     $data0 = $this->em->getRepository(CiClasse::class)->findAll();
                     $syncFunction = $this->syncClasseSlot;
                     break;
