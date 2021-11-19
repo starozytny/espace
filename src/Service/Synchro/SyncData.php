@@ -4,6 +4,7 @@ namespace App\Service\Synchro;
 
 use App\Entity\Cite\CiActivity;
 use App\Entity\Cite\CiCenter;
+use App\Entity\Cite\CiClasse;
 use App\Entity\Cite\CiClassroom;
 use App\Entity\Cite\CiCycle;
 use App\Entity\Cite\CiEleve;
@@ -14,6 +15,8 @@ use App\Entity\Cite\CiTeacher;
 use App\Service\DatabaseService;
 use App\Service\Synchro\Table\SyncActivity;
 use App\Service\Synchro\Table\SyncCenter;
+use App\Service\Synchro\Table\SyncClasse;
+use App\Service\Synchro\Table\SyncClasseSlot;
 use App\Service\Synchro\Table\SyncClassroom;
 use App\Service\Synchro\Table\SyncCycle;
 use App\Service\Synchro\Table\SyncEleve;
@@ -43,12 +46,14 @@ class SyncData
     private $syncClassroom;
     private $syncSlot;
     private $syncSlotMissing;
+    private $syncClasse;
+    private $syncClasseSlot;
 
     public function __construct(DatabaseService $databaseService, Sync $sync,
                                 SyncCenter $syncCenter, SyncTeacher $syncTeacher, SyncResponsable $syncResponsable,
                                 SyncEleve $syncEleve, SyncActivity $syncActivity, SyncCycle $syncCycle,
                                 SyncLevel $syncLevel, SyncClassroom $syncClassroom, SyncSlot $syncSlot,
-                                SyncSlotMissing $syncSlotMissing)
+                                SyncSlotMissing $syncSlotMissing, SyncClasse $syncClasse, SyncClasseSlot $syncClasseSlot)
     {
         $this->em = $databaseService->getEm();
         $this->emWindev = $databaseService->getEmWindev();
@@ -64,6 +69,8 @@ class SyncData
         $this->syncClassroom = $syncClassroom;
         $this->syncSlot = $syncSlot;
         $this->syncSlotMissing = $syncSlotMissing;
+        $this->syncClasse = $syncClasse;
+        $this->syncClasseSlot = $syncClasseSlot;
     }
 
     /**
@@ -172,6 +179,11 @@ class SyncData
             $data1 = [];
             $isAncien = false;
             switch ($name){
+                case "classesSlots":
+                    $data1 = [];
+                    $data0 = $this->em->getRepository(CiClasse::class)->findAll();
+                    $syncFunction = $this->syncClasseSlot;
+                    break;
                 case "salles":
                     $data1 = $this->em->getRepository(CiCenter::class)->findAll();
                     $data0 = $this->em->getRepository(CiClassroom::class)->findAll();
@@ -232,10 +244,17 @@ class SyncData
                             break;
                         case 2:
                             $updated++;
-                            array_push($updatedArray, $result['data']);
+                            if($name == "classeSlots"){
+                                array_push($data1, $result['noDuplication']);
+                            }else{
+                                array_push($updatedArray, $result['data']);
+                            }
                             break;
                         case 1:
                             $created++;
+                            if($name == "classeSlots"){
+                                array_push($data1, $result['noDuplication']);
+                            }
                             break;
                         case 0:
                             array_push($errors, $result['data']);

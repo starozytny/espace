@@ -67,9 +67,15 @@ class CiCycle
      */
     private $slots;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CiClasse::class, mappedBy="cycle")
+     */
+    private $classes;
+
     public function __construct()
     {
         $this->slots = new ArrayCollection();
+        $this->classes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -185,6 +191,36 @@ class CiCycle
             // set the owning side to null (unless already changed)
             if ($slot->getCycle() === $this) {
                 $slot->setCycle(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CiClasse[]
+     */
+    public function getClasses(): Collection
+    {
+        return $this->classes;
+    }
+
+    public function addClass(CiClasse $class): self
+    {
+        if (!$this->classes->contains($class)) {
+            $this->classes[] = $class;
+            $class->setCycle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClass(CiClasse $class): self
+    {
+        if ($this->classes->removeElement($class)) {
+            // set the owning side to null (unless already changed)
+            if ($class->getCycle() === $this) {
+                $class->setCycle(null);
             }
         }
 

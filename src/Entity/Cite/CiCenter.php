@@ -39,10 +39,16 @@ class CiCenter
      */
     private $slots;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CiClasse::class, mappedBy="center")
+     */
+    private $classes;
+
     public function __construct()
     {
         $this->classrooms = new ArrayCollection();
         $this->slots = new ArrayCollection();
+        $this->classes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -128,6 +134,36 @@ class CiCenter
             // set the owning side to null (unless already changed)
             if ($slot->getCenter() === $this) {
                 $slot->setCenter(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CiClasse[]
+     */
+    public function getClasses(): Collection
+    {
+        return $this->classes;
+    }
+
+    public function addClass(CiClasse $class): self
+    {
+        if (!$this->classes->contains($class)) {
+            $this->classes[] = $class;
+            $class->setCenter($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClass(CiClasse $class): self
+    {
+        if ($this->classes->removeElement($class)) {
+            // set the owning side to null (unless already changed)
+            if ($class->getCenter() === $this) {
+                $class->setCenter(null);
             }
         }
 

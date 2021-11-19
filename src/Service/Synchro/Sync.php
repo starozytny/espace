@@ -4,6 +4,7 @@ namespace App\Service\Synchro;
 
 use App\Entity\Cite\CiActivity;
 use App\Entity\Cite\CiCenter;
+use App\Entity\Cite\CiClasse;
 use App\Entity\Cite\CiClassroom;
 use App\Entity\Cite\CiCycle;
 use App\Entity\Cite\CiLevel;
@@ -167,5 +168,133 @@ class Sync
             ->setIsActual($planning->getIsActual())
             ->setIdentifiant($identifiant)
         ;
+    }
+
+    /**
+     * @param CiClasse[] $data
+     */
+    private function getExisteClasse(array $data, $teacherId, $centerId, $activityId, $cycleId, $levelId): ?CiClasse
+    {
+        foreach($data as $el){
+            if($el->getTeacher()->getId() == $teacherId
+                && $el->getCenter()->getId() == $centerId
+                && $el->getActivity()->getId() == $activityId
+                && (($cycleId && $el->getCycle() && $el->getCycle()->getId() == $cycleId) || ($cycleId == null && $el->getCycle() == null))
+                && (($levelId && $el->getLevel() && $el->getLevel()->getId() == $levelId) || ($levelId == null && $el->getLevel() == null))
+            ){
+                return $el;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param CiSlot $slot
+     * @param CiClasse[] $classes
+     * @param $noDuplication
+     * @return array|void
+     */
+    protected function createClasse(CiSlot $slot, array $classes, $noDuplication)
+    {
+        $teacher = $slot->getTeacher();
+        $center = $slot->getCenter();
+        $activity = $slot->getActivity();
+        $cycle = $slot->getCycle();
+        $level = $slot->getLevel();
+
+        $teacherId = $teacher->getId();
+        $centerId = $center->getId();
+        $activityId = $activity->getId();
+        $cycleId = $cycle ? $cycle->getId() : null;
+        $levelId = $level ? $level->getId() : null;
+
+        $unicite = [$teacherId, $centerId, $activityId, $cycleId, $levelId];
+
+        if(!in_array($unicite, $noDuplication)){
+            array_push($noDuplication, $unicite);
+
+            // Check if classe already existe
+            $classe = $this->getExisteClasse($classes, $teacherId, $centerId, $activityId, $cycleId, $levelId);
+            if($classe){
+                $status = 2;
+            }else{
+                $classe = new CiClasse();
+                $status = 1;
+            }
+
+            $nameCycle = ''; $nameLevel = '';
+
+            $isFm           = $activity->getDepartement() == "Formation musicale";
+
+            $nameActivity   = $activity->getName();
+            $max            = $activity->getMax();
+            $mode           = $activity->getMode();
+            $duration       = $activity->getDuration();
+            $durationTotal  = $activity->getDurationTotal();
+
+            if($activity->getDepartement() == "Formation musicale" && $max == 0){
+                $max = 80;
+            }
+
+            if($cycle){
+                $nameCycle  = ' - ' . $cycle->getName();
+                $mode       = $cycle->getMode();
+                if($mode != 0){
+                    $max            = $cycle->getMax();
+                    $duration       = $cycle->getDuration();
+                    $durationTotal  = $cycle->getDurationTotal();
+                }
+
+                //Si cycle EVEIL 1EA or 2EA add different duration from Yolaine
+                if($isFm){
+                    if($cycle->getOldId() === 22 && $level){
+                        if($level->getOldId() == 11 || $level->getOldId() == 17){
+                            $duration = date_create_from_format('H:i:s', '00:45:00');
+                        }else{
+                            $duration = date_create_from_format('H:i:s', '01:00:00');
+                        }
+                        $max = 15;
+                        $durationTotal = $duration;
+
+                        //Si cycle 1 1EA or 2EA // same for ADOS // add different duration from Yolaine
+                    }elseif($cycle->getOldId() === 23 && $level){
+                        if($level->getOldId() == 11  || $level->getOldId() == 17
+                            || $level->getOldId() == 73 || $level->getOldId() == 74){
+                            $duration = date_create_from_format('H:i:s', '01:00:00');
+                        }else{
+                            $duration = date_create_from_format('H:i:s', '01:30:00');
+                        }
+                        $max = 12;
+                        $durationTotal = $duration;
+                    }
+                }
+            }
+
+            if($level){
+                $nameLevel = ' - ' . $level->getName();
+            }
+
+            $name = $nameActivity . $nameCycle . $nameLevel;
+
+            /** @var CiClasse $classe */
+            $classe = ($classe)
+                ->setName($name)
+                ->setActivity($activity)
+                ->setCycle($cycle)
+                ->setTeacher($teacher)
+                ->setDuration($duration)
+                ->setDurationTotal($durationTotal)
+                ->setMode($mode)
+                ->setMax($max)
+                ->setLevel($level)
+                ->setCenter($center)
+                ->setIsFm($isFm)
+            ;
+
+            $this->em->persist($classe);
+
+            return ['code' => 1, 'status' => $status, 'data' => $name, 'noDuplication' => $noDuplication];
+        }
     }
 }

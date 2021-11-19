@@ -34,9 +34,15 @@ class CiLevel
      */
     private $slots;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CiClasse::class, mappedBy="level")
+     */
+    private $classes;
+
     public function __construct()
     {
         $this->slots = new ArrayCollection();
+        $this->classes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -92,6 +98,36 @@ class CiLevel
             // set the owning side to null (unless already changed)
             if ($slot->getLevel() === $this) {
                 $slot->setLevel(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CiClasse[]
+     */
+    public function getClasses(): Collection
+    {
+        return $this->classes;
+    }
+
+    public function addClass(CiClasse $class): self
+    {
+        if (!$this->classes->contains($class)) {
+            $this->classes[] = $class;
+            $class->setLevel($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClass(CiClasse $class): self
+    {
+        if ($this->classes->removeElement($class)) {
+            // set the owning side to null (unless already changed)
+            if ($class->getLevel() === $this) {
+                $class->setLevel(null);
             }
         }
 
