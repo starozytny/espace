@@ -294,5 +294,7 @@ class Sync
 
             return ['code' => 1, 'status' => $status, 'data' => $noDuplication];
         }
+
+        return  ['code' => 0];
     }
 }

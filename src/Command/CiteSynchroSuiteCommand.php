@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Entity\Cite\CiClasse;
 use App\Entity\Cite\CiSlot;
 use App\Service\DatabaseService;
 use App\Service\Synchro\SyncData;
@@ -38,6 +39,7 @@ class CiteSynchroSuiteCommand extends Command
 
         $used = $this->syncData->synchroSpecial($output, $io, $this->getDataEm($io, CiSlot::class,"classesSlots"),"classesSlots");
         $this->syncData->synchroSpecial($output, $io, $this->getData($io, WindevCours::class,"classes"),"classes", [], $used);
+        $this->syncData->synchroSpecial($output, $io, $this->getDataEm($io, CiClasse::class,"classesSemi"),"classesSemi");
 
         return Command::SUCCESS;
     }

@@ -16,6 +16,7 @@ use App\Service\DatabaseService;
 use App\Service\Synchro\Table\SyncActivity;
 use App\Service\Synchro\Table\SyncCenter;
 use App\Service\Synchro\Table\SyncClasse;
+use App\Service\Synchro\Table\SyncClasseSemi;
 use App\Service\Synchro\Table\SyncClasseSlot;
 use App\Service\Synchro\Table\SyncClassroom;
 use App\Service\Synchro\Table\SyncCycle;
@@ -49,12 +50,14 @@ class SyncData
     private $syncSlotMissing;
     private $syncClasse;
     private $syncClasseSlot;
+    private $syncClasseSemi;
 
     public function __construct(DatabaseService $databaseService, Sync $sync,
                                 SyncCenter $syncCenter, SyncTeacher $syncTeacher, SyncResponsable $syncResponsable,
                                 SyncEleve $syncEleve, SyncActivity $syncActivity, SyncCycle $syncCycle,
                                 SyncLevel $syncLevel, SyncClassroom $syncClassroom, SyncSlot $syncSlot,
-                                SyncSlotMissing $syncSlotMissing, SyncClasse $syncClasse, SyncClasseSlot $syncClasseSlot)
+                                SyncSlotMissing $syncSlotMissing, SyncClasse $syncClasse,
+                                SyncClasseSlot $syncClasseSlot, SyncClasseSemi $syncClasseSemi)
     {
         $this->em = $databaseService->getEm();
         $this->emWindev = $databaseService->getEmWindev();
@@ -72,6 +75,7 @@ class SyncData
         $this->syncSlotMissing = $syncSlotMissing;
         $this->syncClasse = $syncClasse;
         $this->syncClasseSlot = $syncClasseSlot;
+        $this->syncClasseSemi = $syncClasseSemi;
     }
 
     /**
@@ -82,7 +86,7 @@ class SyncData
         $used = [];
         if($this->sync->haveData($io, $items)){
             $errors = []; $updatedArray = []; $noDuplication = [];
-            $total = 0; $created = 0; $notUsed = 0; $updated = 0;
+            $total = 0; $created = 0; $notUsed = 0; $updated = 0; $noUpdated = 0;
 
             $progressBar = new ProgressBar($output, count($items));
             $progressBar->start();
@@ -98,6 +102,15 @@ class SyncData
             $data0 = $this->em->getRepository(CiSlot::class)->findAll();
             $windevData = $items;
             switch ($name){
+                case "classesSemi":
+                    $cycle = $this->em->getRepository(CiCycle::class)->findOneBy(['oldId' => 1]);
+                    $cycleSemi = $this->em->getRepository(CiCycle::class)->findOneBy(['oldId' => 5]);
+                    $items = $this->em->getRepository(CiClasse::class)->findBy(['cycle' => $cycle]);
+                    $data1 = $this->em->getRepository(CiClasse::class)->findAll();
+                    $data0 = $this->em->getRepository(CiClasse::class)->findBy(['cycle' => $cycleSemi]);
+
+                    $syncFunction = $this->syncClasseSemi;
+                    break;
                 case "classes":
                     $data0 = $this->em->getRepository(CiClasse::class)->findAll();
                     $windevData = $this->emWindev->getRepository(WindevAdhact::class)->findAll();
@@ -134,33 +147,33 @@ class SyncData
                     if($result['code'] == 1){
                         $total++;
 
+                        if($result['status'] == 2){
+                            if($name == "slots" || $name == "classesSlots" || $name == "classesSemi") {
+                                array_push($used, $result['data']);
+
+                                if($name == "classesSlots" || $name == "classesSemi"){
+                                    $noDuplication = $result['data'];
+                                }
+                            }
+                        }
+
                         switch ($result['status']){
                             case 4:
-                                $total = $total + $result['total'];
+                                $total   = $total + $result['total'];
                                 $created = $created + $result['created'];
                                 $updated = $updated + $result['updated'];
                                 break;
+                            case 3:
+                                $noUpdated++;
+                                break;
                             case 2:
                                 $updated++;
-                                if($name == "slots" || $name == "classesSlots"){
-                                    array_push($used, $result['data']);
-
-                                    if($name == "classesSlots"){
-                                        array_push($noDuplication, $result['data']);
-                                    }
-                                }
                                 array_push($updatedArray, $result['data']);
                                 break;
                             case 1:
                                 $created++;
-                                if($name == "slots" || $name == "classesSlots"){
-                                    array_push($used, $result['data']);
-
-                                    if($name == "classesSlots"){
-                                        array_push($noDuplication, $result['data']);
-                                    }
-                                }else{
-                                    array_push($noDuplication, $result['data']);
+                                if($name != "slots" && $name == "classesSlots" & $name != "classesSemi"){
+                                    $noDuplication = $result['data'];
                                 }
                                 break;
                             case 0:
@@ -177,15 +190,16 @@ class SyncData
 
             $progressBar->finish();
 
-            $this->em->flush();
+//            $this->em->flush();
 
             $io->newLine();
             $this->sync->displayDataArray($io, $errors);
             $io->comment(sprintf("%d %s non utilisés.", $notUsed, $name));
             $io->comment(sprintf("%d %s mis à jour.", $updated, $name));
-            if($name != "classesSlots"){
+            if($name != "classesSlots" && $name != "classesSemi"){
                 $this->sync->displayDataArray($io, $updatedArray);
             }
+            $io->comment(sprintf("%d %s inchangés.", $noUpdated, $name));
             $io->comment(sprintf("%d / %d %s créés.", $created, $total, $name));
         }
 
