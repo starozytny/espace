@@ -69,8 +69,9 @@ class SyncData
     /**
      * @throws Exception
      */
-    public function synchroSlots($output, $io, $items, $name, $plannings, $used = [])
+    public function synchroSlots($output, $io, $items, $name, $plannings, $usedSlot = [], $usedAdhAct = [])
     {
+        $used = [];
         if($this->sync->haveData($io, $items)){
             $errors = []; $updatedArray = []; $noDuplication = [];
             $total = 0; $created = 0; $notUsed = 0; $updated = 0;
@@ -78,6 +79,9 @@ class SyncData
             $progressBar = new ProgressBar($output, count($items));
             $progressBar->start();
 
+            $data9 = $usedAdhAct;
+            $data8 = $usedSlot;
+            $data7 = $noDuplication;
             $data6 = $this->em->getRepository(CiClassroom::class)->findAll();
             $data5 = $this->em->getRepository(CiLevel::class)->findAll();
             $data4 = $this->em->getRepository(CiCycle::class)->findAll();
@@ -85,13 +89,16 @@ class SyncData
             $data2 = $this->em->getRepository(CiCenter::class)->findAll();
             $data1 = $this->em->getRepository(CiTeacher::class)->findAll();
             $data0 = $this->em->getRepository(CiSlot::class)->findAll();
+            $windevData = $items;
             switch ($name){
+                case "slotsDelete":
+                    $syncFunction = $this->syncSlotMissing;
+                    break;
                 case "slotsMissing":
                     $windevData = $this->emWindev->getRepository(WindevCours::class)->findAll();
                     $syncFunction = $this->syncSlotMissing;
                     break;
                 case "slots":
-                    $windevData = $items;
                     $syncFunction = $this->syncSlot;
                     break;
                 default:
@@ -105,7 +112,7 @@ class SyncData
 
                 for($i = 0 ; $i < count($letters) ; $i++){
                     $result = $syncFunction->synchronize($letters[$i], $item, $windevData, $plannings,
-                        $data0, $data1, $data2, $data3, $data4, $data5, $data6, $noDuplication);
+                        $data0, $data1, $data2, $data3, $data4, $data5, $data6, $data7, $data8, $data9);
 
                     if($result['code'] == 1){
                         $total++;
