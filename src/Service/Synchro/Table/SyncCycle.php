@@ -11,10 +11,10 @@ class SyncCycle extends Sync
     /**
      * @param WindevCycle $item
      * @param bool $isAncien
-     * @param $cycles
+     * @param CiCycle[] $cycles
      * @return array
      */
-    public function synchronize(WindevCycle $item, bool $isAncien, $cycles): array
+    public function synchronize(WindevCycle $item, bool $isAncien, array $cycles): array
     {
         /** @var CiCycle $cycle */
         if($item->getPlusutilise() == 0){

@@ -56,6 +56,69 @@ class SyncData
         $this->syncClassroom = $syncClassroom;
     }
 
+    public function synchroSlots($output, $io, $items, $name, $plannings)
+    {
+        if($this->sync->haveData($io, $items)){
+            $errors = []; $updatedArray = [];
+            $total = 0; $created = 0; $notUsed = 0; $updated = 0; $noUpdated = 0;
+
+            $progressBar = new ProgressBar($output, count($items));
+            $progressBar->start();
+
+            $data1 = [];
+            $isAncien = false;
+            switch ($name){
+                case "salles":
+                    $syncFunction = $this->syncClassroom;
+                    break;
+                default:
+                    return;
+            }
+
+            foreach($items as $item){
+                $progressBar->advance();
+
+                $result = $syncFunction->synchronize($item, $isAncien, $data0, $data1);
+
+                if($result['code'] == 1){
+                    $total++;
+
+                    switch ($result['status']){
+                        case 3:
+                            $noUpdated++;
+                            break;
+                        case 2:
+                            $updated++;
+                            array_push($updatedArray, $result['data']);
+                            break;
+                        case 1:
+                            $created++;
+                            break;
+                        case 0:
+                            array_push($errors, $result['data']);
+                            break;
+                        default:
+                            break;
+                    }
+                }else{
+                    $notUsed++;
+                }
+            }
+
+            $progressBar->finish();
+
+            $this->em->flush();
+
+            $io->newLine();
+            $this->sync->displayDataArray($io, $errors);
+            $io->comment(sprintf("%d %s non utilisés.", $notUsed, $name));
+            $io->comment(sprintf("%d %s mis à jour.", $updated, $name));
+            $this->sync->displayDataArray($io, $updatedArray);
+            $io->comment(sprintf("%d %s inchangés.", $noUpdated, $name));
+            $io->comment(sprintf("%d / %d %s créés.", $created, $total, $name));
+        }
+    }
+
     public function synchroData($output, $io, $items, $name)
     {
         if($this->sync->haveData($io, $items)){
@@ -102,7 +165,7 @@ class SyncData
                     break;
                 case "professeurs":
                     //Récupération des données des professeurs contenues dans la table windev personne
-                    $data1 = $this->getPersonnes($items);
+                    $data1 = $this->getPersonnes($items); //Windev[]
                     $data0 = $this->em->getRepository(CiTeacher::class)->findAll();
                     $syncFunction = $this->syncTeacher;
                     break;

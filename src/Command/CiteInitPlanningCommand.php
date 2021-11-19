@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\Cite\CiPlanning;
 use App\Service\DatabaseService;
 use App\Service\Synchro\SyncData;
+use App\Windev\WindevEmpltps;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -49,7 +50,7 @@ class CiteInitPlanningCommand extends Command
         $this->databaseService->resetTable($io, $list);
 
         $plannings = $this->createPlanning($io, $input->getArgument('year'));
-
+        $this->syncData->synchroSlots($output, $io, $this->getData($io, WindevEmpltps::class,"slots"),"slots", $plannings);
 
         return Command::SUCCESS;
     }

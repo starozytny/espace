@@ -11,10 +11,10 @@ class SyncLevel extends Sync
     /**
      * @param WindevNiveau $item
      * @param bool $isAncien
-     * @param $levels
+     * @param CiLevel[] $levels
      * @return array
      */
-    public function synchronize(WindevNiveau $item, bool $isAncien, $levels): array
+    public function synchronize(WindevNiveau $item, bool $isAncien, array $levels): array
     {
         /** @var CiLevel $level */
         if($item->getPlusutilise() == 0){

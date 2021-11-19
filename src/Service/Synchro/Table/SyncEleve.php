@@ -3,6 +3,7 @@
 namespace App\Service\Synchro\Table;
 
 use App\Entity\Cite\CiEleve;
+use App\Entity\Cite\CiResponsable;
 use App\Service\Synchro\Sync;
 
 class SyncEleve extends Sync
@@ -10,11 +11,11 @@ class SyncEleve extends Sync
     /**
      * @param $item
      * @param bool $isAncien
-     * @param $eleves
-     * @param $responsables
+     * @param CiEleve[] $eleves
+     * @param CiResponsable[] $responsables
      * @return array
      */
-    public function synchronize($item, bool $isAncien, $eleves, $responsables): array
+    public function synchronize($item, bool $isAncien, array $eleves, array $responsables): array
     {
         /** @var CiEleve $eleve */
         $msg = "";

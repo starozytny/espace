@@ -4,6 +4,7 @@ namespace App\Service\Synchro\Table;
 
 use App\Entity\Cite\CiTeacher;
 use App\Service\Synchro\Sync;
+use App\Windev\WindevPersonne;
 use App\Windev\WindevProfs;
 
 class SyncTeacher extends Sync
@@ -11,11 +12,11 @@ class SyncTeacher extends Sync
     /**
      * @param WindevProfs $item
      * @param bool $isAncien
-     * @param $teachers
-     * @param $persons
+     * @param CiTeacher[] $teachers
+     * @param WindevPersonne[] $persons
      * @return array
      */
-    public function synchronize(WindevProfs $item, bool $isAncien, $teachers, $persons): array
+    public function synchronize(WindevProfs $item, bool $isAncien, array $teachers, array $persons): array
     {
         /** @var CiTeacher $teacher */
         if($item->getPlusutilise() == 0){

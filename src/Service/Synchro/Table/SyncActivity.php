@@ -11,10 +11,10 @@ class SyncActivity extends Sync
     /**
      * @param WindevActivite $item
      * @param bool $isAncien
-     * @param $activities
+     * @param CiActivity[] $activities
      * @return array
      */
-    public function synchronize(WindevActivite $item, bool $isAncien, $activities): array
+    public function synchronize(WindevActivite $item, bool $isAncien, array $activities): array
     {
         /** @var CiActivity $activity */
         if($item->getPlusutilise() == 0){

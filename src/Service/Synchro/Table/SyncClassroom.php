@@ -2,6 +2,7 @@
 
 namespace App\Service\Synchro\Table;
 
+use App\Entity\Cite\CiCenter;
 use App\Entity\Cite\CiClassroom;
 use App\Service\Synchro\Sync;
 use App\Windev\WindevSalle;
@@ -11,11 +12,11 @@ class SyncClassroom extends Sync
     /**
      * @param WindevSalle $item
      * @param bool $isAncien
-     * @param $classrooms
-     * @param $centers
+     * @param CiClassroom[] $classrooms
+     * @param CiCenter[] $centers
      * @return array
      */
-    public function synchronize(WindevSalle $item, bool $isAncien, $classrooms, $centers): array
+    public function synchronize(WindevSalle $item, bool $isAncien, array $classrooms, array $centers): array
     {
         /** @var CiClassroom $classroom */
         $name = mb_strtoupper($item->getNom());

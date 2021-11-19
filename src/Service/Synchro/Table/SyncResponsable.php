@@ -11,10 +11,10 @@ class SyncResponsable extends Sync
     /**
      * @param WindevPersonne $item
      * @param bool $isAncien
-     * @param $responsables
+     * @param CiResponsable[] $responsables
      * @return array
      */
-    public function synchronize(WindevPersonne $item, bool $isAncien, $responsables): array
+    public function synchronize(WindevPersonne $item, bool $isAncien, array $responsables): array
     {
         /** @var CiResponsable $responsable */
         $lastname = $this->helper->getFirstnameAndLastname($item)[0];

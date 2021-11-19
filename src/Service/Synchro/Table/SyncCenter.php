@@ -11,10 +11,10 @@ class SyncCenter extends Sync
     /**
      * @param WindevCentre $item
      * @param boolean $isAncien
-     * @param array $centres
+     * @param CiCenter[] $centers
      * @return array|int[]
      */
-    public function synchronize(WindevCentre $item, bool $isAncien, array $centres): array
+    public function synchronize(WindevCentre $item, bool $isAncien, array $centers): array
     {
         /** @var CiCenter $center */
         if($item->getPlusutilise() == 0){
@@ -22,7 +22,7 @@ class SyncCenter extends Sync
             $name = mb_strtoupper($item->getNomCentre());
 
             //Check l'existance du centre
-            $result = $this->checkExiste("name", new CiCenter(), $centres, $item, $name);
+            $result = $this->checkExiste("name", new CiCenter(), $centers, $item, $name);
             $center = $result[0];
 
             $center = ($center)
