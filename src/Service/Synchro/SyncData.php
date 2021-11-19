@@ -115,10 +115,10 @@ class SyncData
                     $data0 = $this->em->getRepository(CiClasse::class)->findAll();
                     $windevData = $this->emWindev->getRepository(WindevAdhact::class)->findAll();
                     $noDuplication = $usedData;
+
                     $syncFunction = $this->syncClasse;
                     break;
                 case "classesSlots":
-                    dump(count($items));
                     $data0 = $this->em->getRepository(CiClasse::class)->findAll();
                     $syncFunction = $this->syncClasseSlot;
                     break;
@@ -160,9 +160,10 @@ class SyncData
 
                         switch ($result['status']){
                             case 4:
-                                $total   = $total + $result['total'];
+                                $total   = $result['total'] > 1 ? $total + $result['total'] : $total;
                                 $created = $created + $result['created'];
                                 $updated = $updated + $result['updated'];
+                                $noDuplication = $result['data'];
                                 break;
                             case 3:
                                 $noUpdated++;
@@ -191,7 +192,7 @@ class SyncData
 
             $progressBar->finish();
 
-//            $this->em->flush();
+            $this->em->flush();
 
             $io->newLine();
             $this->sync->displayDataArray($io, $errors);

@@ -39,12 +39,20 @@ class SyncClasse extends Sync
         $levelsPossibility = []; $noDuplication = [];
         /** @var WindevAdhact $link */
         foreach($links as $link){
-            $searchLevel = $link->getNicleunik() != 0 ? $link->getNicleunik() : $item->getNicleunik();
 
-            if($searchLevel != 0){
+            if($link->getNicleunik() == 0){
+                array_push($levelsPossibility, null);
+            }else{
                 foreach($levels as $level) {
-                    if ($level->getOldId() == $searchLevel) {
-                        if(!in_array( $level->getId(), $noDuplication)){
+                    if ($level->getOldId() == $link->getNicleunik()) {
+                        if(!in_array($level->getId(), $noDuplication)){
+                            array_push($noDuplication, $level->getId());
+                            array_push($levelsPossibility, $level);
+                        }
+                    }
+
+                    if ($level->getOldId() == $item->getNicleunik()) {
+                        if(!in_array($level->getId(), $noDuplication)){
                             array_push($noDuplication, $level->getId());
                             array_push($levelsPossibility, $level);
                         }
@@ -58,7 +66,11 @@ class SyncClasse extends Sync
         $activity   = $this->getExisteFromOldId($activities, $item->getAccleunik());
         $cycle      = $this->getExisteFromOldId($cycles,     $item->getCycleunik());
 
-        $total = -1; $created = 0; $updated = 0;
+        if(count($levelsPossibility) == 0){
+            array_push($levelsPossibility, null);
+        }
+
+        $total = 0; $created = 0; $updated = 0;
         foreach($levelsPossibility as $level){
             $result = $this->createClasse($teacher, $center, $activity, $cycle, $level, $classes, $noDuplicationMain);
 
@@ -68,11 +80,11 @@ class SyncClasse extends Sync
                 switch ($result['status']) {
                     case 2:
                         $updated++;
-                        array_push($noDuplicationMain, $result['data']);
+                        $noDuplicationMain = $result['data'];
                         break;
                     case 1:
                         $created++;
-                        array_push($noDuplicationMain, $result['data']);
+                        $noDuplicationMain = $result['data'];
                         break;
                     default:
                         break;
@@ -80,6 +92,6 @@ class SyncClasse extends Sync
             }
         }
 
-        return ['code' => 1, 'status' => 4, 'total' => $total, 'created' => $created, 'updated' => $updated];
+        return ['code' => 1, 'status' => 4, 'total' => $total, 'created' => $created, 'updated' => $updated, 'data' => $noDuplicationMain];
     }
 }

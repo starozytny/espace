@@ -197,9 +197,9 @@ class Sync
      * @param $level
      * @param CiClasse[] $classes
      * @param $noDuplication
-     * @return array|void
+     * @return array
      */
-    protected function createClasse($teacher, $center, $activity, $cycle, $level, array $classes, $noDuplication)
+    protected function createClasse($teacher, $center, $activity, $cycle, $level, array $classes, $noDuplication): array
     {
         $teacherId = $teacher->getId();
         $centerId = $center->getId();

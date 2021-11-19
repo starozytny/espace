@@ -55,10 +55,4 @@ class CiteSynchroSuiteCommand extends Command
         $io->title("Synchronisation des " . $title);
         return $this->em->getRepository($class)->findAll();
     }
-
-    protected function getDataPrevisionnel($io, $windevClass, $title): array
-    {
-        $io->title("Synchronisation des " . $title);
-        return $this->emWindev->getRepository($windevClass)->findBy(['previsionnel' => 1]);
-    }
 }

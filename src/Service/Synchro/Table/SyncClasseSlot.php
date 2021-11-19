@@ -15,9 +15,9 @@ class SyncClasseSlot extends Sync
      * @param array $uselessPlanning
      * @param CiClasse[] $classes
      * @param array $noDuplication
-     * @return array|void
+     * @return array
      */
-    public function synchronize($useless, CiSlot $slot, array $uselessWindevItems, array $uselessPlanning, array $noDuplication, array $classes)
+    public function synchronize($useless, CiSlot $slot, array $uselessWindevItems, array $uselessPlanning, array $noDuplication, array $classes): array
     {
         $teacher = $slot->getTeacher();
         $center = $slot->getCenter();
@@ -25,6 +25,10 @@ class SyncClasseSlot extends Sync
         $cycle = $slot->getCycle();
         $level = $slot->getLevel();
 
-        return $this->createClasse($teacher, $center, $activity, $cycle, $level, $classes, $noDuplication);
+        if($cycle != null){
+            return $this->createClasse($teacher, $center, $activity, $cycle, $level, $classes, $noDuplication);
+        }else{
+            return ['code' => 0];
+        }
     }
 }
