@@ -3,6 +3,9 @@
 namespace App\Service\Synchro;
 
 use App\Entity\Cite\CiCycle;
+use App\Entity\Cite\CiSlot;
+use App\Windev\WindevAdhact;
+use App\Windev\WindevCours;
 use DateTime;
 
 class Helper
@@ -265,5 +268,129 @@ class Helper
         }else{
             return CiCycle::CAT_UNKNOWN;
         }
+    }
+
+    /**
+     * @param WindevAdhact $item
+     * @param WindevCours $cours
+     * @param CiSlot[] $initSlots
+     * @return int|mixed
+     */
+    public function getExisteSlotForCours(WindevAdhact $item, WindevCours $cours, array $initSlots)
+    {
+        $level = $item->getNicleunik() != 0 ? $item->getNicleunik() : $cours->getNicleunik();
+
+        $possibilities = [];
+        foreach($initSlots as $slot){
+            if($slot->getDay() == $cours->getJour()
+                && $slot->getTeacher()->getOldId() == $cours->getPrcleunik()
+                && $slot->getCenter()->getOldId() == $cours->getCecleunik()
+                && $slot->getActivity()->getOldId() == $cours->getAccleunik()
+            ){
+                array_push($possibilities, $slot);
+            }
+        }
+
+        if(count($possibilities) == 0){
+            return 0;
+        }else{
+
+            // if cours have cycle, check if in possibilities, at least on with cycle ==
+            $possibilities_cycles = $this->getPossibilitiesCycles($possibilities, $cours);
+
+            // if cours have level, check if in possibilities, at least on with level ==
+            $possibilities_levels = $this->getPossibilitiesLevel($possibilities_cycles, $level);
+
+            // check by start if possibilities > 1
+            $slots = $this->getPossibilitiesStart($possibilities_levels, $cours);
+
+            if(count($slots) == 1){
+                return $slots[0];
+            }elseif(count($slots) == 0){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+    }
+
+    /**
+     * @param CiSlot[] $possibilities
+     * @param $cours
+     * @return array
+     */
+    public function getPossibilitiesCycles(array $possibilities, $cours): array
+    {
+        $possibilities_cycles = [];
+        foreach($possibilities as $possibility){
+            if($cours->getCycleunik() == 0){
+                if($possibility->getCycle() == null){
+                    array_push($possibilities_cycles, $possibility); //Get all slots with cycle null
+                }
+            }else{
+                if($possibility->getCycle() && $possibility->getCycle()->getOldId() == $cours->getCycleunik()){
+                    array_push($possibilities_cycles, $possibility); //Get all slots with cycle ==
+                }
+            }
+        }
+        if(count($possibilities_cycles) == 0){
+            $possibilities_cycles = $possibilities; // check with level maybe
+        }
+
+        return $possibilities_cycles;
+    }
+
+    /**
+     * @param CiSlot[] $possibilities_cycles
+     * @param $level
+     * @return array
+     */
+    public function getPossibilitiesLevel(array $possibilities_cycles, $level): array
+    {
+        $slots = [];
+        foreach($possibilities_cycles as $possibility){
+            if($level == 0){
+                if($possibility->getLevel() == null){
+                    array_push($slots, $possibility);
+                }
+            }else{
+                if($possibility->getLevel() && $possibility->getLevel()->getOldId() == $level){
+                    array_push($slots, $possibility);
+                }
+            }
+        }
+
+        return $slots;
+    }
+
+    /**
+     * @param CiSlot[] $slots
+     * @param $cours
+     * @return array
+     */
+    public function getPossibilitiesStart(array $slots, $cours): array
+    {
+        $checkStart = false;
+        if(count($slots) > 1 || count($slots) == 0){
+            $checkStart = true;
+        }
+
+        if($checkStart){
+            $possibilities_start = $slots; // check with start time maybe
+            $slots = [];
+            foreach($possibilities_start as $possibility){
+                $coursStart = $this->createTime($cours->getHeuredeb());
+                $slotStart = DateTime::createFromFormat("H:i:s", $possibility->getStartString());
+
+                if($coursStart >= $slotStart){
+                    $slots = [$possibility]; // get last
+                }
+            }
+            if(count($slots) == 0 && count($possibilities_start) >= 1){
+                $slots = [$possibilities_start[0]];
+            }
+        }
+
+        return $slots;
     }
 }

@@ -178,6 +178,14 @@ class CiSlot
         return $this;
     }
 
+    public function getStartString(){
+        if($this->start == null){
+            return null;
+        }
+
+        return date_format($this->start, 'H:i:s');
+    }
+
     public function getStart(): ?\DateTimeInterface
     {
         return $this->start;

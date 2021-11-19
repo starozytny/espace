@@ -6,6 +6,7 @@ use App\Entity\Cite\CiPlanning;
 use App\Entity\Cite\CiSlot;
 use App\Service\DatabaseService;
 use App\Service\Synchro\SyncData;
+use App\Windev\WindevAdhact;
 use App\Windev\WindevEmpltps;
 use Exception;
 use Symfony\Component\Console\Command\Command;
@@ -55,7 +56,8 @@ class CiteInitPlanningCommand extends Command
         $this->databaseService->resetTable($io, $list);
 
         $plannings = $this->createPlanning($io, $input->getArgument('year'));
-        $this->syncData->synchroSlots($output, $io, $this->getData($io, WindevEmpltps::class,"slots"),"slots", $plannings);
+        $used = $this->syncData->synchroSlots($output, $io, $this->getData($io, WindevEmpltps::class,"slots"),"slots", $plannings);
+        $this->syncData->synchroSlots($output, $io, $this->getData($io, WindevAdhact::class,"slotsMissing"),"slotsMissing", $plannings, $used);
 
         return Command::SUCCESS;
     }

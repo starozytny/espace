@@ -12,6 +12,7 @@ use App\Entity\Cite\CiSlot;
 use App\Entity\Cite\CiTeacher;
 use App\Service\Synchro\Sync;
 use App\Windev\WindevActivite;
+use App\Windev\WindevAdhact;
 use App\Windev\WindevEmpltps;
 use Exception;
 
@@ -168,12 +169,7 @@ class SyncSlot extends Sync
             }
 
             //check if existe
-            $slot = null;
-            foreach($slots as $s){
-                if($slot == null && $s->getOldId() == $oldId){
-                    $slot = $s;
-                }
-            }
+            $slot = $this->getExisteFromOldId($slots, $oldId);
 
             if($slot == null){
                 $slot = new CiSlot();
@@ -184,22 +180,9 @@ class SyncSlot extends Sync
                 $status = 2;
             }
 
-            $slot = ($slot)
-                ->setOldId($oldId)
-                ->setPlanning($planning)
-                ->setTeacher($teacher)
-                ->setActivity($activity)
-                ->setCycle($cycle)
-                ->setCenter($center)
-                ->setLevel($level)
-                ->setClassroom($classroom)
-                ->setDay($item->getJour())
-                ->setStart($start)
-                ->setEnd($end)
-                ->setDuration($duration)
-                ->setIsActual($planning->getIsActual())
-                ->setIdentifiant($identifiant)
-            ;
+            $slot = $this->createSlotEntity($slot, $item, $start, $end, $duration, $identifiant,
+                $planning, $teacher, $center, $activity, $cycle, $level, $classroom);
+            $slot->setOldId($oldId);
 
             $this->em->persist($slot);
 

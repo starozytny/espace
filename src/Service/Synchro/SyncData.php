@@ -20,7 +20,9 @@ use App\Service\Synchro\Table\SyncEleve;
 use App\Service\Synchro\Table\SyncLevel;
 use App\Service\Synchro\Table\SyncResponsable;
 use App\Service\Synchro\Table\SyncSlot;
+use App\Service\Synchro\Table\SyncSlotMissing;
 use App\Service\Synchro\Table\SyncTeacher;
+use App\Windev\WindevCours;
 use App\Windev\WindevPersonne;
 use Exception;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -40,11 +42,13 @@ class SyncData
     private $syncLevel;
     private $syncClassroom;
     private $syncSlot;
+    private $syncSlotMissing;
 
     public function __construct(DatabaseService $databaseService, Sync $sync,
                                 SyncCenter $syncCenter, SyncTeacher $syncTeacher, SyncResponsable $syncResponsable,
                                 SyncEleve $syncEleve, SyncActivity $syncActivity, SyncCycle $syncCycle,
-                                SyncLevel $syncLevel, SyncClassroom $syncClassroom, SyncSlot $syncSlot)
+                                SyncLevel $syncLevel, SyncClassroom $syncClassroom, SyncSlot $syncSlot,
+                                SyncSlotMissing $syncSlotMissing)
     {
         $this->em = $databaseService->getEm();
         $this->emWindev = $databaseService->getEmWindev();
@@ -59,44 +63,49 @@ class SyncData
         $this->syncLevel = $syncLevel;
         $this->syncClassroom = $syncClassroom;
         $this->syncSlot = $syncSlot;
+        $this->syncSlotMissing = $syncSlotMissing;
     }
 
     /**
      * @throws Exception
      */
-    public function synchroSlots($output, $io, $items, $name, $plannings)
+    public function synchroSlots($output, $io, $items, $name, $plannings, $used = [])
     {
         if($this->sync->haveData($io, $items)){
-            $errors = []; $updatedArray = [];
+            $errors = []; $updatedArray = []; $noDuplication = [];
             $total = 0; $created = 0; $notUsed = 0; $updated = 0;
 
             $progressBar = new ProgressBar($output, count($items));
             $progressBar->start();
 
+            $data6 = $this->em->getRepository(CiClassroom::class)->findAll();
+            $data5 = $this->em->getRepository(CiLevel::class)->findAll();
+            $data4 = $this->em->getRepository(CiCycle::class)->findAll();
+            $data3 = $this->em->getRepository(CiActivity::class)->findAll();
+            $data2 = $this->em->getRepository(CiCenter::class)->findAll();
+            $data1 = $this->em->getRepository(CiTeacher::class)->findAll();
+            $data0 = $this->em->getRepository(CiSlot::class)->findAll();
             switch ($name){
+                case "slotsMissing":
+                    $windevData = $this->emWindev->getRepository(WindevCours::class)->findAll();
+                    $syncFunction = $this->syncSlotMissing;
+                    break;
                 case "slots":
-                    $data6 = $this->em->getRepository(CiClassroom::class)->findAll();
-                    $data5 = $this->em->getRepository(CiLevel::class)->findAll();
-                    $data4 = $this->em->getRepository(CiCycle::class)->findAll();
-                    $data3 = $this->em->getRepository(CiActivity::class)->findAll();
-                    $data2 = $this->em->getRepository(CiCenter::class)->findAll();
-                    $data1 = $this->em->getRepository(CiTeacher::class)->findAll();
-                    $data0 = $this->em->getRepository(CiSlot::class)->findAll();
+                    $windevData = $items;
                     $syncFunction = $this->syncSlot;
                     break;
                 default:
-                    return;
+                    return $used;
             }
 
-            $used = [];
             foreach($items as $item){
                 $progressBar->advance();
 
-                $letters = ["", "A", "B", "C", "D"];
+                $letters = $name == "slots" ? ["", "A", "B", "C", "D"] : [""];
 
                 for($i = 0 ; $i < count($letters) ; $i++){
-                    $result = $syncFunction->synchronize($letters[$i], $item, $items, $plannings,
-                        $data0, $data1, $data2, $data3, $data4, $data5, $data6);
+                    $result = $syncFunction->synchronize($letters[$i], $item, $windevData, $plannings,
+                        $data0, $data1, $data2, $data3, $data4, $data5, $data6, $noDuplication);
 
                     if($result['code'] == 1){
                         $total++;
@@ -104,12 +113,18 @@ class SyncData
                         switch ($result['status']){
                             case 2:
                                 $updated++;
+                                if($name == "slots"){
+                                    array_push($used, $result['data']);
+                                }
                                 array_push($updatedArray, $result['data']);
-                                array_push($used, $result['data']);
                                 break;
                             case 1:
                                 $created++;
-                                array_push($used, $result['data']);
+                                if($name == "slots"){
+                                    array_push($used, $result['data']);
+                                }else{
+                                    array_push($noDuplication, $result['data']);
+                                }
                                 break;
                             case 0:
                                 array_push($errors, $result['data']);
@@ -134,6 +149,8 @@ class SyncData
             $this->sync->displayDataArray($io, $updatedArray);
             $io->comment(sprintf("%d / %d %s créés.", $created, $total, $name));
         }
+
+        return $used;
     }
 
     public function synchroData($output, $io, $items, $name)
