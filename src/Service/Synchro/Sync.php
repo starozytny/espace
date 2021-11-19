@@ -190,19 +190,17 @@ class Sync
     }
 
     /**
-     * @param CiSlot $slot
+     * @param $teacher
+     * @param $center
+     * @param $activity
+     * @param $cycle
+     * @param $level
      * @param CiClasse[] $classes
      * @param $noDuplication
      * @return array|void
      */
-    protected function createClasse(CiSlot $slot, array $classes, $noDuplication)
+    protected function createClasse($teacher, $center, $activity, $cycle, $level, array $classes, $noDuplication)
     {
-        $teacher = $slot->getTeacher();
-        $center = $slot->getCenter();
-        $activity = $slot->getActivity();
-        $cycle = $slot->getCycle();
-        $level = $slot->getLevel();
-
         $teacherId = $teacher->getId();
         $centerId = $center->getId();
         $activityId = $activity->getId();
@@ -294,7 +292,7 @@ class Sync
 
             $this->em->persist($classe);
 
-            return ['code' => 1, 'status' => $status, 'data' => $name, 'noDuplication' => $noDuplication];
+            return ['code' => 1, 'status' => $status, 'data' => $noDuplication];
         }
     }
 }

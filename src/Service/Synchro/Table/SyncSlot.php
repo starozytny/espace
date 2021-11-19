@@ -23,6 +23,7 @@ class SyncSlot extends Sync
      * @param WindevEmpltps $item
      * @param WindevEmpltps[] $items
      * @param array $plannings - 0 = prev | 1 = actual
+     * @param array $noDuplication
      * @param CiSlot[] $slots
      * @param CiTeacher[] $teachers
      * @param CiCenter[] $centers
@@ -33,7 +34,7 @@ class SyncSlot extends Sync
      * @return array
      * @throws Exception
      */
-    public function synchronize($letter, WindevEmpltps $item, array $items, array $plannings, array $slots,
+    public function synchronize($letter, WindevEmpltps $item, array $items, array $plannings, array $noDuplication, array $slots,
                                 array $teachers, array $centers, array $activities, array $cycles, array $levels, array $classrooms): array
     {
         $oldId = $item->getId().$letter;

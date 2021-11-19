@@ -9,14 +9,22 @@ use App\Service\Synchro\Sync;
 class SyncClasseSlot extends Sync
 {
     /**
+     * @param $useless
      * @param CiSlot $slot
-     * @param bool $isAncien
+     * @param array $uselessWindevItems
+     * @param array $uselessPlanning
      * @param CiClasse[] $classes
      * @param array $noDuplication
      * @return array|void
      */
-    public function synchronize(CiSlot $slot, bool $isAncien, array $classes, array $noDuplication)
+    public function synchronize($useless, CiSlot $slot, array $uselessWindevItems, array $uselessPlanning, array $noDuplication, array $classes)
     {
-        return $this->createClasse($slot, $classes, $noDuplication);
+        $teacher = $slot->getTeacher();
+        $center = $slot->getCenter();
+        $activity = $slot->getActivity();
+        $cycle = $slot->getCycle();
+        $level = $slot->getLevel();
+
+        return $this->createClasse($teacher, $center, $activity, $cycle, $level, $classes, $noDuplication);
     }
 }

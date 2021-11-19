@@ -24,6 +24,7 @@ class SyncSlotDelete extends Sync
      * @param WindevAdhact $item
      * @param WindevCours[] $items
      * @param array $plannings - 0 = prev | 1 = actual
+     * @param array $noDuplication
      * @param CiSlot[] $slots
      * @param CiTeacher[] $teachers
      * @param CiCenter[] $centers
@@ -31,14 +32,13 @@ class SyncSlotDelete extends Sync
      * @param CiCycle[] $cycles
      * @param CiLevel[] $levels
      * @param CiClassroom[] $classrooms
-     * @param array $noDuplication
      * @param array $usedSlot
      * @param array $usedAdhact
      * @return array
      */
-    public function synchronize($letter, WindevAdhact $item, array $items, array $plannings, array $slots,
+    public function synchronize($letter, WindevAdhact $item, array $items, array $plannings, array $noDuplication, array $slots,
                                 array $teachers, array $centers, array $activities, array $cycles, array $levels, array $classrooms,
-                                array $noDuplication, array $usedSlot, array $usedAdhact): array
+                                array $usedSlot, array $usedAdhact): array
     {
 //        $notUsed = [];
 //        // delete all slots qui ne sont pas passé par la boucle

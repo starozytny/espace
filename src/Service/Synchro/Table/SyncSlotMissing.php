@@ -45,9 +45,8 @@ class SyncSlotMissing extends Sync
      * @param array $noDuplication
      * @return array
      */
-    public function synchronize($letter, WindevAdhact $item, array $items, array $plannings, array $slots,
-                                array $teachers, array $centers, array $activities, array $cycles, array $levels, array $classrooms,
-                                array $noDuplication): array
+    public function synchronize($letter, WindevAdhact $item, array $items, array $plannings, array $noDuplication, array $slots,
+                                array $teachers, array $centers, array $activities, array $cycles, array $levels, array $classrooms): array
     {
         $oldId = $item->getId();
 

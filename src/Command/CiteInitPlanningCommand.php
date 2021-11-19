@@ -56,8 +56,8 @@ class CiteInitPlanningCommand extends Command
         $this->databaseService->resetTable($io, $list);
 
         $plannings = $this->createPlanning($io, $input->getArgument('year'));
-        $usedSlot = $this->syncData->synchroSlots($output, $io, $this->getData($io, WindevEmpltps::class,"slots"),"slots", $plannings);
-        $usedAdhAct = $this->syncData->synchroSlots($output, $io, $this->getData($io, WindevAdhact::class,"slotsMissing"),"slotsMissing", $plannings, $usedSlot);
+        $usedSlot = $this->syncData->synchroSpecial($output, $io, $this->getData($io, WindevEmpltps::class,"slots"),"slots", $plannings);
+        $usedAdhAct = $this->syncData->synchroSpecial($output, $io, $this->getData($io, WindevAdhact::class,"slotsMissing"),"slotsMissing", $plannings, $usedSlot);
 //        $this->syncData->synchroSlots($output, $io, $this->getData($io, WindevAdhact::class,"slotsDelete"),"slotsDelete", $plannings, $usedSlot, $usedAdhAct);
 
         return Command::SUCCESS;

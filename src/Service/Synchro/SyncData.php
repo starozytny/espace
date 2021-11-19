@@ -25,6 +25,7 @@ use App\Service\Synchro\Table\SyncResponsable;
 use App\Service\Synchro\Table\SyncSlot;
 use App\Service\Synchro\Table\SyncSlotMissing;
 use App\Service\Synchro\Table\SyncTeacher;
+use App\Windev\WindevAdhact;
 use App\Windev\WindevCours;
 use App\Windev\WindevPersonne;
 use Exception;
@@ -76,7 +77,7 @@ class SyncData
     /**
      * @throws Exception
      */
-    public function synchroSlots($output, $io, $items, $name, $plannings, $usedSlot = [], $usedAdhAct = [])
+    public function synchroSpecial($output, $io, $items, $name, $plannings = [], $usedData = [], $usedAdhAct = [])
     {
         $used = [];
         if($this->sync->haveData($io, $items)){
@@ -86,9 +87,8 @@ class SyncData
             $progressBar = new ProgressBar($output, count($items));
             $progressBar->start();
 
-            $data9 = $usedAdhAct;
-            $data8 = $usedSlot;
-            $data7 = $noDuplication;
+            $data8 = $usedAdhAct;
+            $data7 = $usedData;
             $data6 = $this->em->getRepository(CiClassroom::class)->findAll();
             $data5 = $this->em->getRepository(CiLevel::class)->findAll();
             $data4 = $this->em->getRepository(CiCycle::class)->findAll();
@@ -98,6 +98,16 @@ class SyncData
             $data0 = $this->em->getRepository(CiSlot::class)->findAll();
             $windevData = $items;
             switch ($name){
+                case "classes":
+                    $data0 = $this->em->getRepository(CiClasse::class)->findAll();
+                    $windevData = $this->emWindev->getRepository(WindevAdhact::class)->findAll();
+                    $noDuplication = $usedData;
+                    $syncFunction = $this->syncClasse;
+                    break;
+                case "classesSlots":
+                    $data0 = $this->em->getRepository(CiClasse::class)->findAll();
+                    $syncFunction = $this->syncClasseSlot;
+                    break;
                 case "slotsDelete":
                     $syncFunction = $this->syncSlotMissing;
                     break;
@@ -118,24 +128,37 @@ class SyncData
                 $letters = $name == "slots" ? ["", "A", "B", "C", "D"] : [""];
 
                 for($i = 0 ; $i < count($letters) ; $i++){
-                    $result = $syncFunction->synchronize($letters[$i], $item, $windevData, $plannings,
-                        $data0, $data1, $data2, $data3, $data4, $data5, $data6, $data7, $data8, $data9);
+                    $result = $syncFunction->synchronize($letters[$i], $item, $windevData, $plannings, $noDuplication,
+                        $data0, $data1, $data2, $data3, $data4, $data5, $data6, $data7, $data8);
 
                     if($result['code'] == 1){
                         $total++;
 
                         switch ($result['status']){
+                            case 4:
+                                $total = $total + $result['total'];
+                                $created = $created + $result['created'];
+                                $updated = $updated + $result['updated'];
+                                break;
                             case 2:
                                 $updated++;
-                                if($name == "slots"){
+                                if($name == "slots" || $name == "classesSlots"){
                                     array_push($used, $result['data']);
+
+                                    if($name == "classesSlots"){
+                                        array_push($noDuplication, $result['data']);
+                                    }
                                 }
                                 array_push($updatedArray, $result['data']);
                                 break;
                             case 1:
                                 $created++;
-                                if($name == "slots"){
+                                if($name == "slots" || $name == "classesSlots"){
                                     array_push($used, $result['data']);
+
+                                    if($name == "classesSlots"){
+                                        array_push($noDuplication, $result['data']);
+                                    }
                                 }else{
                                     array_push($noDuplication, $result['data']);
                                 }
@@ -160,7 +183,9 @@ class SyncData
             $this->sync->displayDataArray($io, $errors);
             $io->comment(sprintf("%d %s non utilisés.", $notUsed, $name));
             $io->comment(sprintf("%d %s mis à jour.", $updated, $name));
-            $this->sync->displayDataArray($io, $updatedArray);
+            if($name != "classesSlots"){
+                $this->sync->displayDataArray($io, $updatedArray);
+            }
             $io->comment(sprintf("%d / %d %s créés.", $created, $total, $name));
         }
 
@@ -179,11 +204,6 @@ class SyncData
             $data1 = [];
             $isAncien = false;
             switch ($name){
-                case "classesSlots":
-                    $data1 = [];
-                    $data0 = $this->em->getRepository(CiClasse::class)->findAll();
-                    $syncFunction = $this->syncClasseSlot;
-                    break;
                 case "salles":
                     $data1 = $this->em->getRepository(CiCenter::class)->findAll();
                     $data0 = $this->em->getRepository(CiClassroom::class)->findAll();
@@ -244,17 +264,10 @@ class SyncData
                             break;
                         case 2:
                             $updated++;
-                            if($name == "classeSlots"){
-                                array_push($data1, $result['noDuplication']);
-                            }else{
-                                array_push($updatedArray, $result['data']);
-                            }
+                            array_push($updatedArray, $result['data']);
                             break;
                         case 1:
                             $created++;
-                            if($name == "classeSlots"){
-                                array_push($data1, $result['noDuplication']);
-                            }
                             break;
                         case 0:
                             array_push($errors, $result['data']);

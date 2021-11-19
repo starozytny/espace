@@ -5,16 +5,8 @@ namespace App\Command;
 use App\Entity\Cite\CiSlot;
 use App\Service\DatabaseService;
 use App\Service\Synchro\SyncData;
-use App\Windev\WindevActivite;
-use App\Windev\WindevAdherent;
-use App\Windev\WindevAncien;
-use App\Windev\WindevCentre;
-use App\Windev\WindevCycle;
-use App\Windev\WindevEmpltps;
-use App\Windev\WindevNiveau;
-use App\Windev\WindevPersonne;
-use App\Windev\WindevProfs;
-use App\Windev\WindevSalle;
+use App\Windev\WindevCours;
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -37,11 +29,15 @@ class CiteSynchroSuiteCommand extends Command
         $this->syncData = $syncData;
     }
 
+    /**
+     * @throws Exception
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        $this->syncData->synchroData($output, $io, $this->getDataEm($io, CiSlot::class,"classesSlots"),"classesSlots");
+        $used = $this->syncData->synchroSpecial($output, $io, $this->getDataEm($io, CiSlot::class,"classesSlots"),"classesSlots");
+        $this->syncData->synchroSpecial($output, $io, $this->getData($io, WindevCours::class,"classes"),"classes", [], $used);
 
         return Command::SUCCESS;
     }
