@@ -266,20 +266,4 @@ class Helper
             return CiCycle::CAT_UNKNOWN;
         }
     }
-
-    public function notUsed($emWindev, $classe, $searchId, $id, $msg): array
-    {
-        $obj = $emWindev->getRepository($classe)->findOneBy(['id' => $searchId]);
-
-        if($obj){
-            if($obj->getPlusutilise() == 1){
-                if($msg == "Teacher"){
-                    return [0, ""];
-                }
-                return [0, sprintf('Slot - %s plus utilisé : %d', $msg, $id)];
-            }
-        }
-
-        return [0, sprintf('Slot - %s not found : %d', $msg, $id)];
-    }
 }

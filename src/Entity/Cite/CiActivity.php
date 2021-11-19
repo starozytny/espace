@@ -3,6 +3,8 @@
 namespace App\Entity\Cite;
 
 use App\Repository\Cite\CiActivityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -71,6 +73,16 @@ class CiActivity
      * @ORM\Column(type="time", nullable=true)
      */
     private $durationTotal;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CiSlot::class, mappedBy="activity")
+     */
+    private $slots;
+
+    public function __construct()
+    {
+        $this->slots = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -169,6 +181,36 @@ class CiActivity
     public function setDurationTotal(?\DateTimeInterface $durationTotal): self
     {
         $this->durationTotal = $durationTotal;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CiSlot[]
+     */
+    public function getSlots(): Collection
+    {
+        return $this->slots;
+    }
+
+    public function addSlot(CiSlot $slot): self
+    {
+        if (!$this->slots->contains($slot)) {
+            $this->slots[] = $slot;
+            $slot->setActivity($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSlot(CiSlot $slot): self
+    {
+        if ($this->slots->removeElement($slot)) {
+            // set the owning side to null (unless already changed)
+            if ($slot->getActivity() === $this) {
+                $slot->setActivity(null);
+            }
+        }
 
         return $this;
     }

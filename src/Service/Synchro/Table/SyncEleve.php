@@ -29,7 +29,7 @@ class SyncEleve extends Sync
             $firstname = $this->helper->getFirstnameAndLastname($item)[1];
 
             if($isAncien == false){
-                $eleve = $this->getExiste($eleves, $item);
+                $eleve = $this->getExisteFromOldId($eleves, $item->getId());
             }else{ // check with numAdh
                 $eleve = $this->getExisteFromOldId($eleves, $numAdh);
             }

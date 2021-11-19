@@ -3,6 +3,7 @@
 namespace App\Service\Synchro;
 
 use App\Service\DatabaseService;
+use App\Service\SanitizeData;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class Sync
@@ -10,12 +11,14 @@ class Sync
     protected $em;
     protected $emWindev;
     protected $helper;
+    protected $sanitizeData;
 
-    public function __construct(DatabaseService $databaseService, Helper $helper)
+    public function __construct(DatabaseService $databaseService, Helper $helper, SanitizeData $sanitizeData)
     {
         $this->em = $databaseService->getEm();
         $this->emWindev = $databaseService->getEmWindev();
         $this->helper = $helper;
+        $this->sanitizeData = $sanitizeData;
     }
 
     /**
@@ -36,24 +39,6 @@ class Sync
     }
 
     /**
-     * Return object of windev entity or null
-     *
-     * @param array $windevData
-     * @param $windevItem
-     * @return mixed|null
-     */
-    protected function getExiste(array $windevData, $windevItem)
-    {
-        foreach($windevData as $item){
-            if($item->getOldId() == $windevItem->getId()){
-                return $item;
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Display date of array
      *
      * @param SymfonyStyle $io
@@ -69,11 +54,11 @@ class Sync
     }
 
     /**
-     * @param $data
+     * @param array $data
      * @param $correspondance
-     * @return null
+     * @return mixed|null
      */
-    protected function getExisteFromOldId($data, $correspondance)
+    protected function getExisteFromOldId(array $data, $correspondance)
     {
         foreach($data as $el){
             if($el->getOldId() == $correspondance){
@@ -87,7 +72,7 @@ class Sync
     protected function checkExiste($type, $entity, $data, $item, $diff0, $diff1 = null): array
     {
         $msg = "";
-        if($elem = $this->getExiste($data, $item)){
+        if($elem = $this->getExisteFromOldId($data, $item->getId())){
             $same = false;
             switch ($type){
                 case "num":

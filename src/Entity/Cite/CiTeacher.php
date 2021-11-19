@@ -3,6 +3,8 @@
 namespace App\Entity\Cite;
 
 use App\Repository\Cite\CiTeacherRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -91,6 +93,16 @@ class CiTeacher
      * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CiSlot::class, mappedBy="teacher")
+     */
+    private $slots;
+
+    public function __construct()
+    {
+        $this->slots = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -273,6 +285,36 @@ class CiTeacher
     public function setComment(?string $comment): self
     {
         $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CiSlot[]
+     */
+    public function getSlots(): Collection
+    {
+        return $this->slots;
+    }
+
+    public function addSlot(CiSlot $slot): self
+    {
+        if (!$this->slots->contains($slot)) {
+            $this->slots[] = $slot;
+            $slot->setTeacher($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSlot(CiSlot $slot): self
+    {
+        if ($this->slots->removeElement($slot)) {
+            // set the owning side to null (unless already changed)
+            if ($slot->getTeacher() === $this) {
+                $slot->setTeacher(null);
+            }
+        }
 
         return $this;
     }

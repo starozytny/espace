@@ -9,6 +9,7 @@ use App\Entity\Cite\CiCycle;
 use App\Entity\Cite\CiEleve;
 use App\Entity\Cite\CiLevel;
 use App\Entity\Cite\CiResponsable;
+use App\Entity\Cite\CiSlot;
 use App\Entity\Cite\CiTeacher;
 use App\Service\DatabaseService;
 use App\Service\Synchro\Table\SyncActivity;
@@ -18,8 +19,10 @@ use App\Service\Synchro\Table\SyncCycle;
 use App\Service\Synchro\Table\SyncEleve;
 use App\Service\Synchro\Table\SyncLevel;
 use App\Service\Synchro\Table\SyncResponsable;
+use App\Service\Synchro\Table\SyncSlot;
 use App\Service\Synchro\Table\SyncTeacher;
 use App\Windev\WindevPersonne;
+use Exception;
 use Symfony\Component\Console\Helper\ProgressBar;
 
 class SyncData
@@ -36,11 +39,12 @@ class SyncData
     private $syncCycle;
     private $syncLevel;
     private $syncClassroom;
+    private $syncSlot;
 
     public function __construct(DatabaseService $databaseService, Sync $sync,
                                 SyncCenter $syncCenter, SyncTeacher $syncTeacher, SyncResponsable $syncResponsable,
                                 SyncEleve $syncEleve, SyncActivity $syncActivity, SyncCycle $syncCycle,
-                                SyncLevel $syncLevel, SyncClassroom $syncClassroom)
+                                SyncLevel $syncLevel, SyncClassroom $syncClassroom, SyncSlot $syncSlot)
     {
         $this->em = $databaseService->getEm();
         $this->emWindev = $databaseService->getEmWindev();
@@ -54,54 +58,68 @@ class SyncData
         $this->syncCycle = $syncCycle;
         $this->syncLevel = $syncLevel;
         $this->syncClassroom = $syncClassroom;
+        $this->syncSlot = $syncSlot;
     }
 
+    /**
+     * @throws Exception
+     */
     public function synchroSlots($output, $io, $items, $name, $plannings)
     {
         if($this->sync->haveData($io, $items)){
             $errors = []; $updatedArray = [];
-            $total = 0; $created = 0; $notUsed = 0; $updated = 0; $noUpdated = 0;
+            $total = 0; $created = 0; $notUsed = 0; $updated = 0;
 
             $progressBar = new ProgressBar($output, count($items));
             $progressBar->start();
 
-            $data1 = [];
-            $isAncien = false;
             switch ($name){
-                case "salles":
-                    $syncFunction = $this->syncClassroom;
+                case "slots":
+                    $data6 = $this->em->getRepository(CiClassroom::class)->findAll();
+                    $data5 = $this->em->getRepository(CiLevel::class)->findAll();
+                    $data4 = $this->em->getRepository(CiCycle::class)->findAll();
+                    $data3 = $this->em->getRepository(CiActivity::class)->findAll();
+                    $data2 = $this->em->getRepository(CiCenter::class)->findAll();
+                    $data1 = $this->em->getRepository(CiTeacher::class)->findAll();
+                    $data0 = $this->em->getRepository(CiSlot::class)->findAll();
+                    $syncFunction = $this->syncSlot;
                     break;
                 default:
                     return;
             }
 
+            $used = [];
             foreach($items as $item){
                 $progressBar->advance();
 
-                $result = $syncFunction->synchronize($item, $isAncien, $data0, $data1);
+                $letters = ["", "A", "B", "C", "D"];
 
-                if($result['code'] == 1){
-                    $total++;
+                for($i = 0 ; $i < count($letters) ; $i++){
+                    $result = $syncFunction->synchronize($letters[$i], $item, $items, $plannings,
+                        $data0, $data1, $data2, $data3, $data4, $data5, $data6);
 
-                    switch ($result['status']){
-                        case 3:
-                            $noUpdated++;
-                            break;
-                        case 2:
-                            $updated++;
-                            array_push($updatedArray, $result['data']);
-                            break;
-                        case 1:
-                            $created++;
-                            break;
-                        case 0:
-                            array_push($errors, $result['data']);
-                            break;
-                        default:
-                            break;
+                    if($result['code'] == 1){
+                        $total++;
+
+                        switch ($result['status']){
+                            case 2:
+                                $updated++;
+                                array_push($updatedArray, $result['data']);
+                                array_push($used, $result['data']);
+                                break;
+                            case 1:
+                                $created++;
+                                array_push($used, $result['data']);
+                                break;
+                            case 0:
+                                array_push($errors, $result['data']);
+                                break;
+                            default:
+                                break;
+                        }
+                    }else{
+                        $notUsed++;
                     }
-                }else{
-                    $notUsed++;
                 }
             }
 
@@ -114,7 +132,6 @@ class SyncData
             $io->comment(sprintf("%d %s non utilisés.", $notUsed, $name));
             $io->comment(sprintf("%d %s mis à jour.", $updated, $name));
             $this->sync->displayDataArray($io, $updatedArray);
-            $io->comment(sprintf("%d %s inchangés.", $noUpdated, $name));
             $io->comment(sprintf("%d / %d %s créés.", $created, $total, $name));
         }
     }

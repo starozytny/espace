@@ -3,9 +3,11 @@
 namespace App\Command;
 
 use App\Entity\Cite\CiPlanning;
+use App\Entity\Cite\CiSlot;
 use App\Service\DatabaseService;
 use App\Service\Synchro\SyncData;
 use App\Windev\WindevEmpltps;
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -39,13 +41,16 @@ class CiteInitPlanningCommand extends Command
         ;
     }
 
+    /**
+     * @throws Exception
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
         $io->title('Reset des tables');
         $list = [
-            CiPlanning::class
+            CiSlot::class, CiPlanning::class
         ];
         $this->databaseService->resetTable($io, $list);
 

@@ -3,6 +3,8 @@
 namespace App\Entity\Cite;
 
 use App\Repository\Cite\CiPlanningRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -31,6 +33,16 @@ class CiPlanning
      * @ORM\Column(type="boolean")
      */
     private $isActual;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CiSlot::class, mappedBy="planning")
+     */
+    private $slots;
+
+    public function __construct()
+    {
+        $this->slots = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -69,6 +81,36 @@ class CiPlanning
     public function setIsActual(bool $isActual): self
     {
         $this->isActual = $isActual;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CiSlot[]
+     */
+    public function getSlots(): Collection
+    {
+        return $this->slots;
+    }
+
+    public function addSlot(CiSlot $slot): self
+    {
+        if (!$this->slots->contains($slot)) {
+            $this->slots[] = $slot;
+            $slot->setPlanning($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSlot(CiSlot $slot): self
+    {
+        if ($this->slots->removeElement($slot)) {
+            // set the owning side to null (unless already changed)
+            if ($slot->getPlanning() === $this) {
+                $slot->setPlanning(null);
+            }
+        }
 
         return $this;
     }

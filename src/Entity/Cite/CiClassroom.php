@@ -3,6 +3,8 @@
 namespace App\Entity\Cite;
 
 use App\Repository\Cite\CiClassroomRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -42,6 +44,16 @@ class CiClassroom
      * @ORM\JoinColumn(nullable=false)
      */
     private $center;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CiSlot::class, mappedBy="classroom")
+     */
+    private $slots;
+
+    public function __construct()
+    {
+        $this->slots = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -104,6 +116,36 @@ class CiClassroom
     public function setCenter(?CiCenter $center): self
     {
         $this->center = $center;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CiSlot[]
+     */
+    public function getSlots(): Collection
+    {
+        return $this->slots;
+    }
+
+    public function addSlot(CiSlot $slot): self
+    {
+        if (!$this->slots->contains($slot)) {
+            $this->slots[] = $slot;
+            $slot->setClassroom($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSlot(CiSlot $slot): self
+    {
+        if ($this->slots->removeElement($slot)) {
+            // set the owning side to null (unless already changed)
+            if ($slot->getClassroom() === $this) {
+                $slot->setClassroom(null);
+            }
+        }
 
         return $this;
     }
