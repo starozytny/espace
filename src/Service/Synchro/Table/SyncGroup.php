@@ -28,10 +28,11 @@ class SyncGroup extends Sync
      * @param CiCycle[] $cycles
      * @param CiLevel[] $levels
      * @param CiSlot[] $slotsPrev
+     * @param PrGroup[] $prGroups
      * @return array
      */
     public function synchronize($letter, WindevAdhact $item, array $items, array $plannings, array $noDuplication, array $slots,
-                                array $classes, array $groups, array $eleves, array $cycles, array $levels, array $slotsPrev): array
+                                array $classes, array $groups, array $eleves, array $cycles, array $levels, array $slotsPrev, array $prGroups): array
     {
         /** @var WindevCours $cours */
         $cours = $this->getExisteFromId($items, $item->getCocleunik());
@@ -73,6 +74,7 @@ class SyncGroup extends Sync
                             ->setIsFm($isFm)
                             ->setIsFree($item->getGratuit())
                             ->setIsSuspended($item->getSuspendu())
+                            ->setWindevCours($cours->getId())
                         ;
 
                         $this->em->persist($group);
@@ -97,6 +99,11 @@ class SyncGroup extends Sync
 
                             if(count($up) > 0){
 
+                                $prGroup = $this->isExistePrGroup($prGroups, $group);
+                                if(!$prGroup){
+                                    $prGroup = new PrGroup();
+                                }
+
                                 $numGroup = uniqid();
                                 if(count($up) > 1){ // si quand même > 1  = only same teacher not found
 
@@ -115,7 +122,7 @@ class SyncGroup extends Sync
                                     if($canLevelUp){ // can level up if all up = same cycle and level
                                         foreach($up as $u){
 
-                                            $prGroup = (new PrGroup())
+                                            $prGroup = ($prGroup)
                                                 ->setClasse($u)
                                                 ->setEleve($group->getEleve())
                                                 ->setIsFm($isFm)
@@ -125,6 +132,7 @@ class SyncGroup extends Sync
                                                 ->setIsFree($group->getIsFree())
                                                 ->setIsOri(true)
                                                 ->setGroupe($group)
+                                                ->setWindevCours($cours->getId())
                                             ;
 
                                             $group->setStatus($status);
@@ -136,7 +144,7 @@ class SyncGroup extends Sync
                                     }
 
                                 }else if(count($up) == 1){
-                                    $prGroup = (new PrGroup())
+                                    $prGroup = ($prGroup)
                                         ->setClasse($up[0])
                                         ->setEleve($group->getEleve())
                                         ->setIsFm($isFm)
@@ -145,6 +153,7 @@ class SyncGroup extends Sync
                                         ->setIsFree($group->getIsFree())
                                         ->setIsOri(true)
                                         ->setGroupe($group)
+                                        ->setWindevCours($cours->getId())
                                     ;
 
                                     $group->setStatus($status);
@@ -177,6 +186,22 @@ class SyncGroup extends Sync
                 && $grp->getClasse()->getId() == $classe->getId()
             ){
                 return $grp;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param PrGroup[] $prGroups
+     * @param CiGroup $group
+     * @return PrGroup|null
+     */
+    private function isExistePrGroup(array $prGroups, CiGroup $group): ?PrGroup
+    {
+        foreach($prGroups as $prGroup){
+            if($prGroup->getGroupe()->getId() == $group->getId()){
+                return $prGroup;
             }
         }
 

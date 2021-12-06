@@ -95,6 +95,11 @@ class CiGroup
      */
     private $prGroups;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $windevCours;
+
     public function __construct()
     {
         $this->prGroups = new ArrayCollection();
@@ -263,6 +268,18 @@ class CiGroup
                 $prGroup->setGroupe(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getWindevCours(): ?int
+    {
+        return $this->windevCours;
+    }
+
+    public function setWindevCours(int $windevCours): self
+    {
+        $this->windevCours = $windevCours;
 
         return $this;
     }

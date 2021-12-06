@@ -90,6 +90,11 @@ class PrGroup
      */
     private $assignation;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $windevCours;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -247,6 +252,18 @@ class PrGroup
     public function setAssignation(?CiAssignation $assignation): self
     {
         $this->assignation = $assignation;
+
+        return $this;
+    }
+
+    public function getWindevCours(): ?int
+    {
+        return $this->windevCours;
+    }
+
+    public function setWindevCours(int $windevCours): self
+    {
+        $this->windevCours = $windevCours;
 
         return $this;
     }

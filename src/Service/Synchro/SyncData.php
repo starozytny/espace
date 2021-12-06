@@ -28,6 +28,7 @@ use App\Service\Synchro\Table\SyncGroup;
 use App\Service\Synchro\Table\SyncLesson;
 use App\Service\Synchro\Table\SyncLessonFm;
 use App\Service\Synchro\Table\SyncLevel;
+use App\Service\Synchro\Table\SyncLevelUpFm;
 use App\Service\Synchro\Table\SyncResponsable;
 use App\Service\Synchro\Table\SyncSlot;
 use App\Service\Synchro\Table\SyncSlotMissing;
@@ -60,6 +61,7 @@ class SyncData
     private $syncLesson;
     private $syncGroup;
     private $syncLessonFm;
+    private $syncLevelUpFm;
 
     public function __construct(DatabaseService $databaseService, Sync $sync,
                                 SyncCenter $syncCenter, SyncTeacher $syncTeacher, SyncResponsable $syncResponsable,
@@ -67,7 +69,7 @@ class SyncData
                                 SyncLevel $syncLevel, SyncClassroom $syncClassroom, SyncSlot $syncSlot,
                                 SyncSlotMissing $syncSlotMissing, SyncClasse $syncClasse, SyncClasseSemi $syncClasseSemi,
                                 SyncClasseSlot $syncClasseSlot, SyncLesson $syncLesson, SyncLessonFm $syncLessonFm,
-                                SyncGroup $syncGroup)
+                                SyncGroup $syncGroup, SyncLevelUpFm $syncLevelUpFm)
     {
         $this->em = $databaseService->getEm();
         $this->emWindev = $databaseService->getEmWindev();
@@ -89,6 +91,7 @@ class SyncData
         $this->syncLesson = $syncLesson;
         $this->syncGroup = $syncGroup;
         $this->syncLessonFm = $syncLessonFm;
+        $this->syncLevelUpFm = $syncLevelUpFm;
     }
 
     /**
@@ -115,6 +118,12 @@ class SyncData
             $data0 = $this->em->getRepository(CiSlot::class)->findAll();
             $windevData = $items;
             switch ($name){
+                case "levelUpFm":
+                    $data1 = $this->em->getRepository(CiLesson::class)->findAll();
+                    $data0 = $this->em->getRepository(CiAssignation::class)->findAll();
+                    $windevData = $this->emWindev->getRepository(WindevCours::class)->findAll();
+                    $syncFunction = $this->syncLevelUpFm;
+                    break;
                 case "groups":
                     $data6 = $this->em->getRepository(CiSlot::class)->findBy(
                         ['planning' => $plannings[0]], ['start' => 'ASC', 'end' => 'DESC']

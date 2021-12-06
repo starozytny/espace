@@ -11,6 +11,7 @@ use App\Entity\Cite\CiLevel;
 use App\Entity\Cite\CiPlanning;
 use App\Entity\Cite\CiSlot;
 use App\Entity\Cite\CiTeacher;
+use App\Service\Cite\ClasseService;
 use App\Service\Cite\LevelUp;
 use App\Service\DatabaseService;
 use App\Service\SanitizeData;
@@ -25,14 +26,17 @@ class Sync
     protected $helper;
     protected $sanitizeData;
     protected $levelUp;
+    protected $classeService;
 
-    public function __construct(DatabaseService $databaseService, Helper $helper, SanitizeData $sanitizeData, LevelUp $levelUp)
+    public function __construct(DatabaseService $databaseService, Helper $helper, SanitizeData $sanitizeData,
+                                LevelUp $levelUp, ClasseService $classeService)
     {
         $this->em = $databaseService->getEm();
         $this->emWindev = $databaseService->getEmWindev();
         $this->helper = $helper;
         $this->sanitizeData = $sanitizeData;
         $this->levelUp = $levelUp;
+        $this->classeService = $classeService;
     }
 
     /**
@@ -226,7 +230,7 @@ class Sync
 
             $nameCycle = ''; $nameLevel = '';
 
-            $isFm           = $activity->getDepartement() == "Formation musicale";
+            $isFm           = $activity->getDepartement() == CiActivity::DEP_FM;
 
             $nameActivity   = $activity->getName();
             $max            = $activity->getMax();
@@ -234,7 +238,7 @@ class Sync
             $duration       = $activity->getDuration();
             $durationTotal  = $activity->getDurationTotal();
 
-            if($activity->getDepartement() == "Formation musicale" && $max == 0){
+            if($activity->getDepartement() == CiActivity::DEP_FM && $max == 0){
                 $max = 80;
             }
 

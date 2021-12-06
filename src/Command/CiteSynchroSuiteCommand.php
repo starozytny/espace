@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\Cite\CiClasse;
 use App\Entity\Cite\CiPlanning;
 use App\Entity\Cite\CiSlot;
+use App\Entity\Prev\PrGroup;
 use App\Service\DatabaseService;
 use App\Service\Synchro\SyncData;
 use App\Windev\WindevAdhact;
@@ -51,6 +52,8 @@ class CiteSynchroSuiteCommand extends Command
 
         $this->syncData->synchroSpecial($output, $io, $this->getData($io, WindevAdhact::class,"groups"),"groups", [$planningPrev, null]);
 
+        $this->syncData->synchroSpecial($output, $io, $this->getDataEmSpecial($io, PrGroup::class,"levelUpFm"),"levelUpFm", []);
+
         return Command::SUCCESS;
     }
 
@@ -64,5 +67,17 @@ class CiteSynchroSuiteCommand extends Command
     {
         $io->title("Synchronisation des " . $title);
         return $this->em->getRepository($class)->findAll();
+    }
+
+    protected function getDataEmSpecial($io, $class, $title): array
+    {
+        $io->title("Synchronisation des " . $title);
+        return $this->em->getRepository($class)->findBy([
+                'isFm' => true,
+                'isMultiple' => false,
+                'isHidden' => false,
+                'isWaiting' => false,
+                'isRefused' => false
+            ]);
     }
 }
