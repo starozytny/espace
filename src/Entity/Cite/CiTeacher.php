@@ -104,10 +104,16 @@ class CiTeacher
      */
     private $classes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CiLesson::class, mappedBy="teacher")
+     */
+    private $lessons;
+
     public function __construct()
     {
         $this->slots = new ArrayCollection();
         $this->classes = new ArrayCollection();
+        $this->lessons = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -349,6 +355,36 @@ class CiTeacher
             // set the owning side to null (unless already changed)
             if ($class->getTeacher() === $this) {
                 $class->setTeacher(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CiLesson[]
+     */
+    public function getLessons(): Collection
+    {
+        return $this->lessons;
+    }
+
+    public function addLesson(CiLesson $lesson): self
+    {
+        if (!$this->lessons->contains($lesson)) {
+            $this->lessons[] = $lesson;
+            $lesson->setTeacher($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLesson(CiLesson $lesson): self
+    {
+        if ($this->lessons->removeElement($lesson)) {
+            // set the owning side to null (unless already changed)
+            if ($lesson->getTeacher() === $this) {
+                $lesson->setTeacher(null);
             }
         }
 
