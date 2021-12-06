@@ -3,6 +3,8 @@
 namespace App\Entity\Cite;
 
 use App\Repository\Cite\CiEleveRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -172,6 +174,16 @@ class CiEleve
      * @ORM\JoinColumn(nullable=false)
      */
     private $responsable;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CiGroup::class, mappedBy="eleve")
+     */
+    private $groups;
+
+    public function __construct()
+    {
+        $this->groups = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -546,6 +558,36 @@ class CiEleve
     public function setResponsable(?CiResponsable $responsable): self
     {
         $this->responsable = $responsable;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CiGroup[]
+     */
+    public function getGroups(): Collection
+    {
+        return $this->groups;
+    }
+
+    public function addGroup(CiGroup $group): self
+    {
+        if (!$this->groups->contains($group)) {
+            $this->groups[] = $group;
+            $group->setEleve($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroup(CiGroup $group): self
+    {
+        if ($this->groups->removeElement($group)) {
+            // set the owning side to null (unless already changed)
+            if ($group->getEleve() === $this) {
+                $group->setEleve(null);
+            }
+        }
 
         return $this;
     }

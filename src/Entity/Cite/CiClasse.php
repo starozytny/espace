@@ -3,6 +3,8 @@
 namespace App\Entity\Cite;
 
 use App\Repository\Cite\CiClasseRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -74,6 +76,16 @@ class CiClasse
      * @ORM\ManyToOne(targetEntity=CiLevel::class, inversedBy="classes")
      */
     private $level;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CiGroup::class, mappedBy="classe")
+     */
+    private $groups;
+
+    public function __construct()
+    {
+        $this->groups = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -208,6 +220,36 @@ class CiClasse
     public function setLevel(?CiLevel $level): self
     {
         $this->level = $level;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CiGroup[]
+     */
+    public function getGroups(): Collection
+    {
+        return $this->groups;
+    }
+
+    public function addGroup(CiGroup $group): self
+    {
+        if (!$this->groups->contains($group)) {
+            $this->groups[] = $group;
+            $group->setClasse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroup(CiGroup $group): self
+    {
+        if ($this->groups->removeElement($group)) {
+            // set the owning side to null (unless already changed)
+            if ($group->getClasse() === $this) {
+                $group->setClasse(null);
+            }
+        }
 
         return $this;
     }
