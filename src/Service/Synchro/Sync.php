@@ -11,6 +11,7 @@ use App\Entity\Cite\CiLevel;
 use App\Entity\Cite\CiPlanning;
 use App\Entity\Cite\CiSlot;
 use App\Entity\Cite\CiTeacher;
+use App\Service\Cite\LevelUp;
 use App\Service\DatabaseService;
 use App\Service\SanitizeData;
 use App\Windev\WindevCours;
@@ -23,13 +24,15 @@ class Sync
     protected $emWindev;
     protected $helper;
     protected $sanitizeData;
+    protected $levelUp;
 
-    public function __construct(DatabaseService $databaseService, Helper $helper, SanitizeData $sanitizeData)
+    public function __construct(DatabaseService $databaseService, Helper $helper, SanitizeData $sanitizeData, LevelUp $levelUp)
     {
         $this->em = $databaseService->getEm();
         $this->emWindev = $databaseService->getEmWindev();
         $this->helper = $helper;
         $this->sanitizeData = $sanitizeData;
+        $this->levelUp = $levelUp;
     }
 
     /**

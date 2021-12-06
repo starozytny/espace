@@ -44,11 +44,12 @@ class CiteSynchroSuiteCommand extends Command
         $this->syncData->synchroSpecial($output, $io, $this->getDataEm($io, CiClasse::class,"classesSemi"),"classesSemi");
 
         $planning = $this->em->getRepository(CiPlanning::class)->findOneBy(['isActual' => true]);
+        $planningPrev = $this->em->getRepository(CiPlanning::class)->findOneBy(['isActual' => false]);
         $used = $this->syncData->synchroSpecial($output, $io, $this->getData($io, WindevAdhact::class,"lessons"),"lessons", [null, $planning]);
         $this->syncData->synchroSpecial($output, $io, $this->getData($io, WindevCours::class,"lessonsMissing"),"lessonsMissing", [null, $planning], $used);
         $this->syncData->synchroSpecial($output, $io, $this->getDataEm($io, CiSlot::class,"lessonsFM"),"lessonsFM", [null, $planning], $used);
 
-        $this->syncData->synchroSpecial($output, $io, $this->getData($io, WindevAdhact::class,"groups"),"groups", []);
+        $this->syncData->synchroSpecial($output, $io, $this->getData($io, WindevAdhact::class,"groups"),"groups", [$planningPrev, null]);
 
         return Command::SUCCESS;
     }

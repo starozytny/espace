@@ -116,6 +116,9 @@ class SyncData
             $windevData = $items;
             switch ($name){
                 case "groups":
+                    $data6 = $this->em->getRepository(CiSlot::class)->findBy(
+                        ['planning' => $plannings[0]], ['start' => 'ASC', 'end' => 'DESC']
+                    );
                     $data3 = $this->em->getRepository(CiEleve::class)->findAll();
                     $data2 = $this->em->getRepository(CiGroup::class)->findAll();
                     $data1 = $this->em->getRepository(CiClasse::class)->findAll();

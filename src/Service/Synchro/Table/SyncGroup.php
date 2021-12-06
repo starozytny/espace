@@ -3,9 +3,12 @@
 namespace App\Service\Synchro\Table;
 
 use App\Entity\Cite\CiClasse;
+use App\Entity\Cite\CiCycle;
 use App\Entity\Cite\CiEleve;
 use App\Entity\Cite\CiGroup;
+use App\Entity\Cite\CiLevel;
 use App\Entity\Cite\CiSlot;
+use App\Entity\Prev\PrGroup;
 use App\Service\Synchro\Sync;
 use App\Windev\WindevAdhact;
 use App\Windev\WindevCours;
@@ -22,10 +25,13 @@ class SyncGroup extends Sync
      * @param CiClasse[] $classes
      * @param CiGroup[] $groups
      * @param CiEleve[] $eleves
+     * @param CiCycle[] $cycles
+     * @param CiLevel[] $levels
+     * @param CiSlot[] $slotsPrev
      * @return array
      */
     public function synchronize($letter, WindevAdhact $item, array $items, array $plannings, array $noDuplication, array $slots,
-                                array $classes, array $groups, array $eleves): array
+                                array $classes, array $groups, array $eleves, array $cycles, array $levels, array $slotsPrev): array
     {
         /** @var WindevCours $cours */
         $cours = $this->getExisteFromId($items, $item->getCocleunik());
@@ -59,15 +65,95 @@ class SyncGroup extends Sync
                     if(!in_array($unicite, $noDuplication)) {
                         array_push($noDuplication, $unicite);
 
+                        $isFm = $classe->getIsFm();
+
                         $group = ($group)
                             ->setClasse($classe)
                             ->setEleve($eleve)
-                            ->setIsFm($classe->getIsFm())
+                            ->setIsFm($isFm)
                             ->setIsFree($item->getGratuit())
                             ->setIsSuspended($item->getSuspendu())
                         ;
 
                         $this->em->persist($group);
+
+                        if(!$item->getSuspendu()){
+                            if($isFm){
+                                if($group->getEleve()->getDispenseFm()){
+                                    $result = [[], CiGroup::STAY];
+                                }else{
+                                    $result = $this->levelUp->getLevelUpFM($levels, $cycles, $classes, $classe, $slotsPrev, false, true);
+                                }
+                            }else{
+                                if($this->levelUp->haveSlot($slotsPrev, $classe)){
+                                    $result = [[$classe], CiGroup::STAY];
+                                }else{
+                                    $result = [[], CiGroup::STAY];
+                                }
+                            }
+
+                            $up = $result[0];
+                            $status = $result[1];
+
+                            if(count($up) > 0){
+
+                                $numGroup = uniqid();
+                                if(count($up) > 1){ // si quand même > 1  = only same teacher not found
+
+                                    $canLevelUp = true; $prev = null; $first = true;
+                                    foreach($up as $u){
+                                        if($first) {
+                                            $first = false;
+                                        } else{
+                                            if($u->getName() != $prev){
+                                                $canLevelUp = false;
+                                            }
+                                        }
+                                        $prev = $u->getName();
+                                    }
+
+                                    if($canLevelUp){ // can level up if all up = same cycle and level
+                                        foreach($up as $u){
+
+                                            $prGroup = (new PrGroup())
+                                                ->setClasse($u)
+                                                ->setEleve($group->getEleve())
+                                                ->setIsFm($isFm)
+                                                ->setIsMultiple(true)
+                                                ->setNumGroup($numGroup)
+                                                ->setClasseFrom($classe)
+                                                ->setIsFree($group->getIsFree())
+                                                ->setIsOri(true)
+                                                ->setGroupe($group)
+                                            ;
+
+                                            $group->setStatus($status);
+                                            $group->setClasseTo($u);
+                                            $group->setRenewAnswer(CiGroup::ANSWER_WAITING_PRIORITY);
+
+                                            $this->em->persist($prGroup);
+                                        }
+                                    }
+
+                                }else if(count($up) == 1){
+                                    $prGroup = (new PrGroup())
+                                        ->setClasse($up[0])
+                                        ->setEleve($group->getEleve())
+                                        ->setIsFm($isFm)
+                                        ->setNumGroup($numGroup)
+                                        ->setClasseFrom($classe)
+                                        ->setIsFree($group->getIsFree())
+                                        ->setIsOri(true)
+                                        ->setGroupe($group)
+                                    ;
+
+                                    $group->setStatus($status);
+                                    $group->setClasseTo($up[0]);
+
+                                    $this->em->persist($prGroup);
+                                }
+                            }
+                        }
 
                         return ['code' => 1, 'status' => $status, 'data' => $noDuplication];
                     }
