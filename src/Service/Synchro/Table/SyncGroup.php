@@ -37,10 +37,11 @@ class SyncGroup extends Sync
             if($slot instanceof CiSlot){
                 $level = $item->getNicleunik() != 0 ? $item->getNicleunik() : $cours->getNicleunik();
 
-                $classe = $this->helper->getClasseOptimize($cours, $classes, $level);
-                if(!$classe instanceof CiClasse) {
+                $classe = $this->helper->getClasseOptimize("normal", $classes, $cours, $level);
+                if(!is_array($classe)) {
                     return ['code' => 1, 'status' => 0, 'data' => 'Classe introuvable.'];
                 }
+                $classe = $classe[0];
 
                 $group = $this->isExisteGroup($groups, $item, $classe);
                 $status = 2;

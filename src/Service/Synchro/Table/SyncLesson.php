@@ -44,15 +44,16 @@ class SyncLesson extends Sync
                 $end = $this->helper->createTime($cours->getHeurefin());
                 $duration = $this->helper->createTime($cours->getDuree());
 
-                $unicite = [$level, $cours->getId(), $slot->getId()];
+                $unicite = [$level, $cours->getHeuredeb(), $slot->getId()];
 
                 if(!in_array($unicite, $noDuplication)) {
                     array_push($noDuplication, $unicite);
 
-                    $classe = $this->helper->getClasseOptimize($cours, $classes, $level);
-                    if(!$classe instanceof CiClasse) {
+                    $classe = $this->helper->getClasseOptimize("normal", $classes, $cours, $level);
+                    if(!is_array($classe)) {
                         return ['code' => 1, 'status' => 0, 'data' => 'Classe introuvable.'];
                     }
+                    $classe = $classe[0];
 
                     $lesson = $this->isExisteLesson($lessons, $slot, $start);
                     $status = 2;

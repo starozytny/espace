@@ -395,15 +395,27 @@ class Helper
         return $slots;
     }
 
-    public function getClasseOptimize(WindevCours $cours, $classes, $level)
+    /**
+     * @param $type
+     * @param $classes
+     * @param WindevCours|CiSlot $item
+     * @param $level
+     * @return array|int
+     */
+    public function getClasseOptimize($type, $classes, $item, $level)
     {
+        $prCleunik = $type == "normal" ? $item->getPrcleunik() : $item->getTeacher()->getOldId();
+        $ceCleunik = $type == "normal" ? $item->getCecleunik() : $item->getCenter()->getOldId();
+        $acCleunik = $type == "normal" ? $item->getAccleunik() : $item->getActivity()->getOldId();
+        $cyCleunik = $type == "normal" ? $item->getCycleunik() : ($item->getCycle() ? $item->getCycle()->getOldId() : 0);
+
         $possibilities = [];
         /** @var CiClasse $classe */
         /** @var CiClasse $possibility */
         foreach($classes as $classe){
-            if($classe->getTeacher()->getOldId() == $cours->getPrcleunik()
-                && $classe->getCenter()->getOldId() == $cours->getCecleunik()
-                && $classe->getActivity()->getOldId() == $cours->getAccleunik()
+            if($classe->getTeacher()->getOldId() == $prCleunik
+                && $classe->getCenter()->getOldId() == $ceCleunik
+                && $classe->getActivity()->getOldId() == $acCleunik
             ){
                 array_push($possibilities, $classe);
             }
@@ -413,12 +425,12 @@ class Helper
             // check cycle
             $tmp = [];
             foreach($possibilities as $possibility) {
-                if ($cours->getCycleunik() == 0) {
+                if ($cyCleunik == 0) {
                     if ($possibility->getCycle() == null) {
                         array_push($tmp, $possibility);
                     }
                 } else {
-                    if($possibility->getCycle() && $possibility->getCycle()->getOldId() == $cours->getCycleunik()){
+                    if($possibility->getCycle() && $possibility->getCycle()->getOldId() == $cyCleunik){
                         array_push($tmp, $possibility);
                     }
                 }
@@ -446,8 +458,8 @@ class Helper
                 $possibilities = $tmp;
             }
 
-            if(count($possibilities) == 1){
-                return $possibilities[0];
+            if(count($possibilities) >= 1){
+                return $possibilities;
             }
         }
 

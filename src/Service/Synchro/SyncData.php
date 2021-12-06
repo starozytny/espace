@@ -26,6 +26,7 @@ use App\Service\Synchro\Table\SyncCycle;
 use App\Service\Synchro\Table\SyncEleve;
 use App\Service\Synchro\Table\SyncGroup;
 use App\Service\Synchro\Table\SyncLesson;
+use App\Service\Synchro\Table\SyncLessonFm;
 use App\Service\Synchro\Table\SyncLevel;
 use App\Service\Synchro\Table\SyncResponsable;
 use App\Service\Synchro\Table\SyncSlot;
@@ -58,13 +59,15 @@ class SyncData
     private $syncClasseSemi;
     private $syncLesson;
     private $syncGroup;
+    private $syncLessonFm;
 
     public function __construct(DatabaseService $databaseService, Sync $sync,
                                 SyncCenter $syncCenter, SyncTeacher $syncTeacher, SyncResponsable $syncResponsable,
                                 SyncEleve $syncEleve, SyncActivity $syncActivity, SyncCycle $syncCycle,
                                 SyncLevel $syncLevel, SyncClassroom $syncClassroom, SyncSlot $syncSlot,
                                 SyncSlotMissing $syncSlotMissing, SyncClasse $syncClasse, SyncClasseSemi $syncClasseSemi,
-                                SyncClasseSlot $syncClasseSlot, SyncLesson $syncLesson, SyncGroup $syncGroup)
+                                SyncClasseSlot $syncClasseSlot, SyncLesson $syncLesson, SyncLessonFm $syncLessonFm,
+                                SyncGroup $syncGroup)
     {
         $this->em = $databaseService->getEm();
         $this->emWindev = $databaseService->getEmWindev();
@@ -85,6 +88,7 @@ class SyncData
         $this->syncClasseSemi = $syncClasseSemi;
         $this->syncLesson = $syncLesson;
         $this->syncGroup = $syncGroup;
+        $this->syncLessonFm = $syncLessonFm;
     }
 
     /**
@@ -117,6 +121,11 @@ class SyncData
                     $data1 = $this->em->getRepository(CiClasse::class)->findAll();
                     $windevData = $this->emWindev->getRepository(WindevCours::class)->findAll();
                     $syncFunction = $this->syncGroup;
+                    break;
+                case "lessonsFM":
+                    $data2 = $this->em->getRepository(CiLesson::class)->findAll();
+                    $data1 = $this->em->getRepository(CiClasse::class)->findAll();
+                    $syncFunction = $this->syncLessonFm;
                     break;
                 case "lessonsMissing":
                 case "lessons":
@@ -217,9 +226,7 @@ class SyncData
             $this->sync->displayDataArray($io, $errors);
             $io->comment(sprintf("%d %s non utilisés.", $notUsed, $name));
             $io->comment(sprintf("%d %s mis à jour.", $updated, $name));
-            if($name != "classesSlots" && $name != "classesSemi"
-                && $name != "lessons" && $name != "lessonsMissing"
-                && $name != "groups"){
+            if($name == "slots"){
                 $this->sync->displayDataArray($io, $updatedArray);
             }
             $io->comment(sprintf("%d %s inchangés.", $noUpdated, $name));
