@@ -1,0 +1,289 @@
+@import "../../../vars/vars";
+
+.form-impot{
+  margin-bottom: 48px;
+
+  form{
+    border-bottom: 1px solid var(--grey);
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+  }
+
+  .form-button{
+    & > .btn{
+      width: 100%;
+    }
+  }
+}
+
+.ul{
+  padding-left: 0;
+}
+
+.items-response{
+
+  .item{
+    padding-top: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--fond);
+
+    &:hover{
+      background-color: var(--alpha);
+    }
+  }
+
+  .sondage-response{
+    width: 100%;
+
+    .btn{
+      background: var(--fond);
+      border: 1px solid var(--greyShadow);
+    }
+
+    .btn:last-child{
+      margin-left: 8px;
+    }
+
+    .actions-sondage-edit{
+      .btn{
+        width: 100%;
+      }
+    }
+  }
+
+  .infos{
+    & > div{
+      width: 100%;
+    }
+  }
+
+  .assign{
+    margin-bottom: 48px;
+  }
+
+  .alert{
+    margin-bottom: 0;
+  }
+
+  .actions{
+    justify-content: space-between;
+
+    .btn{
+      width: 50%;
+
+      &:hover{
+        transform: translateY(0);
+      }
+    }
+
+    .btn:first-child{
+      border-radius: 4px 0 0 4px;
+    }
+    .btn:last-child{
+      border-radius: 0 4px 4px 0;
+    }
+  }
+
+  .from, .to{
+    width: 100%;
+  }
+}
+
+.txt-minus{
+  font-size: 14px;
+}
+
+.propals-choice-others{
+  margin: 1em 0;
+  width: calc(100% - 50px);
+  background: var(--warningShadow);
+  border: 1px solid var(--greyShadow)
+}
+
+.propals-choice{
+  p:first-child{
+    @include fontSemibold();
+    margin-top: 1em;
+  }
+}
+
+.message-classes-full{
+  margin: 1em 0;
+  max-width: 414px;
+}
+
+.choice-classe{
+  cursor: pointer;
+
+  &:hover{
+    opacity: 1;
+  }
+}
+
+.choice-classe, .lesson-infos.alone{
+  padding: 8px;
+  border: 1px solid var(--grey);
+  border-radius: 4px;
+  background: var(--alpha);
+  opacity: 0.6;
+  transition: all 0.2s ease-in-out;
+  margin-bottom: 4px;
+
+  &.active{
+    border-color: var(--primary);
+    opacity: 1;
+  }
+
+  &.false{
+    opacity: 0.4;
+    cursor: not-allowed;
+
+    &:hover{
+      opacity: 0.4;
+    }
+  }
+}
+
+.lesson-infos.alone{
+  margin-bottom: 0;
+}
+
+.choice-classe{
+  &.active{
+    border-color: var(--primary);
+    background: var(--alpha);
+    opacity: 1;
+    color: var(--txt);
+  }
+}
+
+.lesson-infos.accepted{
+  &.active{
+    border-color: var(--primaryShadow);
+    background: var(--primaryShadow2);
+    opacity: 1;
+  }
+}
+
+.redirectToFm{
+  color: var(--alpha);
+  text-decoration: underline;
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .multiple-choice{
+    @include flex(row, flex-start, flex-start);
+  }
+
+  .from-to{
+    width: 100%;
+  }
+
+  .eleve {
+    @include flex(row, flex-start, flex-start);
+    width: 100%;
+  }
+
+  .items-response{
+    .toolbar {
+      .item-display {
+        width: 100%;
+        border-radius: 3px;
+        border-left: 1px solid var(--grey);
+        justify-content: flex-end;
+      }
+    }
+
+    .eleve{
+      padding-left: 12px;
+      width: calc(100% - 12px);
+    }
+
+    .infos{
+      align-items: flex-start;
+
+      .sondage-response{
+        @include flex(row, flex-start, flex-start);
+
+        .propals{
+          width: calc(75% - 12px);
+        }
+
+        .actions{
+          width: 25%;
+        }
+      }
+
+      .eleve-infos{
+        width: calc(25% - 12px);
+        margin-right: 12px;
+      }
+      .assignations{
+        width: 75%;
+      }
+
+      .assign{
+        @include flex(row, flex-start, space-between);
+        flex-wrap: wrap;
+      }
+
+      .assign:last-child{
+        margin-bottom: 0;
+      }
+
+      .actions{
+        width: 100%;
+      }
+    }
+
+    .propals-choice{
+      width: calc(100% - 12px);
+      margin-right: 0;
+      overflow: hidden;
+      padding-right: 12px;
+
+      .ul{
+        margin: 1em 0;
+        @include flex(row, stretch, flex-start);
+        flex-wrap: wrap;
+        width: calc(100% + 12px);
+
+        .choice-classe{
+          width: calc(50% - 30px);
+          margin-right: 12px;
+          margin-bottom: 12px;
+        }
+      }
+    }
+
+    .propals-choice-others{
+      margin-top: 0;
+    }
+  }
+}
+
+//                      __   _  __    ___   ___    __
+//                     | _| / |/ /_  / _ \ / _ \  |_ |
+//    _____ _____ _____| |  | | '_ \| | | | | | |  | |_____ _____ _____
+//   |_____|_____|_____| |  | | (_) | |_| | |_| |  | |_____|_____|_____|
+//                     | |  |_|\___/ \___/ \___/   | |
+//                     |__|                       |__|
+@media (min-width: 1600px){
+  .items-response{
+    .propals-choice{
+      .ul{
+        width: calc(100% + 20px);
+
+        .choice-classe{
+          width: calc(33% - 30px);
+        }
+      }
+    }
+  }
+}

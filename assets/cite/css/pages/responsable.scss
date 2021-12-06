@@ -1,0 +1,88 @@
+@import "../vars/vars";
+
+.infos-generales{
+
+  h2{
+    font-size: 18px;
+    margin-bottom: 24px;
+  }
+
+  .infos{
+    .name{
+      @include flex(row, flex-start, flex-start);
+      flex-wrap: wrap;
+      font-size: 18px;
+      @include fontSemibold();
+    }
+  }
+  .infos, .eleve{
+    .email{
+      opacity: 0.7;
+      margin-bottom: 12px;
+    }
+
+    .phone, .adr, .birthday{
+      opacity: 0.8;
+    }
+
+    .phone + .adr{
+      margin-top: 8px;
+    }
+  }
+
+  .infos-eleves{
+
+    .eleve{
+      margin-top: 12px;
+      background-color: var(--alpha);
+      box-shadow: 0 5px 10px var(--greyShadow);
+      border-radius: 4px;
+      padding: 12px;
+
+      .older{
+        display: inline-block;
+        background-color: var(--grey);
+        border-radius: 4px;
+        font-size: 14px;
+        padding: 4px 8px;
+        opacity: 0.7;
+        margin-bottom: 8px;
+      }
+
+      .classes{
+        margin-top: 12px;
+      }
+    }
+  }
+}
+
+.auths{
+  margin-top: 24px;
+  opacity: 0.7;
+
+  & > p{
+    margin-bottom: 12px;
+  }
+}
+
+//                      __   _ ____  ___   ___    __
+//                     | _| / |___ \( _ ) / _ \  |_ |
+//    _____ _____ _____| |  | | __) / _ \| | | |  | |_____ _____ _____
+//   |_____|_____|_____| |  | |/ __/ (_) | |_| |  | |_____|_____|_____|
+//                     | |  |_|_____\___/ \___/   | |
+//                     |__|                      |__|
+@media (min-width:1280px) {
+  .infos-generales{
+    @include flex(row, flex-start, flex-start);
+
+    .infos-responsable{
+      width: 40%;
+    }
+
+    .infos-eleves{
+      width: calc(60% - 24px);
+      margin-top: 0;
+      margin-left: 24px;
+    }
+  }
+}

@@ -19,6 +19,7 @@ Encore
         '@publicFolder': path.resolve(__dirname, './public'),
         '@dashboardComponents': path.resolve(__dirname, './assets/dashboard/js/components'),
         '@commonComponents': path.resolve(__dirname, './assets/common/js/components'),
+        '@citeComponents': path.resolve(__dirname, './assets/cite/js/components'),
         '@appComponents': path.resolve(__dirname, './assets/app/js/components'),
         '@nodeModulesFolder': path.resolve(__dirname, './node_modules'),
     })
@@ -66,6 +67,8 @@ Encore
     .addEntry('dashboard_settings', './assets/dashboard/js/pages/settings.js')
     .addEntry('dashboard_contact', './assets/dashboard/js/pages/contact.js')
     .addEntry('dashboard_notifications', './assets/dashboard/js/pages/notifications.js')
+
+    .addEntry('cite_level', './assets/cite/js/pages/level.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     //.enableStimulusBridge('./assets/controllers.json')

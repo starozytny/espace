@@ -1,0 +1,39 @@
+@import "../../../vars/vars";
+
+.tmCours{
+  border: 1px solid var(--fond);
+  margin-right: 8px;
+  margin-bottom: 8px;
+  padding: 12px 8px 0 8px;
+  border-radius: 4px;
+  box-shadow: 0 5px 10px var(--greyShadow);
+  background-color: var(--alpha);
+
+  & > .name{
+    opacity: 0.8;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--fond);
+  }
+}
+
+.eleves{
+  @include flex(row, flex-start, flex-start);
+  flex-wrap: wrap;
+}
+
+.eleve{
+  width: 100%;
+}
+
+.liste{
+  width: 100%;
+}
+
+.liste-1{
+  .tmCours{
+    width: calc(100% - 16px);
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+}

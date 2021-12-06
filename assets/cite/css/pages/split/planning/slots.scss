@@ -1,0 +1,160 @@
+@import "../../../vars/vars";
+
+.slots{
+  position: relative;
+  margin-top: 24px;
+  margin-bottom: 24px;
+
+  &:before{
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0; left: 20px;
+    border-left: 3px dashed var(--grey);
+    width: 3px;
+    height: 100%;
+  }
+
+  .slot{
+    .start, .end{
+      position: relative;
+      z-index: 1;
+      @include fontSemibold();
+      font-size: 18px;
+      padding: 8px 0;
+      background: var(--fondContent);
+
+    }
+    .group{
+      min-height: 50px;
+      width: calc(100% - 40px);
+      margin: 0 0 12px 40px;
+      @include flex(column, flex-start, flex-start);
+      transition: all 0.2s ease-in-out;
+      vertical-align: top;
+
+      & + .group{
+        margin-top: 24px;
+      }
+
+      .group-infos{
+        width: 100%;
+
+        .activity{
+          display: inline-block;
+          @include fontSemibold();
+        }
+        .centre, .classroom{
+          display: inline-block;
+          opacity: 0.7;
+          margin-right: 4px;
+        }
+
+        .classroom{
+          margin-top: 4px;
+        }
+      }
+
+      .group-add{
+        cursor: pointer;
+        padding: 12px 0;
+        width: 100%;
+        border: 1px dashed var(--grey);
+        @include flex(row, center, center);
+        transition: all 0.2s ease;
+        border-radius: 4px;
+
+        span:first-child{
+          margin-right: 6px;
+          transform: translateY(1px);
+        }
+
+        span{
+          display: inline-block;
+        }
+
+        & > div{
+          opacity: 0.4;
+          transition: all 0.2s ease;
+        }
+
+        &:hover{
+          border-color: var(--grey2);
+
+          & > div{
+            opacity: 0.7;
+            transform: scale(0.95);
+          }
+        }
+      }
+
+      .lessons{
+        margin-top: 12px;
+      }
+    }
+    .pause{
+      position: relative;
+      z-index: 1;
+      display: none;
+      background-color: var(--fondContent);
+
+      span{
+        background-color: var(--grey);
+        padding: 12px;
+        margin: 16px 0;
+        opacity: 0.5;
+        width: 100%;
+        @include flex(row, center, center);
+      }
+    }
+  }
+
+  .slot:not(:first-child){
+    .pause{
+      @include flex(row, center, center);
+    }
+  }
+
+  .eleve-checked{
+
+    [class^="icon-"]{
+      font-size: 10px;
+      display: inline-block;
+      margin-right: 4px;
+    }
+  }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .slot.slot-merged{
+    .group{
+      display: inline-block;
+      width: calc(50% - 40px);
+    }
+
+    .group + .group{
+      margin-top: 0;
+    }
+  }
+
+  .slots{
+    .slot{
+      .group{
+        .group-infos{
+          @include flex(row, flex-start, space-between);
+
+          .classroom{
+            margin-top: 0;
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  }
+}

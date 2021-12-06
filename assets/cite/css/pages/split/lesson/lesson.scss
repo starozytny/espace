@@ -1,0 +1,190 @@
+@import "../../../vars/vars";
+
+.visio-content {
+  .alert-form-info{
+    .alert{
+      margin-top: 0;
+    }
+  }
+}
+
+.lesson{
+  padding: 12px;
+  background: var(--alpha);
+  box-shadow: 0 3px 10px var(--greyShadow);
+  margin-bottom: 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
+
+  &:hover{
+    transform: translateX(5px);
+  }
+
+  &:last-child{
+    margin-bottom: 0;
+  }
+}
+
+.lesson-details{
+  @include flex(column, stretch, flex-start);
+
+  .time{
+    width: 120px;
+    margin-bottom: 12px;
+
+    & > span{
+      display: inline-block;
+      background: var(--dangerShadow);
+      padding: 4px 12px 2px 12px;
+      border-radius: 50px;
+      font-size: 14px;
+      box-shadow: 0 3px 10px var(--dangerShadow2);
+    }
+  }
+
+  .infos{
+    width: 100%;
+  }
+
+  .lesson-infos{
+    width: 100%;
+
+    .activity{
+      display: block;
+      @include fontSemibold();
+      margin-bottom: 2px;
+    }
+    .centre, .classroom{
+      display: inline-block;
+      opacity: 0.7;
+      margin-right: 4px;
+    }
+    .classroom{
+      font-size: 14px;
+    }
+    .teacher{
+      opacity: 0.7;
+      margin-top: 12px;
+    }
+    .total{
+      @include flex(row, flex-start, flex-start);
+      margin-top: 8px;
+      font-size: 14px;
+      opacity: 0.7;
+
+      & > div{
+        margin-right: 24px;
+      }
+    }
+
+    .btn-icon{
+      padding-left: 0;
+      color: var(--color0);
+      opacity: 1;
+      text-align: left;
+      display: block;
+
+      &:hover{
+        transform: translateY(0) translateX(5px);
+      }
+    }
+  }
+
+  .actions{
+    @include flex(column, flex-end, flex-end);
+  }
+}
+
+.lesson-infos-eleves{
+  position: relative;
+  font-size: 14px;
+  opacity: 0.7;
+  margin: 8px 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  z-index: 3;
+
+  &:hover{
+    overflow: initial;
+    max-height: 600px;
+
+    .lesson-infos-eleves-container{
+      &:before{
+        opacity: 0;
+        transition: all 0.3s ease-in-out;
+      }
+    }
+  }
+
+  .lesson-infos-eleves-name{
+    .details-classe{
+      display: none;
+    }
+  }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+
+  .lesson-details{
+    flex-direction: row;
+
+    .time{
+      margin-bottom: 0;
+      text-align: center;
+
+      span{
+        font-size: 15px;
+      }
+    }
+
+    .infos{
+      margin-left: 12px;
+      width: calc(100% - 12px - 120px);
+    }
+
+    .lesson-infos{
+      .lesson-assignations{
+        @include flex(column, flex-start, flex-start);
+        margin-top: 8px;
+
+        .total{
+          margin-top: 0;
+          margin-bottom: 8px;
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .lesson-infos-eleves{
+    margin: 0;
+    max-width: 414px;
+  }
+}
+
+
+
+//                      __   _  __    ___   ___    __
+//                     | _| / |/ /_  / _ \ / _ \  |_ |
+//    _____ _____ _____| |  | | '_ \| | | | | | |  | |_____ _____ _____
+//   |_____|_____|_____| |  | | (_) | |_| | |_| |  | |_____|_____|_____|
+//                     | |  |_|\___/ \___/ \___/   | |
+//                     |__|                       |__|
+@media (min-width: 1600px){
+  .lesson-infos-eleves{
+    width: calc(100% - 12px);
+
+    .lesson-infos-eleves-name{
+      @include flex(row, flex-start, space-between);
+      .details-classe{
+        display: inline-block;
+      }
+    }
+  }
+}

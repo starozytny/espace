@@ -1,0 +1,221 @@
+@import "./split/lesson/lesson";
+@import "./split/planning/days";
+@import "./split/planning/slots";
+@import "./split/planning/classe";
+@import "./split/planning/lesson";
+@import "./split/planning/places/blob";
+
+#planning-slots{
+  form{
+    flex-direction: column;
+  }
+}
+
+.toolbar{
+  .filter-search{
+    width: 100%;
+
+    .filter{
+      width: 100%;
+    }
+
+    .dropdown-btn{
+      border-right: 1px solid var(--grey);
+      border-radius: 3px;
+    }
+  }
+}
+
+.dropdown{
+  .dropdown-items{
+    .item{
+      @include flex(row, flex-start, flex-start);
+    }
+  }
+}
+
+.planning-name{
+  width: 100%;
+  margin-bottom: 24px;
+  @include fontSemibold();
+}
+
+.selected-teacher-name{
+  @include fontSemibold();
+  margin-bottom: 12px;
+  @include flex(row, flex-start, space-between);
+}
+
+.lessons{
+  width: 100%
+}
+
+.toolbar{
+  & > .item.select{
+    width: 100%;
+  }
+}
+
+.quotas{
+  opacity: 0.8;
+
+  .line{
+    margin-bottom: 0;
+  }
+}
+
+.items-planning{
+  .actions{
+    @include flex(column, flex-start, flex-start);
+    .item{
+      width: 100%;
+
+      a{
+        width: calc(100% - 48px);
+      }
+    }
+    .item:first-child{
+      margin: 12px 0;
+    }
+  }
+}
+
+.choice-type{
+  @include flex(row, flex-start, flex-start);
+
+  .classe{
+    &:hover{
+      transform: translateX(0) translateY(-2px);
+    }
+  }
+
+  & > div:first-child{
+    margin-right: 4px;
+    width: calc(50% - 4px);
+  }
+
+  & > div:last-child{
+    margin-left: 4px;
+    width: calc(50% - 4px);
+  }
+}
+
+.form-title{
+  font-size: 14px;
+  text-transform: uppercase;
+  color: var(--grey2);
+  margin-bottom: 8px;
+
+  &:not(:first-child){
+    margin-top: 12px;
+  }
+}
+
+.form {
+  .form-infos{
+    max-width: 768px;
+  }
+}
+
+.vacant-list{
+  margin: 48px 0 0 0;
+}
+
+.vacant-places{
+
+  .vacant{
+    padding: 12px;
+    border: 1px solid var(--grey);
+    box-shadow: 0 0 10px var(--greyShadow);
+    background: var(--alpha);
+    border-radius: 4px;
+    text-align: center;
+
+    &:not(:last-child){
+      margin-bottom: 12px;
+    }
+
+    &.active{
+      border-color: var(--primary);
+    }
+  }
+
+  .vacant-counter{
+    @include flex(row, center, center);
+    margin: 8px 0;
+
+    .vacant-soustraction, .vacant-add{
+      padding: 12px;
+      color: var(--grey);
+      margin: 0 12px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+
+      &:hover{
+        color: var(--txt);
+      }
+    }
+  }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .toolbar{
+    .filter-search{
+      width: calc(100% - 181px - 24px);
+    }
+  }
+}
+
+//                      __   _ ____  ___   ___    __
+//                     | _| / |___ \( _ ) / _ \  |_ |
+//    _____ _____ _____| |  | | __) / _ \| | | |  | |_____ _____ _____
+//   |_____|_____|_____| |  | |/ __/ (_) | |_| |  | |_____|_____|_____|
+//                     | |  |_|_____\___/ \___/   | |
+//                     |__|                      |__|
+@media (min-width:1280px) {
+  .items-planning{
+    .actions{
+      flex-direction: row;
+
+      .item{
+        width: auto;
+
+        a{
+          width: auto;
+        }
+      }
+      .item:first-child{
+        margin: 0 12px 0 0;
+      }
+    }
+  }
+
+  .form-title, .recap-content span:first-child{
+    font-size: 16px;
+  }
+
+  .vacant-places{
+    @include flex(row, flex-start, flex-start);
+    width: calc(100% + 12px);
+
+    .vacant{
+      width: calc(25% - 12px);
+      margin-right: 12px;
+      padding: 8px 0;
+
+      & > div:first-child{
+        font-size: 14px;
+      }
+
+      &:not(:last-child){
+        margin-bottom: 0;
+      }
+    }
+  }
+}

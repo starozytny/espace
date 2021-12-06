@@ -1,0 +1,96 @@
+@import "../vars/vars";
+
+@import "./split/renew/fromto";
+@import "./split/renew/eleve";
+
+.sans-reponse-explain{
+  margin: 24px 0;
+  border-top: 1px solid var(--fond);
+  padding-top: 24px;
+
+  .title{
+    margin-bottom: 4px;
+    @include fontSemibold();
+    font-size: 18px;
+  }
+}
+
+.items-to-set, .items-without-propal{
+  .infos{
+    & > div{
+      width: 50%;
+    }
+  }
+}
+
+.items-without-response{
+  .item-header{
+    & > .name{
+      margin-bottom: 24px;
+    }
+  }
+  .infos{
+    align-items: flex-start;
+
+    & > div{
+      margin-bottom: 12px;
+
+      .eleve{
+        margin-bottom: 4px;
+      }
+    }
+
+    .name{
+      margin-bottom: 12px;
+    }
+  }
+}
+
+.items-phase-2{
+  .eleve-resp{
+    margin-bottom: 12px;
+  }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .items-without-response{
+    .infos{
+      flex-wrap: wrap;
+      align-items: stretch;
+      justify-content: flex-start;
+
+      & > div{
+        width: calc(33% - 12px);
+        margin-right: 12px;
+        margin-bottom: 24px;
+      }
+    }
+  }
+
+  .items-phase-2{
+    .infos{
+      flex-wrap: wrap;
+      align-items: stretch;
+      justify-content: flex-start;
+
+      & > div{
+        width: 100%;
+        margin-bottom: 24px;
+      }
+    }
+
+    .eleve-resp{
+      @include flex(row, flex-start, flex-start);
+
+      .eleve, .responsable{
+        width: 50%;
+      }
+    }
+  }
+}

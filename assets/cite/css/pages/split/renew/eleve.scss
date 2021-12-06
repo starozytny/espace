@@ -1,0 +1,127 @@
+@import "../../../vars/vars";
+
+.eleve{
+  .sub{
+    .icon-male, .icon-female{
+      display: inline-block;
+      margin-top: 4px;
+      margin-right: 4px;
+      font-size: 12px;
+    }
+
+    .btn-icon{
+      .tooltip{
+        top: 3px;
+        right: -36px;
+        width: 32px;
+      }
+    }
+
+    &:not(:last-child){
+      margin-bottom: 2px;
+    }
+  }
+
+  .eleve-centre{
+    margin-top: 4px;
+  }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .items-default{
+    .infos{
+      .eleve > .name, .eleve-infos > .name{
+        position: relative;
+
+        span:first-child{
+          position: relative;
+          background: var(--fondContent);
+          z-index: 5;
+          padding-right: 8px;
+        }
+
+        &:after{
+          content: "";
+          background: var(--grey);
+          height: 2px;
+          width: calc(100% - 12px);
+          position: absolute;
+          top: 8px; left: 0;
+          z-index: 1;
+          opacity: 0.6;
+        }
+      }
+      .assignations{
+        position: relative;
+
+        &:before{
+          content: "";
+          background: var(--grey);
+          height: calc(100% - 6px);
+          width: 2px;
+          position: absolute;
+          top: 10px; left: -24px;
+          opacity: 0.6;
+        }
+
+        .assign{
+          position: relative;
+
+          &:before{
+            content: '';
+            width: 24px;
+            background: var(--grey);
+            height: 2px;
+            position: absolute;
+            top: 24px;
+            left: -24px;
+            opacity: 0.6;
+          }
+        }
+      }
+    }
+  }
+
+}
+
+//                      __   _ ____  ___   ___    __
+//                     | _| / |___ \( _ ) / _ \  |_ |
+//    _____ _____ _____| |  | | __) / _ \| | | |  | |_____ _____ _____
+//   |_____|_____|_____| |  | |/ __/ (_) | |_| |  | |_____|_____|_____|
+//                     | |  |_|_____\___/ \___/   | |
+//                     |__|                      |__|
+@media (min-width:1280px) {
+  .eleve{
+    @include flex(row, flex-start, flex-start);
+    width: 100%;
+
+    .assignations{
+      width: 75%;
+      margin-top: 0;
+      transition: all 0.2s ease-in-out;
+
+      .actions{
+        transition: all 0.2s ease-in-out;
+
+        &.actions-1, &.actions-0{
+          .alert{
+            width: 65%;
+          }
+          button{
+            width: 35%;
+          }
+        }
+      }
+    }
+
+    &:not(:last-child){
+      margin-bottom: 24px;
+    }
+  }
+}

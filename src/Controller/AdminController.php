@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Cite\CiAuthorization;
 use App\Entity\Contact;
 use App\Entity\Notification;
 use App\Entity\Settings;
@@ -138,6 +139,20 @@ class AdminController extends AbstractController
 
         return $this->render('admin/pages/notifications/index.html.twig', [
             'donnees' => $objs
+        ]);
+    }
+
+    /**
+     * @Route("/gestion-niveaux", name="level_index")
+     * @return Response
+     */
+    public function level(): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $authorization = $em->getRepository(CiAuthorization::class)->findOneBy(['rank' => 0]);
+
+        return $this->render('admin/pages/level/index.html.twig', [
+            'isOpenLevel' => $authorization->getIsOpenLevel()
         ]);
     }
 }

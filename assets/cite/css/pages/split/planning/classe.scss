@@ -1,0 +1,360 @@
+@import "../../../vars/vars";
+
+.classe{
+  transition: all 0.2s ease-in-out;
+  margin-bottom: 12px;
+
+  &:hover{
+    transform: translateX(6px);
+  }
+}
+
+.classe-infos{
+  @include flex(row, flex-start, flex-start);
+  border-radius: 4px;
+  padding: 12px;
+  border: 1px solid var(--grey);
+  background: var(--alpha);
+  box-shadow: 0 0 10px var(--greyShadow);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover,
+  &.active{
+    .radio{
+      .radio-button{
+        &:before{
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  &.active{
+    border-color: var(--primary);
+
+    & + .classe-eleves{
+      position: relative;
+      opacity: 1;
+      z-index: 1;
+      height: auto;
+      transition: all 0.2s ease-in-out;
+    }
+  }
+
+  .radio{
+    width: 20px;
+    margin-right: 12px;
+
+    .radio-button{
+      position: relative;
+      width: 16px; height: 16px;
+      border-radius: 4px;
+      background-color: var(--alpha);
+      border: 1px solid var(--grey);
+      transition: all 0.2s ease;
+
+      &:before{
+        content: "";
+        position: absolute;
+        top: 1px; left: 1px;
+        width: 14px; height: 14px;
+        background: var(--primary);
+        opacity: 0;
+        border-radius: 4px;
+        transition: all 0.2s ease-in-out;
+      }
+    }
+  }
+
+  .infos-title{
+    @include fontSemibold();
+
+    span:first-child{
+      display: inline-block;
+      margin-right: 8px;
+      min-width: 120px;
+    }
+  }
+
+  .infos, .infos-next{
+    width: calc(100% - 20px - 12px);
+    font-size: 14px;
+
+    .time, .total{
+      display: block;
+      margin-top: 4px;
+      opacity: 0.7;
+      text-align: right;
+
+      [class^="icon-"]{
+        display: inline-block;
+        margin-left: 4px;
+      }
+    }
+  }
+
+  .infos-next{
+    .time, .total{ text-align: left; }
+  }
+}
+
+.classe-eleves{
+  position: absolute;
+  z-index: -10;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  padding: 12px 12px 0 12px;
+
+  &:before{
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 1px; height: 100%;
+    display: block;
+    background: var(--primary);
+  }
+
+  .eleve{
+    @include flex(row, flex-start, flex-start);
+    margin-bottom: 24px;
+    cursor: pointer;
+
+    &:hover{
+      .eleve-infos{
+        opacity: 0.9;
+      }
+
+      .eleve-selector{
+        &:before{
+          opacity: 0.6;
+        }
+      }
+    }
+
+    &.active{
+      .eleve-infos{
+        opacity: 1;
+      }
+      .eleve-selector{
+        &:before{
+          opacity: 1;
+        }
+      }
+    }
+
+    &.true, &.refused, &.indispo{
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &.true{
+      &:hover{
+        .eleve-selector{
+          &:before{
+            opacity: 1;
+          }
+        }
+      }
+    }
+
+    &.refused{
+      text-decoration: line-through;
+
+      &:hover{
+        .eleve-selector{
+          &:before{
+            opacity: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .eleve-selector{
+    position: relative;
+    width: 14px; height: 14px;
+    margin-right: 12px;
+    border-radius: 4px;
+    border: 1px solid var(--grey);
+    background: var(--alpha);
+    cursor: pointer;
+
+    &:before{
+      content: "";
+      position: absolute;
+      top: 1px; left: 1px;
+      width: 12px; height: 12px;
+      background: var(--primary);
+      opacity: 0;
+      border-radius: 4px;
+      transition: all 0.2s ease-in-out;
+    }
+  }
+
+  .eleve-infos{
+    opacity: 0.7;
+    transition: all 0.2s ease-in-out;
+
+    .age{
+      font-size: 14px;
+      opacity: 0.7;
+    }
+  }
+}
+
+.preselection-list{
+  .form-text{
+    margin-bottom: 24px;
+    max-width: 500px;
+    font-size: 15px;
+    opacity: 0.8;
+  }
+}
+
+.preselection{
+
+  .classe-infos{
+    border-style: dashed;
+    overflow: auto;
+    opacity: 0.8;
+    border-radius: 4px 4px 0 0;
+
+    .infos{
+      width: 100%;
+    }
+  }
+  .classe-eleves{
+    padding-bottom: 12px;
+    border-radius: 0 0 4px 4px;
+
+    &:before{
+      background: transparent;
+    }
+
+    .eleve{
+      margin-bottom: 4px;
+      cursor: initial;
+    }
+  }
+}
+
+.preselection:hover, .preselection-show{
+  transform: translateX(0);
+  opacity: 1;
+
+  .classe-infos{
+    border-style: solid;
+    border-bottom-color: transparent;
+  }
+
+  .classe-infos + .classe-eleves{
+    position: relative;
+    opacity: 1;
+    z-index: 1;
+    height: auto;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid var(--grey);
+    background-color: var(--fondContent);
+    font-size: 15px;
+  }
+}
+
+.preselection:hover{
+  transform: translateX(6px);
+
+  .classe-infos{
+    border-color: var(--grey2);
+    border-bottom-color: transparent;
+
+    .infos{
+      @include fontSemibold();
+    }
+  }
+
+  .classe-infos + .classe-eleves{
+    background-color: var(--alpha);
+    border: 1px solid var(--grey2);
+  }
+}
+
+.preselections-maybe, .preselections-others{
+  .form-title{
+    color: var(--txt);
+    margin-top: 0;
+    margin-bottom: 12px;
+  }
+}
+
+.preselections-others{
+  margin-top: 48px;
+}
+
+.preselection.maybe{
+
+  .classe-infos{
+    border-color: var(--success);
+    border-bottom-color: transparent;
+
+    .infos{
+      @include fontSemibold();
+
+      .infos-title{
+        color: var(--success);
+      }
+    }
+  }
+
+  .classe-infos + .classe-eleves{
+    border-color: var(--success);
+  }
+}
+
+.preselection-list{
+  margin-bottom: 48px;
+  margin-top: 48px;
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .classe-eleves{
+    @include flex(row, flex-start, flex-start);
+    flex-wrap: wrap;
+
+    .eleve{
+      width: calc(50% - 12px);
+    }
+
+    .eleve:nth-child(odd){
+      margin-right: 24px;
+    }
+    .eleve:nth-child(event){
+      margin-left: 24px;
+    }
+  }
+}
+
+//                      __   _  __    ___   ___    __
+//                     | _| / |/ /_  / _ \ / _ \  |_ |
+//    _____ _____ _____| |  | | '_ \| | | | | | |  | |_____ _____ _____
+//   |_____|_____|_____| |  | | (_) | |_| | |_| |  | |_____|_____|_____|
+//                     | |  |_|\___/ \___/ \___/   | |
+//                     |__|                       |__|
+@media (min-width: 1600px){
+  .classe-eleves{
+    .eleve{
+      width: calc(33% - 12px);
+    }
+
+    .eleve:nth-child(odd),
+    .eleve:nth-child(even), {
+      margin-right: 12px;
+    }
+  }
+}

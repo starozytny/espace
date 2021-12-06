@@ -1,0 +1,72 @@
+@import "../../../../vars/vars";
+
+.places-global-centres{
+  @include flex(row, center, center);
+  flex-wrap: wrap;
+}
+
+.blob{
+  padding: 12px;
+  border-radius: 4px;
+  background: var(--alpha);
+  box-shadow: 0 5px 10px var(--greyShadow);
+  margin-bottom: 8px;
+  margin-right: 8px;
+  width: calc(200px - 24px);
+
+  .blob-name{
+    @include fontSemibold();
+    margin-bottom: 8px;
+  }
+
+  .blob-activities{
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--fond);
+  }
+
+  .blob-activity{
+    @include flex(row, flex-start, flex-start);
+    margin-bottom: 4px;
+
+    &.capacity-full{
+      opacity: 0.6;
+    }
+
+    .blob-activity-name{
+      width: calc(70% - 12px);
+      margin-right: 12px;
+    }
+
+    .blob-activity-tot{
+      width: 30%;
+      text-align: right;
+    }
+  }
+}
+
+.places{
+  .blob{
+    width: calc(300px - 24px);
+  }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .items-places{
+    @include flex(row, flex-start, flex-start);
+
+    .by-teachers{
+      margin-left: 12px;
+
+      td{
+        padding: 8px;
+      }
+    }
+  }
+}

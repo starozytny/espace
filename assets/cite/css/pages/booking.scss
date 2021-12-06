@@ -1,0 +1,102 @@
+@import "../vars/vars";
+
+@import "./split/booking/eleves";
+@import "../../../common/css/components/filter";
+
+.title-diff{
+  margin-bottom: 4px;
+  font-size: 14px;
+  opacity: 0.8;
+  text-transform: uppercase;
+}
+
+.sub.adr{
+  max-width: 270px;
+}
+
+.items-table{
+  background: var(--alpha);
+  box-shadow: 0 0 10px var(--greyShadow2);
+
+  & > .alert:first-child{
+    box-shadow: none;
+  }
+}
+
+.liste-selected-filters-radio{
+  width: 100%;
+}
+
+.toolbar{
+  .back, .create{
+    margin-bottom: 12px;
+  }
+
+  .filter-search{
+    width: 100%;
+  }
+}
+
+.open, .close{
+  font-size: 14px;
+
+  [class^="icon-"]{
+    display: inline-block;
+    margin-right: 4px;
+  }
+}
+
+.open{
+  color: var(--primary);
+}
+
+.close{
+  color: var(--danger);
+}
+
+.participations{
+  position: relative;
+
+  .complet{
+    position: absolute;
+    top: 0; left: 0;
+    transform: rotate(-10deg);
+    background: var(--alpha);
+    border: 2px solid var(--danger);
+    border-radius: 4px;
+    padding: 4px 14px;
+  }
+}
+
+.isOpen{
+  display: inline-block;
+  width: 10px; height: 10px;
+  background: var(--danger);
+  border-radius: 50px;
+  margin-right: 8px;
+
+  &.true{
+    background: var(--primary);
+  }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .toolbar{
+    .back, .create{
+      margin-bottom: 0;
+      margin-right: 12px;
+    }
+  }
+
+  .items-day {
+    .actions {
+      width: 114px;
+    }
+  }
+}

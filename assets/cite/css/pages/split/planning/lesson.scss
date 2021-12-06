@@ -1,0 +1,208 @@
+@import "../../../vars/vars";
+
+.lesson:hover{
+  transform: translateX(0);
+}
+
+.form{
+  h2{
+    margin-bottom: 8px;
+  }
+
+  .form-infos{
+    border-bottom: 1px solid var(--fond);
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+
+    span{
+      opacity: 0.7;
+    }
+
+    .activity{
+      @include fontSemibold();
+      opacity: 1;
+    }
+  }
+
+  .form-button{
+    margin-top: 12px;
+
+    .btn{
+      border-radius: 0;
+    }
+  }
+}
+
+.recap{
+  position: fixed;
+  bottom: 0; left: 0;
+  display: block;
+  width: 100%;
+  background: var(--alpha);
+  padding-top: 12px;
+  z-index: 1;
+  box-shadow: 0 -4px 12px var(--greyShadow);
+}
+
+.recap-content{
+  padding: 0 12px;
+
+  span:first-child{
+    margin-bottom: 12px;
+    display: inline-block;
+    font-size: 14px;
+    text-transform: uppercase;
+    @include fontSemibold();
+  }
+
+  .time{
+    display: block;
+    margin: 4px 0;
+    opacity: 0.8;
+  }
+
+  .nb{
+    opacity: 0.8;
+
+    [class^="icon-"]{
+      display: inline-block;
+      margin-right: 4px;
+    }
+  }
+}
+
+.group-add{
+  margin-top: 12px;
+}
+
+.lesson-actions{
+  text-align: left;
+  margin-top: 12px;
+
+  .btn-icon{
+    [class^="icon"]{
+      margin-right: 0;
+    }
+  }
+}
+
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .form{
+    .form-button{
+      margin-top: 24px;
+
+      .btn{
+        border-radius: 4px;
+      }
+    }
+  }
+  form{
+    position: relative;
+    @include flex(row, flex-start, flex-start);
+
+    .formulaire{
+      width: calc(100% - 320px - 24px);
+    }
+
+    .recap{
+      width: 320px;
+      position: relative;
+      bottom: auto; left: auto;
+      padding-top: 0;
+      margin-left: 24px;
+      box-shadow: none;
+
+      &.sticky{
+        position: fixed;
+        top: 24px; right: 0;
+        padding-right: 24px;
+      }
+    }
+
+    .recap-content{
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
+  .lesson-details{
+    .infos{
+      @include flex(row, flex-start, space-between);
+    }
+  }
+
+  .lesson-actions{
+    @include flex(row, flex-start, flex-start);
+  }
+}
+
+//                      __   _ ____  ___   ___    __
+//                     | _| / |___ \( _ ) / _ \  |_ |
+//    _____ _____ _____| |  | | __) / _ \| | | |  | |_____ _____ _____
+//   |_____|_____|_____| |  | |/ __/ (_) | |_| |  | |_____|_____|_____|
+//                     | |  |_|_____\___/ \___/   | |
+//                     |__|                      |__|
+@media (min-width:1280px) {
+  .classe-infos{
+    .infos{
+      @include flex(row, flex-start, space-between);
+    }
+  }
+  form{
+    .recap{
+      &.sticky{
+        padding-right: 56px;
+      }
+    }
+    .recap-content {
+      padding: 0;
+    }
+  }
+}
+
+//                      __   _  __    ___   ___    __
+//                     | _| / |/ /_  / _ \ / _ \  |_ |
+//    _____ _____ _____| |  | | '_ \| | | | | | |  | |_____ _____ _____
+//   |_____|_____|_____| |  | | (_) | |_| | |_| |  | |_____|_____|_____|
+//                     | |  |_|\___/ \___/ \___/   | |
+//                     |__|                       |__|
+@media (min-width: 1600px){
+  form{
+    .formulaire {
+      width: calc(100% - 356px - 24px);
+    }
+
+    .recap{
+      width: 356px;
+
+      &.sticky{
+        padding-right: 8px;
+        margin-right: 2%;
+      }
+    }
+  }
+}
+
+//                      __   _  ___ ____   ___    __
+//                     | _| / |/ _ \___ \ / _ \  |_ |
+//    _____ _____ _____| |  | | (_) |__) | | | |  | |_____ _____ _____
+//   |_____|_____|_____| |  | |\__, / __/| |_| |  | |_____|_____|_____|
+//                     | |  |_|  /_/_____|\___/   | |
+//                     |__|                      |__|
+@media (min-width: 1920px){
+  form{
+    .recap{
+      &.sticky{
+        padding-right: 12px;
+        margin-right: 8%;
+      }
+    }
+  }
+}

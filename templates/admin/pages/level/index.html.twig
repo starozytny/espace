@@ -1,0 +1,8 @@
+{% extends 'admin/pages/level/template.html.twig' %}
+
+{% set page_title %}Gestion des niveaux des élèves{% endset %}
+{% set submenuActive = "Gestion" %}
+
+{% block main_content %}
+    <div id="level" data-is-open-level="{{ isOpenLevel }}" data-role="admin"></div>
+{% endblock %}

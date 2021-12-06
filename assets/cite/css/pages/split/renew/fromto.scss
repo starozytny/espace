@@ -1,0 +1,103 @@
+@import "../../../vars/vars";
+
+.lesson-infos-teacher,
+.lesson-infos-when,
+.lesson-infos-where{
+  font-size: 15px;
+  margin-bottom: 2px;
+
+  [class^="icon-"]{
+    margin-right: 4px;
+  }
+}
+
+.lesson-infos-teacher{
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+.lesson-infos-where{
+  margin-bottom: 4px;
+}
+
+.lesson-infos-when{
+  margin-top: 24px;
+  margin-bottom: 0;
+
+  .day{
+    margin-right: 12px;
+  }
+}
+
+.from, .to{
+  color: var(--grey2);
+  width: calc(100% - 18px);
+  margin: 12px 0;
+  transition: all 0.2s ease-in-out;
+
+  .lesson-infos{
+    padding: 8px;
+    border: 1px dashed var(--grey);
+    border-radius: 4px;
+    height: calc(100% - 16px);
+  }
+}
+
+.to{
+  transition: all 0.2s ease-in-out;
+
+  .lesson-infos{
+    border-style: solid;
+  }
+}
+
+.separator-from-to{
+  @include flex(row, center, center);
+  color: var(--grey2);
+  transition: all 0.2s ease-in-out;
+
+  [class^="icon-"]{
+    display: inline-block;
+    transform: rotate(90deg);
+  }
+}
+
+.lesson-infos{
+  @include flex(column, flex-start, space-between);
+  height: 100%;
+
+  & > div:first-child{
+    @include fontSemibold();
+    color: var(--txt);
+    min-height: 36px;
+  }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .from-to{
+    @include flex(row, stretch, flex-start);
+    transition: all 0.2s ease-in-out;
+  }
+
+  .from, .to{
+    margin-top: 0;
+  }
+  .from{
+    margin-right: 12px;
+  }
+  .to{
+    margin-left: 12px;
+  }
+
+  .separator-from-to{
+    [class^="icon-"]{
+      transform: rotate(0);
+    }
+  }
+}

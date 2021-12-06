@@ -1,0 +1,55 @@
+@import "../../../vars/vars";
+
+.items-renew-admin{
+  .actions{
+    .response{
+      border-radius: 4px;
+      background-color: var(--grey1);
+      margin-right: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      opacity: 0.7;
+      margin-bottom: 8px;
+
+      &:hover{
+        opacity: 1;
+        transform: translateY(-2px);
+      }
+
+      &.status{
+        padding: 6px 8px;
+        font-size: 14px;
+      }
+
+      &.status-0{
+        cursor: initial;
+        color: var(--grey2);
+        opacity: 1;
+
+        &:hover{
+          transform: translateY(0);
+        }
+      }
+
+      &.status-1{
+        color: #af9f67;
+        background-color: var(--warningShadow);
+        box-shadow: 0 5px 10px var(--warningShadow2);
+      }
+
+      &.status-2{
+        color: #0280b1;
+        background-color: var(--primaryShadow);
+        box-shadow: 0 5px 10px var(--primaryShadow2);
+      }
+
+      .loader-element{
+        width: auto; height: auto;
+        padding: 8px;
+        border-radius: 4px;
+        opacity: 0.7;
+        min-width: 68px;
+      }
+    }
+  }
+}

@@ -1,0 +1,90 @@
+@import "../../../vars/vars";
+
+.toolbar{
+  .filter-search{
+    margin-top: 0;
+
+    .search{
+      width: 100%;
+    }
+  }
+}
+
+.item-eleve{
+  .eleve{
+    margin-bottom: 24px;
+    opacity: 0.8;
+
+    .name{
+      opacity: 1;
+      font-size: 18px;
+      @include fontSemibold();
+    }
+  }
+
+  .responsable{
+    padding: 12px;
+    background-color: var(--alpha);
+    border-radius: 8px;
+    border: 1px solid var(--grey);
+    margin-bottom: 24px;
+
+    .title{
+      @include fontSemibold();
+      margin-bottom: 4px;
+    }
+
+    .oldId{
+      margin-bottom: 12px;
+    }
+  }
+
+  .auths{
+    div:first-child{
+      @include fontSemibold();
+      margin-bottom: 4px;
+    }
+  }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .toolbar{
+    .export{
+      width: 15%;
+    }
+    .filter-search{
+      width: calc(85% - 12px);
+      margin-left: 12px;
+    }
+  }
+
+  .items-eleves{
+    .eleve{
+      width: 45%;
+    }
+    .responsable{
+      width: 45%;
+    }
+    .actions {
+      width: 10%;
+    }
+  }
+}
+
+//                      __   _  ___ ____  _  _     __
+//                     | _| / |/ _ \___ \| || |   |_ |
+//    _____ _____ _____| |  | | | | |__) | || |_   | |_____ _____ _____
+//   |_____|_____|_____| |  | | |_| / __/|__   _|  | |_____|_____|_____|
+//                     | |  |_|\___/_____|  |_|    | |
+//                     |__|                       |__|
+@media (min-width: 1024px) {
+  .aside{
+    width: 50%;
+  }
+}

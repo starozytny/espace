@@ -1,0 +1,125 @@
+@import "../vars/vars";
+@import "../../../common/css/components/filter";
+@import "./split/renew/admin";
+
+@import "./split/renew/fromto";
+@import "./split/renew/paid";
+@import "./split/renew/response";
+@import "./split/renew/eleve";
+@import "./split/renew/display";
+
+.panel-btns{
+  margin-bottom: 24px;
+}
+
+.dzu-dropzone{
+  min-height: 78px;
+}
+.form-files .dzu-dropzone .dzu-inputLabel{
+  text-transform: initial;
+}
+
+.liste-eleves .infos-doc{
+  max-width: 600px;
+  p{
+    font-size: 16px;
+  }
+}
+
+h2{
+  margin-bottom: 12px;
+}
+
+.items-default {
+  .name{
+    margin-bottom: 2px;
+  }
+  .item{
+    &:hover{
+      & > .item-content{
+        transform: translateX(0);
+        padding-left: 0;
+      }
+    }
+  }
+
+  .sub{
+    font-size: 15px;
+  }
+}
+
+#renew-admin, #renew-manager{
+  .infos{
+    .eleve{
+      & > .actions{
+        flex-direction: column;
+      }
+    }
+  }
+}
+
+.grp-classe{
+  @include flex(row, flex-start, flex-start);
+  margin-bottom: 12px;
+
+  .separator{
+    margin: 0 12px;
+  }
+}
+
+.btn-september{
+  color: var(--alpha);
+  box-shadow: 0 4px 12px var(--warningShadow);
+  font-size: 16px;
+}
+
+.form-documents, .ask-impot{
+  background-color: var(--alpha);
+  border: 1px solid var(--grey);
+  padding: 12px;
+  border-radius: 4px;
+
+  .btn-icon{
+    opacity: 0.9;
+  }
+}
+
+.ask-impot{
+  @include flex(column, center, center);
+  background-color: var(--dangerShadow);
+
+  .title{
+    @include fontSemibold();
+    font-size: 20px;
+  }
+
+  .content{
+    text-align: center;
+    margin: 12px 0;
+  }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .propals{
+    margin-right: 12px;
+  }
+
+  .line-special{
+    flex-direction: row;
+
+    .form-group{
+      width: calc(25% - 12px);
+      margin-right: 12px;
+    }
+  }
+
+  .form-documents, .ask-impot{
+    padding: 24px;
+  }
+}

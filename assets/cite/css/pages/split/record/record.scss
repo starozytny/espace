@@ -1,0 +1,47 @@
+@import "../../../vars/vars";
+
+.items-table{
+  & > .items-record{
+
+    & > .item{
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+}
+
+.items-record{
+
+  .sub{
+    [class^="icon-"]{
+      display: inline-block;
+      margin-right: 4px;
+      font-size: 14px;
+    }
+  }
+
+  .icon-vision + .tooltip{
+    width: 110px;
+  }
+
+  .icon-screenshot + .tooltip{
+    width: 64px;
+  }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .items-table{
+    & > .items-record {
+      & > .item{
+        flex-direction: row;
+        align-items: center;
+      }
+    }
+  }
+}

@@ -1,0 +1,104 @@
+@import "../../../vars/vars";
+
+.display-mode-0{
+  .from-to > .from,
+  .separator-from-to{
+    display: none;
+  }
+
+  .to, .from{
+    margin-left: 0;
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  .to{
+    @include flex(column, flex-start, flex-start);
+
+    .lesson-infos{
+      width: calc(100% - 24px);
+    }
+  }
+}
+
+.renew-responsable{
+  .display-mode-0{
+    .to{
+      .lesson-infos{
+        width: calc(100% - 18px);
+        margin-bottom: 4px;
+      }
+    }
+  }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .display-mode-0{
+
+    .assignations .assign{
+      @include flex(row, stretch, flex-start);
+    }
+
+    .infos{
+      .assignations .actions,
+      .propals,
+      .sondage-response{
+        width: calc(60% - 12px);
+      }
+
+      .propals{
+        .actions{
+          width: 100%;
+        }
+      }
+
+      .from-to{
+        & + .propals{
+          width: calc(100% - 12px);
+        }
+      }
+
+      .propals-choice{
+        width: 100%;
+      }
+
+      .propals-orphan{
+        width: calc(60% - 12px);
+
+        & + .actions{
+          width: 100%;
+          margin-right: 12px;
+          justify-content: flex-end;
+
+          .btn:last-child{
+            width: calc(60% - 6px);
+            border-radius: 4px;
+          }
+        }
+      }
+    }
+
+    .from-to, .from{
+      margin-right: 12px;
+      width: calc(60% - 12px);
+    }
+  }
+
+  .items-renew-admin .actions .alert{
+    align-items: center;
+  }
+
+  .renew-manager{
+    .items-renew-admin .infos .assignations .actions.actions-1 .alert,
+    .items-renew-admin .infos .assignations .actions.actions-0 .alert{
+      border-radius: 4px;
+      width: 100%;
+    }
+  }
+}

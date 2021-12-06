@@ -1,0 +1,171 @@
+@import "../vars/vars";
+
+.panel-btn{
+  @include flex(column, center, center);
+  padding: 24px 12px;
+  border-radius: 8px;
+  box-shadow: 0 5 10px var(--greyShadow);
+  background-color: var(--alpha);
+  margin-bottom: 12px;
+  text-align: center;
+  color: var(--txt);
+  transition: all 0.2s ease-in-out;
+  border: 1px solid var(--grey);
+
+  &.true{
+    .status:first-child{
+      color: var(--primary)
+    }
+    .title{
+      &:before{
+        background-color: var(--primary)
+      }
+    }
+  }
+
+  &.false{
+    .status:last-child{
+      color: var(--danger)
+    }
+    .title{
+      &:before{
+        background-color: var(--danger)
+      }
+    }
+  }
+
+  .title{
+    font-size: 15px;
+  }
+
+  .title + .text{
+    margin-top: 12px;
+  }
+
+  .status{
+    @include fontSemibold();
+    color: var(--grey2);
+  }
+
+  .title{
+    position: relative;
+    @include fontSemibold();
+    text-transform: uppercase;
+    @include flex(row, center, center);
+
+    &:before{
+      content: "";
+      width: 8px; height: 8px;
+      top:0; left: 0;
+      display: block;
+      background-color: var(--fondMenu);
+      border-radius: 50px;
+      margin-right: 8px;
+    }
+  }
+
+  .actions{
+    margin-top: 24px;
+    @include flex(row, center, center);
+
+    .switch-btn{
+      position: relative;
+      margin: 0 8px;
+      cursor: pointer;
+      background-color: var(--greyShadow);
+      border: 1px solid var(--grey);
+      min-width: 48px;
+      border-radius: 12px;
+      height: 24px;
+    }
+
+    .round{
+      position: absolute;
+      top: -1px; left: -1px;
+      width: 22px; height: 22px;
+      border-radius: 500px;
+      background-color: var(--alpha);
+      border: 1px solid var(--grey);
+      transition: all 0.2s linear;
+    }
+    &:hover{
+      .round{
+        background-color: var(--grey1);
+      }
+    }
+
+    .switch-btn.isClose{
+      background-color: var(--danger);
+
+      .round{
+        left: 22px;
+      }
+    }
+
+    .switch-btn.isOpen{
+      background-color: var(--primary);
+    }
+
+    &.status-isClose{
+      & > div:first-child{
+        opacity: 0.5;
+      }
+    }
+    &.status-isOpen{
+      & > div:last-child{
+        opacity: 0.5;
+      }
+    }
+  }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .panel-btns{
+    @include flex(row, stretch, flex-start);
+    flex-wrap: wrap;
+    width: calc(100% + 12px);
+
+    .panel-btn{
+      width: calc(33% - 12px - 24px - 2px);
+      margin-right: 12px;
+    }
+  }
+
+  .panel-and-toolbar{
+    @include flex(row-reverse, flex-start, flex-start);
+
+    .panel-btns{
+      width: 320px;
+
+      .panel-btn{
+        width: 320px;
+        margin-right: 0;
+        margin-left: 12px;
+      }
+    }
+
+    .toolbar{
+      width: calc(100% - 320px);
+    }
+  }
+}
+
+//                      __   _ ____  ___   ___    __
+//                     | _| / |___ \( _ ) / _ \  |_ |
+//    _____ _____ _____| |  | | __) / _ \| | | |  | |_____ _____ _____
+//   |_____|_____|_____| |  | |/ __/ (_) | |_| |  | |_____|_____|_____|
+//                     | |  |_|_____\___/ \___/   | |
+//                     |__|                      |__|
+@media (min-width:1280px) {
+  .panel-btns{
+    .panel-btn{
+      width: calc(25% - 12px - 24px - 2px);
+    }
+  }
+}

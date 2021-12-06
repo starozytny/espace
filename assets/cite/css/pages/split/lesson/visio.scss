@@ -1,0 +1,135 @@
+@import "../../../vars/vars";
+
+.createRoom{
+  cursor: pointer;
+  padding: 12px 0;
+  width: 100%;
+  border: 1px dashed var(--grey);
+  @include flex(row, center, center);
+  transition: all 0.2s ease;
+  margin-bottom: 12px;
+  border-radius: 4px;
+
+  span{
+    display: inline-block;
+    opacity: 0.4;
+    transition: all 0.2s ease;
+  }
+
+  &:hover{
+    border-color: var(--grey2);
+
+    span{
+      opacity: 0.7;
+      transform: scale(0.95);
+    }
+  }
+}
+
+.visio-create{
+  margin-top: 24px;
+}
+
+.visio-off{
+  .visio{
+    display: none;
+  }
+  .lessons{
+    display: block;
+  }
+}
+
+.visio-on{
+  .visio{
+    display: block;
+  }
+  .lessons{
+    display: none;
+  }
+
+  .lesson{
+    opacity: 0.7;
+
+    &.active{
+      opacity: 1;
+      transform: translateX(5px);
+    }
+  }
+}
+
+.visio-menu{
+  @include flex(row, center, flex-start);
+
+  [class^="icon-"]{
+    display: inline-block;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.4s ease-in-out;
+
+    &:hover{
+      opacity: 1;
+      transform: rotate(360deg);
+    }
+  }
+
+  .title{
+    margin-left: 12px;
+    font-size: 18px;
+    @include fontSemibold();
+  }
+}
+
+.visio-content{
+  .alert{
+    margin-top: 24px;
+    width: calc(100% - 24px);
+  }
+
+  .visio-choice{
+    margin-top: 24px;
+  }
+}
+
+.visio-launch{
+  margin-top: 24px;
+
+  .btn{
+    width: 100%;
+  }
+
+  a.btn{
+    width: calc(100% - 48px);
+  }
+
+  a.btn + .btn{
+    margin-top: 12px;
+  }
+}
+
+.visio-recap{
+  p{
+    word-break: break-all;
+  }
+
+  [name="hiddenUrl"]{
+    position: relative;
+    opacity: 0;
+    z-index: -15000;
+    height: 0;
+    overflow: hidden;
+  }
+}
+
+//                      __   _____ __    ___    __
+//                     | _| |___  / /_  ( _ )  |_ |
+//    _____ _____ _____| |     / / '_ \ / _ \   | |_____ _____ _____
+//   |_____|_____|_____| |    / /| (_) | (_) |  | |_____|_____|_____|
+//                     | |   /_/  \___/ \___/   | |
+//                     |__|                    |__|
+@media (min-width:768px) {
+  .visio-on{
+    .lessons{
+      display: block;
+    }
+  }
+}

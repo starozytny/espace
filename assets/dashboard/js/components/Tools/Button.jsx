@@ -65,3 +65,20 @@ export function ButtonIconDropdown(props){
         </div>
     </div>
 }
+
+export function SwitcherButton(props){
+    const { status, children, onClick } = props;
+
+    return <div className={"panel-btn" + (status ? " true" : " false")}>
+        <div className="title">{children}</div>
+        <div className={"actions status-" + (status ? "isOpen" : "isClose")}>
+            <div className="status">Ouvert</div>
+            <div>
+                <button type="submit" className={"switch-btn " + (status ? "isOpen" : "isClose")} onClick={onClick}>
+                    <div className="round" />
+                </button>
+            </div>
+            <div className="status">Fermé</div>
+        </div>
+    </div>
+}
