@@ -8,6 +8,7 @@ use App\Entity\Cite\CiClasse;
 use App\Entity\Cite\CiClassroom;
 use App\Entity\Cite\CiCycle;
 use App\Entity\Cite\CiEleve;
+use App\Entity\Cite\CiGroup;
 use App\Entity\Cite\CiLesson;
 use App\Entity\Cite\CiLevel;
 use App\Entity\Cite\CiResponsable;
@@ -22,6 +23,7 @@ use App\Service\Synchro\Table\SyncClasseSlot;
 use App\Service\Synchro\Table\SyncClassroom;
 use App\Service\Synchro\Table\SyncCycle;
 use App\Service\Synchro\Table\SyncEleve;
+use App\Service\Synchro\Table\SyncGroup;
 use App\Service\Synchro\Table\SyncLesson;
 use App\Service\Synchro\Table\SyncLevel;
 use App\Service\Synchro\Table\SyncResponsable;
@@ -54,13 +56,14 @@ class SyncData
     private $syncClasseSlot;
     private $syncClasseSemi;
     private $syncLesson;
+    private $syncGroup;
 
     public function __construct(DatabaseService $databaseService, Sync $sync,
                                 SyncCenter $syncCenter, SyncTeacher $syncTeacher, SyncResponsable $syncResponsable,
                                 SyncEleve $syncEleve, SyncActivity $syncActivity, SyncCycle $syncCycle,
                                 SyncLevel $syncLevel, SyncClassroom $syncClassroom, SyncSlot $syncSlot,
-                                SyncSlotMissing $syncSlotMissing, SyncClasse $syncClasse,
-                                SyncClasseSlot $syncClasseSlot, SyncClasseSemi $syncClasseSemi, SyncLesson $syncLesson)
+                                SyncSlotMissing $syncSlotMissing, SyncClasse $syncClasse, SyncClasseSemi $syncClasseSemi,
+                                SyncClasseSlot $syncClasseSlot, SyncLesson $syncLesson, SyncGroup $syncGroup)
     {
         $this->em = $databaseService->getEm();
         $this->emWindev = $databaseService->getEmWindev();
@@ -80,17 +83,19 @@ class SyncData
         $this->syncClasseSlot = $syncClasseSlot;
         $this->syncClasseSemi = $syncClasseSemi;
         $this->syncLesson = $syncLesson;
+        $this->syncGroup = $syncGroup;
     }
 
     /**
      * @throws Exception
      */
-    public function synchroSpecial($output, $io, $items, $name, $plannings = [], $usedData = [], $usedAdhAct = [])
+    public function synchroSpecial($output, $io, $items, $name, $plannings = [], $usedData = [], $usedAdhAct = []): array
     {
         $used = [];
         if($this->sync->haveData($io, $items)){
             $errors = []; $updatedArray = []; $noDuplication = [];
             $total = 0; $created = 0; $notUsed = 0; $updated = 0; $noUpdated = 0;
+            $addUsed = true; $addNoDupl = true;
 
             $progressBar = new ProgressBar($output, count($items));
             $progressBar->start();
@@ -106,6 +111,13 @@ class SyncData
             $data0 = $this->em->getRepository(CiSlot::class)->findAll();
             $windevData = $items;
             switch ($name){
+                case "groups":
+                    $data3 = $this->em->getRepository(CiEleve::class)->findAll();
+                    $data2 = $this->em->getRepository(CiGroup::class)->findAll();
+                    $data1 = $this->em->getRepository(CiClasse::class)->findAll();
+                    $windevData = $this->emWindev->getRepository(WindevCours::class)->findAll();
+                    $syncFunction = $this->syncGroup;
+                    break;
                 case "lessonsMissing":
                 case "lessons":
                     $data2 = $this->em->getRepository(CiLesson::class)->findAll();
@@ -157,16 +169,6 @@ class SyncData
                     if($result['code'] == 1){
                         $total++;
 
-                        if($result['status'] == 2){
-                            if($name == "slots" || $name == "classesSlots" || $name == "classesSemi" || $name == "lessons" || $name == "lessonsMissing") {
-                                array_push($used, $result['data']);
-
-                                if($name == "classesSlots" || $name == "classesSemi" || $name == "lessons" || $name == "lessonsMissing"){
-                                    $noDuplication = $result['data'];
-                                }
-                            }
-                        }
-
                         switch ($result['status']){
                             case 4:
                                 $total   = $result['total'] > 1 ? $total + $result['total'] : $total;
@@ -179,7 +181,13 @@ class SyncData
                                 break;
                             case 2:
                                 $updated++;
+                                array_push($used, $result['data']);
                                 array_push($updatedArray, $result['data']);
+
+                                if($name != "slots"){
+                                    $noDuplication = $result['data'];
+                                }
+
                                 break;
                             case 1:
                                 $created++;
@@ -207,7 +215,9 @@ class SyncData
             $this->sync->displayDataArray($io, $errors);
             $io->comment(sprintf("%d %s non utilisés.", $notUsed, $name));
             $io->comment(sprintf("%d %s mis à jour.", $updated, $name));
-            if($name != "classesSlots" && $name != "classesSemi" && $name != "lessons" && $name != "lessonsMissing"){
+            if($name != "classesSlots" && $name != "classesSemi"
+                && $name != "lessons" && $name != "lessonsMissing"
+                && $name != "groups"){
                 $this->sync->displayDataArray($io, $updatedArray);
             }
             $io->comment(sprintf("%d %s inchangés.", $noUpdated, $name));

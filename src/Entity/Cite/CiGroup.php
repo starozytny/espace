@@ -10,6 +10,19 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CiGroup
 {
+    const TO_SET = 0;
+    const STAY = 1;
+    const LEVEL_UP = 2;
+    const GIVEN = 3;
+
+    const ANSWER_NONE = 0;
+    const ANSWER_ACCEPT = 1;
+    const ANSWER_REFUSE = 2;
+    const ANSWER_WAITING = 3;
+    const ANSWER_WAITING_PRIORITY = 4;
+    const ANSWER_SEPTEMBER = 5;
+    const ANSWER_ASK = 99;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -20,7 +33,7 @@ class CiGroup
     /**
      * @ORM\Column(type="integer")
      */
-    private $status;
+    private $status = self::TO_SET;
 
     /**
      * @ORM\Column(type="boolean")
@@ -30,7 +43,7 @@ class CiGroup
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isGiven;
+    private $isGiven = false;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -40,22 +53,22 @@ class CiGroup
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isFree;
+    private $isFree = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isSuspended;
+    private $isSuspended = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isFinal;
+    private $isFinal = false;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $renewAnswer;
+    private $renewAnswer = self::ANSWER_NONE;
 
     /**
      * @ORM\ManyToOne(targetEntity=CiEleve::class, inversedBy="groups")
