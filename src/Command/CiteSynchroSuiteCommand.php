@@ -47,7 +47,7 @@ class CiteSynchroSuiteCommand extends Command
         $used = $this->syncData->synchroSpecial($output, $io, $this->getData($io, WindevAdhact::class,"lessons"),"lessons", [null, $planning]);
         $this->syncData->synchroSpecial($output, $io, $this->getData($io, WindevCours::class,"lessonsMissing"),"lessonsMissing", [null, $planning], $used);
 
-        $this->syncData->synchroSpecial($output, $io, $this->getData($io, WindevAdhact::class,"groups"),"groups", [null, $planning]);
+        $this->syncData->synchroSpecial($output, $io, $this->getData($io, WindevAdhact::class,"groups"),"groups", []);
 
         return Command::SUCCESS;
     }

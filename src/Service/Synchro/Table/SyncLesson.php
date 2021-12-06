@@ -2,7 +2,9 @@
 
 namespace App\Service\Synchro\Table;
 
+use App\Entity\Cite\CiAssignation;
 use App\Entity\Cite\CiClasse;
+use App\Entity\Cite\CiEleve;
 use App\Entity\Cite\CiLesson;
 use App\Entity\Cite\CiSlot;
 use App\Service\Synchro\Sync;
@@ -20,10 +22,12 @@ class SyncLesson extends Sync
      * @param CiSlot[] $slots
      * @param CiClasse[] $classes
      * @param CiLesson[] $lessons
+     * @param CiEleve[] $eleves
+     * @param CiAssignation[] $assigns
      * @return array
      */
     public function synchronize($letter, $item, array $items, array $plannings, array $noDuplication, array $slots,
-                                array $classes, array $lessons): array
+                                array $classes, array $lessons, array $eleves, array $assigns): array
     {
         /** @var WindevCours $cours */
         $cours = $this->getExisteFromId($items, $item instanceof WindevCours ? $item->getId() : $item->getCocleunik());
@@ -66,10 +70,33 @@ class SyncLesson extends Sync
                         ->setTeacher($slot->getTeacher())
                         ->setIsActual($planning->getIsActual())
                         ->setSlotIdentifiant($slot->getIdentifiant())
-                        ->setIsFm((bool)$classe->getIsFm())
+                        ->setIsFm($classe->getIsFm())
                     ;
 
                     $this->em->persist($lesson);
+
+                    if($item instanceof WindevAdhact){
+                        $eleve = $this->getExisteFromOldId($eleves, $item->getAdcleunik());
+                        if($eleve && !$eleve->getIsAncien()){
+
+                            $assign = $this->isExisteAssign($assigns, $eleve, $classe, $lesson);
+                            if(!$assign instanceof CiAssignation){
+                                $assign = new CiAssignation();
+                            }
+
+                            $assign = ($assign)
+                                ->setLesson($lesson)
+                                ->setEleve($eleve)
+                                ->setClasse($classe)
+                                ->setIsSuspended($item->getSuspendu())
+                                ->setIsFm($classe->getIsFm())
+                                ->setIsActual($planning->getIsActual())
+                            ;
+
+                            $this->em->persist($assign);
+                        }
+
+                    }
 
                     return ['code' => 1, 'status' => $status, 'data' => $noDuplication];
                 }
@@ -89,6 +116,27 @@ class SyncLesson extends Sync
                 && $lesson->getStartString() === $start->format("H:i:s")
             ){
                 return $lesson;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param CiAssignation [] $assigns
+     * @param CiEleve $eleve
+     * @param CiClasse $classe
+     * @param CiLesson $lesson
+     * @return CiAssignation |null
+     */
+    private function isExisteAssign(array $assigns, CiEleve $eleve, CiClasse $classe, CiLesson $lesson): ?CiAssignation
+    {
+        foreach($assigns as $assign){
+            if($assign->getEleve()->getId() == $eleve->getId()
+                && $assign->getClasse()->getId() == $classe->getId()
+                && $assign->getLesson()->getId() == $lesson->getId()
+            ){
+                return $assign;
             }
         }
 

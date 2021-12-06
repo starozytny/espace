@@ -3,6 +3,7 @@
 namespace App\Service\Synchro;
 
 use App\Entity\Cite\CiActivity;
+use App\Entity\Cite\CiAssignation;
 use App\Entity\Cite\CiCenter;
 use App\Entity\Cite\CiClasse;
 use App\Entity\Cite\CiClassroom;
@@ -119,6 +120,8 @@ class SyncData
                     break;
                 case "lessonsMissing":
                 case "lessons":
+                    $data4 = $this->em->getRepository(CiAssignation::class)->findAll();
+                    $data3 = $this->em->getRepository(CiEleve::class)->findAll();
                     $data2 = $this->em->getRepository(CiLesson::class)->findAll();
                     $data1 = $this->em->getRepository(CiClasse::class)->findAll();
                     $windevData = $this->emWindev->getRepository(WindevCours::class)->findAll();

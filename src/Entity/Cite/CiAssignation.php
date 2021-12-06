@@ -10,6 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CiAssignation
 {
+    const STATUS_NONE = 0;
+    const STATUS_ACCEPT = 1;
+    const STATUS_REFUSE = 2;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -20,7 +24,7 @@ class CiAssignation
     /**
      * @ORM\Column(type="integer")
      */
-    private $status;
+    private $status = self::STATUS_NONE;
 
     /**
      * @ORM\Column(type="boolean")
