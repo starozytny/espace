@@ -180,9 +180,15 @@ class CiEleve
      */
     private $groups;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CiAssignation::class, mappedBy="eleve")
+     */
+    private $assignations;
+
     public function __construct()
     {
         $this->groups = new ArrayCollection();
+        $this->assignations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -586,6 +592,36 @@ class CiEleve
             // set the owning side to null (unless already changed)
             if ($group->getEleve() === $this) {
                 $group->setEleve(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CiAssignation[]
+     */
+    public function getAssignations(): Collection
+    {
+        return $this->assignations;
+    }
+
+    public function addAssignation(CiAssignation $assignation): self
+    {
+        if (!$this->assignations->contains($assignation)) {
+            $this->assignations[] = $assignation;
+            $assignation->setEleve($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssignation(CiAssignation $assignation): self
+    {
+        if ($this->assignations->removeElement($assignation)) {
+            // set the owning side to null (unless already changed)
+            if ($assignation->getEleve() === $this) {
+                $assignation->setEleve(null);
             }
         }
 

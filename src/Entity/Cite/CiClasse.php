@@ -82,9 +82,15 @@ class CiClasse
      */
     private $groups;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CiAssignation::class, mappedBy="classe")
+     */
+    private $assignations;
+
     public function __construct()
     {
         $this->groups = new ArrayCollection();
+        $this->assignations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -248,6 +254,36 @@ class CiClasse
             // set the owning side to null (unless already changed)
             if ($group->getClasse() === $this) {
                 $group->setClasse(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CiAssignation[]
+     */
+    public function getAssignations(): Collection
+    {
+        return $this->assignations;
+    }
+
+    public function addAssignation(CiAssignation $assignation): self
+    {
+        if (!$this->assignations->contains($assignation)) {
+            $this->assignations[] = $assignation;
+            $assignation->setClasse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssignation(CiAssignation $assignation): self
+    {
+        if ($this->assignations->removeElement($assignation)) {
+            // set the owning side to null (unless already changed)
+            if ($assignation->getClasse() === $this) {
+                $assignation->setClasse(null);
             }
         }
 

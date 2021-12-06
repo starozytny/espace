@@ -3,6 +3,8 @@
 namespace App\Entity\Cite;
 
 use App\Repository\Cite\CiLessonRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -89,6 +91,16 @@ class CiLesson
      * @ORM\ManyToOne(targetEntity=CiClasse::class)
      */
     private $classeFour;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CiAssignation::class, mappedBy="lesson")
+     */
+    private $assignations;
+
+    public function __construct()
+    {
+        $this->assignations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -272,6 +284,36 @@ class CiLesson
     public function setClasseFour(?CiClasse $classeFour): self
     {
         $this->classeFour = $classeFour;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CiAssignation[]
+     */
+    public function getAssignations(): Collection
+    {
+        return $this->assignations;
+    }
+
+    public function addAssignation(CiAssignation $assignation): self
+    {
+        if (!$this->assignations->contains($assignation)) {
+            $this->assignations[] = $assignation;
+            $assignation->setLesson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssignation(CiAssignation $assignation): self
+    {
+        if ($this->assignations->removeElement($assignation)) {
+            // set the owning side to null (unless already changed)
+            if ($assignation->getLesson() === $this) {
+                $assignation->setLesson(null);
+            }
+        }
 
         return $this;
     }

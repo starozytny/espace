@@ -95,7 +95,6 @@ class SyncData
         if($this->sync->haveData($io, $items)){
             $errors = []; $updatedArray = []; $noDuplication = [];
             $total = 0; $created = 0; $notUsed = 0; $updated = 0; $noUpdated = 0;
-            $addUsed = true; $addNoDupl = true;
 
             $progressBar = new ProgressBar($output, count($items));
             $progressBar->start();
