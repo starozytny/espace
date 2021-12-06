@@ -45,12 +45,12 @@ class CiLesson
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isBbb;
+    private $isBbb = false;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isMixte;
+    private $isMixte = false;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -105,6 +105,19 @@ class CiLesson
         $this->start = $start;
 
         return $this;
+    }
+
+    /**
+     * Get format time start lesson
+     *
+     * @return false|string|null
+     */
+    public function getStartString(){
+        if($this->start){
+            return date_format($this->start, 'H:i:s');
+        }
+
+        return null;
     }
 
     public function getEnd(): ?\DateTimeInterface

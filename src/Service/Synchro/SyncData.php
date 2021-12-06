@@ -8,6 +8,7 @@ use App\Entity\Cite\CiClasse;
 use App\Entity\Cite\CiClassroom;
 use App\Entity\Cite\CiCycle;
 use App\Entity\Cite\CiEleve;
+use App\Entity\Cite\CiLesson;
 use App\Entity\Cite\CiLevel;
 use App\Entity\Cite\CiResponsable;
 use App\Entity\Cite\CiSlot;
@@ -105,8 +106,11 @@ class SyncData
             $data0 = $this->em->getRepository(CiSlot::class)->findAll();
             $windevData = $items;
             switch ($name){
+                case "lessonsMissing":
                 case "lessons":
-                    $data0 = [];
+                    $data2 = $this->em->getRepository(CiLesson::class)->findAll();
+                    $data1 = $this->em->getRepository(CiClasse::class)->findAll();
+                    $windevData = $this->emWindev->getRepository(WindevCours::class)->findAll();
                     $syncFunction = $this->syncLesson;
                     break;
                 case "classesSemi":
@@ -154,10 +158,10 @@ class SyncData
                         $total++;
 
                         if($result['status'] == 2){
-                            if($name == "slots" || $name == "classesSlots" || $name == "classesSemi") {
+                            if($name == "slots" || $name == "classesSlots" || $name == "classesSemi" || $name == "lessons" || $name == "lessonsMissing") {
                                 array_push($used, $result['data']);
 
-                                if($name == "classesSlots" || $name == "classesSemi"){
+                                if($name == "classesSlots" || $name == "classesSemi" || $name == "lessons" || $name == "lessonsMissing"){
                                     $noDuplication = $result['data'];
                                 }
                             }
@@ -179,7 +183,7 @@ class SyncData
                                 break;
                             case 1:
                                 $created++;
-                                if($name != "slots" && $name == "classesSlots" & $name != "classesSemi"){
+                                if($name != "slots"){
                                     $noDuplication = $result['data'];
                                 }
                                 break;
@@ -203,7 +207,7 @@ class SyncData
             $this->sync->displayDataArray($io, $errors);
             $io->comment(sprintf("%d %s non utilisés.", $notUsed, $name));
             $io->comment(sprintf("%d %s mis à jour.", $updated, $name));
-            if($name != "classesSlots" && $name != "classesSemi"){
+            if($name != "classesSlots" && $name != "classesSemi" && $name != "lessons" && $name != "lessonsMissing"){
                 $this->sync->displayDataArray($io, $updatedArray);
             }
             $io->comment(sprintf("%d %s inchangés.", $noUpdated, $name));

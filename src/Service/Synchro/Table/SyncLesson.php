@@ -2,13 +2,9 @@
 
 namespace App\Service\Synchro\Table;
 
-use App\Entity\Cite\CiActivity;
-use App\Entity\Cite\CiCenter;
-use App\Entity\Cite\CiClassroom;
-use App\Entity\Cite\CiCycle;
-use App\Entity\Cite\CiLevel;
+use App\Entity\Cite\CiClasse;
+use App\Entity\Cite\CiLesson;
 use App\Entity\Cite\CiSlot;
-use App\Entity\Cite\CiTeacher;
 use App\Service\Synchro\Sync;
 use App\Windev\WindevAdhact;
 use App\Windev\WindevCours;
@@ -17,24 +13,20 @@ class SyncLesson extends Sync
 {
     /**
      * @param $letter
-     * @param WindevAdhact $item
+     * @param WindevAdhact|WindevCours $item
      * @param WindevCours[] $items
      * @param array $plannings - 0 = prev | 1 = actual
-     * @param CiSlot[] $slots
-     * @param CiTeacher[] $teachers
-     * @param CiCenter[] $centers
-     * @param CiActivity[] $activities
-     * @param CiCycle[] $cycles
-     * @param CiLevel[] $levels
-     * @param CiClassroom[] $classrooms
      * @param array $noDuplication
+     * @param CiSlot[] $slots
+     * @param CiClasse[] $classes
+     * @param CiLesson[] $lessons
      * @return array
      */
-    public function synchronize($letter, WindevAdhact $item, array $items, array $plannings, array $noDuplication, array $slots,
-                                array $teachers, array $centers, array $activities, array $cycles, array $levels, array $classrooms): array
+    public function synchronize($letter, $item, array $items, array $plannings, array $noDuplication, array $slots,
+                                array $classes, array $lessons): array
     {
         /** @var WindevCours $cours */
-        $cours = $this->getExisteFromId($items, $item->getCocleunik());
+        $cours = $this->getExisteFromId($items, $item instanceof WindevCours ? $item->getId() : $item->getCocleunik());
         $planning = $plannings[1]; //actual
 
         if($cours && $cours->getJour() != -1){
@@ -47,9 +39,59 @@ class SyncLesson extends Sync
                 $start = $this->helper->createTime($cours->getHeuredeb());
                 $end = $this->helper->createTime($cours->getHeurefin());
                 $duration = $this->helper->createTime($cours->getDuree());
+
+                $unicite = [$level, $cours->getId(), $slot->getId()];
+
+                if(!in_array($unicite, $noDuplication)) {
+                    array_push($noDuplication, $unicite);
+
+                    $classe = $this->helper->getClasseOptimize($cours, $classes, $level);
+                    if(!$classe instanceof CiClasse) {
+                        return ['code' => 1, 'status' => 0, 'data' => 'Classe introuvable.'];
+                    }
+
+                    $lesson = $this->isExisteLesson($lessons, $slot, $start);
+                    $status = 2;
+                    if(!$lesson instanceof CiLesson){
+                        $lesson = new CiLesson();
+                        $status = 1;
+                    }
+
+                    $lesson = ($lesson)
+                        ->setStart($start)
+                        ->setEnd($end)
+                        ->setDuration($duration)
+                        ->setSlot($slot)
+                        ->setClasse($classe)
+                        ->setTeacher($slot->getTeacher())
+                        ->setIsActual($planning->getIsActual())
+                        ->setSlotIdentifiant($slot->getIdentifiant())
+                        ->setIsFm((bool)$classe->getIsFm())
+                    ;
+
+                    $this->em->persist($lesson);
+
+                    return ['code' => 1, 'status' => $status, 'data' => $noDuplication];
+                }
             }
         }
 
         return ['code' => 0];
+    }
+
+    /**
+     * @param CiLesson[] $lessons
+     */
+    private function isExisteLesson(array $lessons, CiSlot $slot, $start): ?CiLesson
+    {
+        foreach($lessons as $lesson){
+            if($lesson->getSlotIdentifiant() == $slot->getIdentifiant()
+                && $lesson->getStartString() === $start->format("H:i:s")
+            ){
+                return $lesson;
+            }
+        }
+
+        return null;
     }
 }

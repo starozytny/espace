@@ -2,6 +2,7 @@
 
 namespace App\Service\Synchro;
 
+use App\Entity\Cite\CiClasse;
 use App\Entity\Cite\CiCycle;
 use App\Entity\Cite\CiSlot;
 use App\Windev\WindevAdhact;
@@ -271,12 +272,12 @@ class Helper
     }
 
     /**
-     * @param WindevAdhact $item
+     * @param WindevAdhact|WindevCours $item
      * @param WindevCours $cours
      * @param CiSlot[] $initSlots
      * @return int|mixed
      */
-    public function getExisteSlotForCours(WindevAdhact $item, WindevCours $cours, array $initSlots)
+    public function getExisteSlotForCours($item, WindevCours $cours, array $initSlots)
     {
         $level = $item->getNicleunik() != 0 ? $item->getNicleunik() : $cours->getNicleunik();
 
@@ -392,5 +393,64 @@ class Helper
         }
 
         return $slots;
+    }
+
+    public function getClasseOptimize(WindevCours $cours, $classes, $level)
+    {
+        $possibilities = [];
+        /** @var CiClasse $classe */
+        /** @var CiClasse $possibility */
+        foreach($classes as $classe){
+            if($classe->getTeacher()->getOldId() == $cours->getPrcleunik()
+                && $classe->getCenter()->getOldId() == $cours->getCecleunik()
+                && $classe->getActivity()->getOldId() == $cours->getAccleunik()
+            ){
+                array_push($possibilities, $classe);
+            }
+        }
+
+        if(count($possibilities) > 0){
+            // check cycle
+            $tmp = [];
+            foreach($possibilities as $possibility) {
+                if ($cours->getCycleunik() == 0) {
+                    if ($possibility->getCycle() == null) {
+                        array_push($tmp, $possibility);
+                    }
+                } else {
+                    if($possibility->getCycle() && $possibility->getCycle()->getOldId() == $cours->getCycleunik()){
+                        array_push($tmp, $possibility);
+                    }
+                }
+            }
+
+            // si tmp = 0 laisser possibilities a sa valeur sinon update
+            if(count($tmp) >= 1){
+                $possibilities = $tmp;
+            }
+
+            $tmp = [];
+            foreach($possibilities as $possibility) {
+                if ($level == 0) {
+                    if ($possibility->getLevel() == null) {
+                        array_push($tmp, $possibility);
+                    }
+                } else {
+                    if($possibility->getLevel() && $possibility->getLevel()->getOldId() == $level){
+                        array_push($tmp, $possibility);
+                    }
+                }
+            }
+
+            if(count($tmp) >= 1){
+                $possibilities = $tmp;
+            }
+
+            if(count($possibilities) == 1){
+                return $possibilities[0];
+            }
+        }
+
+        return 0;
     }
 }
