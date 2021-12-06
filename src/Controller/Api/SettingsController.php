@@ -84,6 +84,10 @@ class SettingsController extends AbstractController
         $settings->setLogoMail($data->logoMail);
         $settings->setUrlHomepage($this->generateUrl('app_homepage', [], UrlGeneratorInterface::ABSOLUTE_URL));
 
+        /** @var User $user */
+        $user = $this->getUser();
+        $user->setWho($data->who);
+
         $noErrors = $validatorService->validate($settings);
         if ($noErrors !== true) {
             return $apiResponse->apiJsonResponseValidationFailed($noErrors);

@@ -34,6 +34,7 @@ export class SettingsForm extends Component {
             emailContact: props.data ? props.data.emailContact : "",
             emailRgpd: props.data ? props.data.emailRgpd : "",
             logoMail: props.data ? props.data.logoMail : "",
+            who: parseInt(props.who)
         }
 
         this.inputLogoMail = React.createRef();
@@ -86,7 +87,7 @@ export class SettingsForm extends Component {
     }
 
     render () {
-        const { errors, success, websiteName, emailGlobal, emailContact, emailRgpd, logoMail } = this.state;
+        const { errors, success, websiteName, emailGlobal, emailContact, emailRgpd, logoMail, who } = this.state;
 
         return <>
             <div className="form">
@@ -111,6 +112,10 @@ export class SettingsForm extends Component {
                                   label="Téléverser votre logo" labelError="Seules les images sont acceptées."
                                   onGetFile={this.handleGetFile} onRemoveFile={this.handleRemoveFile}>Logo</Drop>
                         </div>
+                    </div>
+
+                    <div className="line">
+                        <Input type="number" valeur={who} identifiant="who" errors={errors} onChange={this.handleChange}>Who</Input>
                     </div>
 
                     <div className="line">

@@ -9,5 +9,5 @@ Routing.setRoutingData(routes);
 
 let el = document.getElementById("settings");
 if(el){
-    render(<Settings />, el)
+    render(<Settings {...el.dataset} />, el)
 }

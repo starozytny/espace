@@ -30,7 +30,7 @@ export class Settings extends Component {
         let content = null, havePagination = false;
         switch (context){
             default:
-                content = loadData ? <LoaderElement /> : <SettingsForm data={data}/>
+                content = loadData ? <LoaderElement /> : <SettingsForm who={this.props.who} data={data}/>
                 break;
         }
 
