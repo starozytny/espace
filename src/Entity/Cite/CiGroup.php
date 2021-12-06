@@ -2,7 +2,10 @@
 
 namespace App\Entity\Cite;
 
+use App\Entity\Prev\PrGroup;
 use App\Repository\Cite\CiGroupRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -86,6 +89,16 @@ class CiGroup
      * @ORM\ManyToOne(targetEntity=CiClasse::class)
      */
     private $classeTo;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PrGroup::class, mappedBy="groupe")
+     */
+    private $prGroups;
+
+    public function __construct()
+    {
+        $this->prGroups = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -220,6 +233,36 @@ class CiGroup
     public function setClasseTo(?CiClasse $classeTo): self
     {
         $this->classeTo = $classeTo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PrGroup[]
+     */
+    public function getPrGroups(): Collection
+    {
+        return $this->prGroups;
+    }
+
+    public function addPrGroup(PrGroup $prGroup): self
+    {
+        if (!$this->prGroups->contains($prGroup)) {
+            $this->prGroups[] = $prGroup;
+            $prGroup->setGroupe($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrGroup(PrGroup $prGroup): self
+    {
+        if ($this->prGroups->removeElement($prGroup)) {
+            // set the owning side to null (unless already changed)
+            if ($prGroup->getGroupe() === $this) {
+                $prGroup->setGroupe(null);
+            }
+        }
 
         return $this;
     }
