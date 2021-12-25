@@ -17,6 +17,7 @@ function switchFunction(type, search, v) {
             ){
                 return v;
             }
+            break;
         default:
             break;
     }

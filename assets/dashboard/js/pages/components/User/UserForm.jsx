@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import axios                   from "axios";
-import toastr                  from "toastr";
 import Routing                 from '@publicFolder/bundles/fosjsrouting/js/router.min.js';
 
 import {Input, Checkbox, Radiobox} from "@dashboardComponents/Tools/Fields";
@@ -11,6 +10,7 @@ import { Drop }                from "@dashboardComponents/Tools/Drop";
 import { FormLayout }          from "@dashboardComponents/Layout/Elements";
 
 import Validateur              from "@commonComponents/functions/validateur";
+import Helper                  from "@commonComponents/functions/helper";
 import Formulaire              from "@dashboardComponents/functions/Formulaire";
 
 const URL_CREATE_ELEMENT     = "api_users_create";
@@ -22,12 +22,12 @@ export function UserFormulaire ({ type, onChangeContext, onUpdateList, element }
 {
     let title = "Ajouter un utilisateur";
     let url = Routing.generate(URL_CREATE_ELEMENT);
-    let msg = "Félicitation ! Vous avez ajouté un nouveau utilisateur !"
+    let msg = "Félicitations ! Vous avez ajouté un nouveau utilisateur !"
 
-    if(type === "update"){
+    if(type === "update" || type === "profil"){
         title = "Modifier " + element.username;
         url = Routing.generate(URL_UPDATE_GROUP, {'id': element.id});
-        msg = "Félicitation ! La mise à jour s'est réalisée avec succès !";
+        msg = "Félicitations ! La mise à jour s'est réalisée avec succès !";
     }
 
     let form = <Form
@@ -49,7 +49,7 @@ export function UserFormulaire ({ type, onChangeContext, onUpdateList, element }
     return <FormLayout onChangeContext={onChangeContext} form={form}>{title}</FormLayout>
 }
 
-class Form extends Component {
+export class Form extends Component {
     constructor(props) {
         super(props);
 
@@ -75,12 +75,14 @@ class Form extends Component {
     }
 
     componentDidMount() {
-        document.body.scrollTop = 0; // For Safari
-        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-        document.getElementById("username").focus()
+        Helper.toTop();
+        let username = document.getElementById("username");
+        if(username){ username.focus(); }
     }
 
     handleChange = (e) => {
+        const { roles } = this.state
+
         let name = e.currentTarget.name;
         let value = e.currentTarget.value;
 
@@ -102,7 +104,7 @@ class Form extends Component {
             {type: "email", id: 'email',    value: email},
             {type: "text",  id: 'role',     value: role}
         ];
-        if(context === "create"){
+        if(context === "create" || context === "profil"){
             if(password !== ""){
                 paramsToValidate = [...paramsToValidate,
                     ...[{type: "password", id: 'password', value: password, idCheck: 'passwordConfirm', valueCheck: passwordConfirm}]
@@ -110,6 +112,8 @@ class Form extends Component {
             }
         }
 
+        let inputAvatar = this.inputAvatar.current;
+        let avatar = inputAvatar ? inputAvatar.drop.current.files : [];
         if(parseInt(role) === 6){
             paramsToValidate = [...paramsToValidate,
                 ...[{type: "text", id: 'center', value: center}]
@@ -127,8 +131,7 @@ class Form extends Component {
         // validate global
         let validate = Validateur.validateur(paramsToValidate)
         if(!validate.code){
-            toastr.warning("Veuillez vérifier les informations transmises.");
-            this.setState({ errors: validate.errors });
+            Formulaire.showErrors(this, validate);
         }else{
             Formulaire.loader(true);
             let self = this;
@@ -143,7 +146,10 @@ class Form extends Component {
             axios({ method: "POST", url: url, data: formData, headers: {'Content-Type': 'multipart/form-data'} })
                 .then(function (response) {
                     let data = response.data;
-                    self.props.onUpdateList(data);
+                    Helper.toTop();
+                    if(self.props.onUpdateList){
+                        self.props.onUpdateList(data);
+                    }
                     self.setState({ success: messageSuccess, errors: [] });
                     if(context === "create"){
                         self.setState( {
@@ -209,8 +215,8 @@ class Form extends Component {
 
                 {success !== false && <Alert type="info">{success}</Alert>}
 
-                <div className="line line-2">
-                    <Input valeur={username} identifiant="username" errors={errors} onChange={this.handleChange} >Nom utilisateur</Input>
+                <div className={"line" + (context !== "profil" ? " line-2" : "")}>
+                    {context !== "profil" && <Input valeur={username} identifiant="username" errors={errors} onChange={this.handleChange}>Nom utilisateur</Input>}
                     <Input valeur={email} identifiant="email" errors={errors} onChange={this.handleChange} type="email" >Adresse e-mail</Input>
                 </div>
 
@@ -219,20 +225,20 @@ class Form extends Component {
                     <Input valeur={lastname} identifiant="lastname" errors={errors} onChange={this.handleChange} >Nom</Input>
                 </div>
 
-                <div className="line line-2">
-                    <Radiobox items={rolesItems} identifiant="role" valeur={role} errors={errors} onChange={this.handleChange}>Role</Radiobox>
+                {context !== "profil" && <div className="line line-2">
+                    <Checkbox items={rolesItems} identifiant="roles" valeur={roles} errors={errors} onChange={this.handleChange}>Roles</Checkbox>
 
                     <Drop ref={this.inputAvatar} identifiant="avatar" file={avatar} folder="avatars" errors={errors} accept={"image/*"} maxFiles={1}
-                          label="Téléverser un avatar" labelError="Seules les images sont acceptées.">Fichier</Drop>
-                </div>
+                          label="Téléverser un avatar" labelError="Seules les images sont acceptées.">Fichier (facultatif)</Drop>
+                </div>}
 
-                {context === "create" ? <>
+                {(context === "create" || context === "profil") ? <>
                     <Alert type="reverse">
                         Laisser le champs vide génére un mot de passe aléatoire. L'utilisateur pourra utilise la
                         fonction <u>Mot de passe oublié ?</u> pour créer son mot de passe.
                     </Alert>
                     <div className="line">
-                        {context === "create" && <div className="password-rules">
+                        <div className="password-rules">
                             <p>Règles de création de mot de passe :</p>
                             <ul>
                                 <li>Au moins 12 caractères</li>
@@ -241,7 +247,7 @@ class Form extends Component {
                                 <li>Au moins 1 chiffre</li>
                                 <li>Au moins 1 caractère spécial</li>
                             </ul>
-                        </div>}
+                        </div>
                     </div>
                     <div className="line line-2">
                         <Input type="password" valeur={password} identifiant="password" errors={errors} onChange={this.handleChange} >Mot de passe (facultatif)</Input>

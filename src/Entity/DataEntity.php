@@ -68,4 +68,31 @@ class DataEntity
 
         return null;
     }
+
+    /**
+     * return format for new Date JS
+     *
+     * @param $date
+     * @return string|null
+     */
+    public function setDateJavascript($date): ?string
+    {
+        date_default_timezone_set('Europe/Paris');
+        return $date != null ? date_format($date, 'F d, Y H:i:s') : null;
+    }
+
+    public function getFullAddressString($address, $zipcode, $city, $complement="", $country = ""): string
+    {
+        $complement = $complement != null && $complement != "" ? ", " . $complement : "";
+        $zipcode = $zipcode != null && $zipcode != "" ? ", " . $zipcode : "";
+        $country = $country != null && $country != "" ? " - " . $country : "";
+
+        return $address . $complement .  $zipcode . $city . $country;
+    }
+
+    public function getFullNameString($lastname, $firstname, $civility = ""): string
+    {
+        $civility = $civility != null && $civility != "" ? $civility . " " : "";
+        return $civility . $lastname . " " . $firstname;
+    }
 }

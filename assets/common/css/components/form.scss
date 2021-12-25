@@ -12,13 +12,32 @@
   }
 
   h2{
-    margin-bottom: 8px;
+    margin-bottom: 24px;
   }
 
   .form-infos{
     opacity: 0.7;
     max-width: 414px;
     margin-bottom: 24px;
+  }
+
+  .line-separator{
+    margin-top: 12px;
+    width: 100%;
+
+    .title{
+      margin-top: 12px;
+      margin-bottom: 12px;
+      background-color: var(--fondContent);
+      padding: 12px;
+      @include fontSemibold();
+      text-transform: uppercase;
+      width: calc(100% - 24px);
+    }
+  }
+
+  .line-buttons{
+    margin-top: 24px;
   }
 }
 
@@ -65,10 +84,11 @@
   width: 100%;
 
   &:not(:last-child){
-    margin-bottom: 16px;
+    margin-bottom: 4px;
   }
 
-  & > .form-group:not(:last-child){
+  & > .form-files,
+  & > .form-group{
     margin-bottom: 8px;
   }
 
@@ -99,7 +119,7 @@ input, textarea, select{
   width: calc(100% - 20px);
   outline: none;
   background-color: var(--alpha);
-  color: var(--grey2);
+  color: var(--txt);
 
   &:focus{
     border: 1px solid var(--txt);
@@ -454,25 +474,36 @@ select{
 //                     | |   /_/  \___/ \___/   | |
 //                     |__|                    |__|
 @media (min-width:768px) {
+  .line{
+    &.line-2, &.line-3, &.line-4, &.line-infinite{
+      flex-direction: row;
+    }
+  }
   .line.line-2{
-    flex-direction: row;
-
     & > .form-group:first-child{
-      margin-right: 12px;
+      margin-right: 6px;
       width: 50%;
     }
     & > .form-group:last-child{
-      margin-left: 12px;
+      margin-left: 6px;
       width: 50%;
     }
   }
 
   .line.line-3{
-    flex-direction: row;
-
     & > .form-group{
       width: 33%;
     }
+    & > .form-group:not(:last-child){
+      margin-right: 12px;
+    }
+  }
+
+  .line.line-4{
+    & > .form-group{
+      width: 25%;
+    }
+
     & > .form-group:not(:last-child){
       margin-right: 12px;
     }
@@ -499,8 +530,18 @@ select{
       margin-right: 12px;
     }
   }
+}
+
+//                      __   _  ___ ____  _  _     __
+//                     | _| / |/ _ \___ \| || |   |_ |
+//    _____ _____ _____| |  | | | | |__) | || |_   | |_____ _____ _____
+//   |_____|_____|_____| |  | | |_| / __/|__   _|  | |_____|_____|_____|
+//                     | |  |_|\___/_____|  |_|    | |
+//                     |__|                       |__|
+@media (min-width: 1024px) {
 
 }
+
 //                      __   _ ____  ___   ___    __
 //                     | _| / |___ \( _ ) / _ \  |_ |
 //    _____ _____ _____| |  | | __) / _ \| | | |  | |_____ _____ _____
@@ -510,6 +551,28 @@ select{
 @media (min-width:1280px) {
   .form {
     padding: 24px;
+  }
+
+  .line.line-2{
+    & > .form-group:first-child{
+      margin-right: 12px;
+    }
+    & > .form-group:last-child{
+      margin-left: 12px;
+    }
+  }
+
+  .line.line-3,
+  .line.line-4{
+    & > .form-group:not(:last-child){
+      margin-right: 24px;
+    }
+  }
+
+  .form-button{
+    & > *:not(:last-child){
+      margin-right: 24px;
+    }
   }
 }
 
