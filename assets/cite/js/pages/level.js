@@ -5,11 +5,11 @@ import Routing from '@publicFolder/bundles/fosjsrouting/js/router.min';
 
 import React from "react";
 import { render } from "react-dom";
-import { Level } from "./components/Level/Level";
+import { Levels } from "./components/Level/Levels";
 
 Routing.setRoutingData(routes);
 
 let el = document.getElementById("level");
 if(el){
-    render(<Level {...el.dataset} />, el);
+    render(<Levels {...el.dataset} />, el);
 }

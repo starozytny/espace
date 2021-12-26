@@ -112,8 +112,6 @@ export class Form extends Component {
             }
         }
 
-        let inputAvatar = this.inputAvatar.current;
-        let avatar = inputAvatar ? inputAvatar.drop.current.files : [];
         if(parseInt(role) === 6){
             paramsToValidate = [...paramsToValidate,
                 ...[{type: "text", id: 'center', value: center}]
@@ -126,7 +124,8 @@ export class Form extends Component {
             ];
         }
 
-        let avatar = this.inputAvatar.current.drop.current.files;
+        let inputAvatar = this.inputAvatar.current;
+        let avatar = inputAvatar ? inputAvatar.drop.current.files : [];
 
         // validate global
         let validate = Validateur.validateur(paramsToValidate)

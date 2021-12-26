@@ -2,20 +2,23 @@
 
 namespace App\Entity\Cite;
 
+use App\Entity\DataEntity;
 use App\Repository\Cite\CiTeacherRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CiTeacherRepository::class)
  */
-class CiTeacher
+class CiTeacher extends DataEntity
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"admin:read"})
      */
     private $id;
 
@@ -143,6 +146,15 @@ class CiTeacher
         $this->oldPersonId = $oldPersonId;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     * @Groups({"admin:read"})
+     */
+    public function getFullname(): string
+    {
+        return $this->getFullNameString($this->lastname, $this->firstname);
     }
 
     public function getFirstname(): ?string
