@@ -8,18 +8,19 @@ import { Select, SelectReactSelectize } from "@dashboardComponents/Tools/Fields"
 
 import Manage from "@citeComponents/functions/manage";
 import Data from "@citeComponents/functions/data";
+import {LevelsList} from "./LevelsList";
 
 export class Levels extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            isOpen: props.isOpenLevel === "true",
+            isOpen: props.isOpenLevel === "1",
             loadPageError: false,
             loadData: true,
             data: [],
-            teacher: "",
-            center: "",
+            teacher: props.teacherId ? parseInt(this.props.teacherId) : "",
+            center: 9,
             teachers: [],
             centers: [],
             classes: [],
@@ -35,7 +36,11 @@ export class Levels extends Component {
     }
 
     componentDidMount = () => {
-        if(this.props.role === "admin"){ Data.getTeachers(this, "select");}
+        if(this.props.role === "admin"){
+            Data.getTeachers(this, "select");
+        }else{
+            Data.getClassesByTeacher(this, this.state.teacher, "centers")
+        }
     }
 
     handleUpdateData = (data) => { this.setState({ currentData: data })  }
@@ -55,9 +60,6 @@ export class Levels extends Component {
     render () {
         const { role, developer } = this.props; // developer = string number | 1 = developer
         const { isOpen, loadData, loadPageError, errors, data, teacher, center, teachers, centers, classes } = this.state;
-
-        console.log(classes)
-        console.log(centers)
 
         let toolbar = <div className="toolbar">
             {role === "admin" && <div className="item select">
@@ -82,7 +84,9 @@ export class Levels extends Component {
                 {toolbar}
             </div> : <>{toolbar}</>}
 
-            {teacher === "" ? <Alert>Veuillez sélectionner un professeur.</Alert> : <div>Hello</div>}
+            {teacher === "" ? <Alert>Veuillez sélectionner un professeur.</Alert> : (
+                center === "" ? <Alert>Veuillez sélectionner un centre</Alert> : <LevelsList {...this.state} />
+            )}
         </div>
 
         return <>

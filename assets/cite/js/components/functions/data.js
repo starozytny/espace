@@ -59,6 +59,9 @@ function getClassesByTeacher(self, teacherId, cas) {
         .catch(function (error) {
             Formulaire.displayErrors(self, error);
         })
+        .then(function () {
+            self.setState({ loadData: false })
+        })
     ;
 }
 

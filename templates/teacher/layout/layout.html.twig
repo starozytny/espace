@@ -1,0 +1,48 @@
+{% extends 'dashboard/layout/layout.html.twig' %}
+
+{% set page_prefix = "Espace professeur" %}
+{% set menu = [
+    {
+        'path': path('teacher_homepage'),
+        'icon': 'home',
+        'label': 'Dashboard',
+        'name': 'espace-professeur'
+    },
+    {
+        'path': path('teacher_level_index'),
+        'icon': 'equalizer',
+        'label': 'Gestion des niveaux',
+        'name': 'gestion-niveaux'
+    }
+] %}
+
+{% set menuBottom = [
+    {
+        'path': path('app_homepage'),
+        'icon': 'earth',
+        'label': 'Page accueil',
+        'name': 'accueil'
+    },
+    {
+        'path': path('app_logout'),
+        'icon': 'eject',
+        'label': 'Se déconnecter',
+        'name': 'logout'
+    }
+] %}
+
+{% if is_granted("ROLE_ADMIN") %}
+    {% set menuAdd = [
+        {
+            'path': path('admin_homepage'),
+            'icon': 'earth',
+            'label': 'Espace admin',
+            'name': 'admin'
+        }
+    ]%}
+    {% set menuBottom = menuAdd | merge(menuBottom) %}
+{% endif %}
+
+{% block footer %}
+    {% include "app/layout/components/footer.html.twig" %}
+{% endblock %}

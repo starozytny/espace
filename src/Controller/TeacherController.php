@@ -2,14 +2,14 @@
 
 namespace App\Controller;
 
-use App\Entity\Cite\CiNews;
-use App\Entity\Cite\CiPlanning;
+use App\Controller\Common\CommonRoute;
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/enseignant", name="teacher_")
+ * @Route("/espace-professeur", name="teacher_")
  */
 class TeacherController extends AbstractController
 {
@@ -18,22 +18,18 @@ class TeacherController extends AbstractController
      */
     public function index(): Response
     {
-        $em = $this->getDoctrine()->getManager();
-        $planning = $em->getRepository(CiPlanning::class)->findOneBy(['isActual' => false]);
+        return $this->render('teacher/pages/index.html.twig');
+    }
 
-        $em = $this->getDoctrine()->getManager();
-        $news = $em->getRepository(CiNews::class)->findAll();
-        $newsData = null;
-        if($news){
-            $newsData = [
-                'title' => $news[0]->getTitle(),
-                'content' => $news[0]->getContent()
-            ];
-        }
-
-        return $this->render('teacher/pages/index.html.twig', [
-            'planningEditable' => $planning->getIsOn(),
-            'news' => $newsData
-        ]);
+    /**
+     * @Route("/gestion-niveaux", name="level_index")
+     * @param CommonRoute $commonRoute
+     * @return Response
+     */
+    public function level(CommonRoute $commonRoute): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        return $this->render('teacher/pages/level/index.html.twig', $commonRoute->returnLevelPage($user));
     }
 }

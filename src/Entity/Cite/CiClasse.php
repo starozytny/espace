@@ -53,8 +53,9 @@ class CiClasse
     private $durationTotal;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiTeacher::class, inversedBy="classes")
+     * @ORM\ManyToOne(targetEntity=CiTeacher::class, fetch="EAGER", inversedBy="classes")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"user:read"})
      */
     private $teacher;
 

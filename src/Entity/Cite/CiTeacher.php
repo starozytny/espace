@@ -18,7 +18,7 @@ class CiTeacher extends DataEntity
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"admin:read"})
+     * @Groups({"admin:read", "user:read"})
      */
     private $id;
 
@@ -147,6 +147,15 @@ class CiTeacher extends DataEntity
         $this->oldPersonId = $oldPersonId;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     * @Groups({"user:read"})
+     */
+    public function getFullnameCivility(): string
+    {
+        return $this->getFullNameString($this->lastname, $this->firstname, $this->getCivility());
     }
 
     /**

@@ -1,0 +1,15 @@
+{% extends 'teacher/layout/layout.html.twig' %}
+
+{% set submenu = [
+    { 'label': "Niveaux", 'path': path('admin_level_index') }
+] %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('cite_level') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('cite_level') }}
+{% endblock %}
