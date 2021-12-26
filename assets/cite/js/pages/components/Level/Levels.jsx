@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 
 import { Page }           from "@dashboardComponents/Layout/Page";
-import { Aside }          from "@dashboardComponents/Tools/Aside";
 import { Alert }          from "@dashboardComponents/Tools/Alert";
 import { SwitcherButton } from "@dashboardComponents/Tools/Button";
+import { LoaderElement }  from "@dashboardComponents/Layout/Loader";
 import { Select, SelectReactSelectize } from "@dashboardComponents/Tools/Fields";
 
 import Manage from "@citeComponents/functions/manage";
 import Data from "@citeComponents/functions/data";
-import {LoaderElement} from "@dashboardComponents/Layout/Loader";
 
 export class Levels extends Component {
     constructor(props) {
@@ -23,6 +22,7 @@ export class Levels extends Component {
             center: "",
             teachers: [],
             centers: [],
+            classes: [],
             errors: [],
         }
 
@@ -41,14 +41,23 @@ export class Levels extends Component {
     handleUpdateData = (data) => { this.setState({ currentData: data })  }
 
     handleChangeSelect = (name, e) => {
-        this.setState({ [name]: e !== undefined ? e.value : "" });
+        let value = e !== undefined ? e.value : "";
+
+        if(name === "teacher"){
+            Data.getClassesByTeacher(this, value, "centers")
+        }
+
+        this.setState({ [name]: value });
     }
 
     handleSwitchManage = () => { Manage.switchLevel(this, this.state.isOpen); }
 
     render () {
-        const { role, developer } = this.props; // developer = string number / 1 = developer
-        const { isOpen, loadData, loadPageError, errors, data, teacher, center, teachers, centers } = this.state;
+        const { role, developer } = this.props; // developer = string number | 1 = developer
+        const { isOpen, loadData, loadPageError, errors, data, teacher, center, teachers, centers, classes } = this.state;
+
+        console.log(classes)
+        console.log(centers)
 
         let toolbar = <div className="toolbar">
             {role === "admin" && <div className="item select">
@@ -59,8 +68,8 @@ export class Levels extends Component {
             </div>}
             <div className="item select">
                 <div className="line">
-                    <Select items={centers} placeholder="Sélectionner un centre" identifiant="center"
-                            valeur={center} errors={errors} onChange={this.handleChangeSelect}/>
+                    <SelectReactSelectize items={centers} placeholder="Sélectionner un centre" identifiant="center"
+                            valeur={center} errors={errors} onChange={(e) => this.handleChangeSelect("center", e)}/>
                 </div>
             </div>
         </div>
@@ -81,7 +90,6 @@ export class Levels extends Component {
                   havePagination={false} taille={data && data.length} data={data} onUpdate={this.handleUpdateData}
             >
                 {loadData ? <LoaderElement /> : content}
-                {/*<Aside ref={this.aside} content={contentAside} />*/}
             </Page>
         </>
     }

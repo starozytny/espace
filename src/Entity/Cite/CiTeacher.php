@@ -24,6 +24,7 @@ class CiTeacher extends DataEntity
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"admin:read"})
      */
     private $oldId;
 

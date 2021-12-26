@@ -6,6 +6,7 @@ use App\Repository\Cite\CiClasseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CiClasseRepository::class)
@@ -16,11 +17,13 @@ class CiClasse
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"user:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user:read"})
      */
     private $name;
 
@@ -56,8 +59,9 @@ class CiClasse
     private $teacher;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiCenter::class, inversedBy="classes")
+     * @ORM\ManyToOne(targetEntity=CiCenter::class, fetch="EAGER", inversedBy="classes")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"user:read"})
      */
     private $center;
 

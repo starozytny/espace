@@ -29,6 +29,40 @@ function getTeachers(self, cas) {
     ;
 }
 
+function getClassesByTeacher(self, teacherId, cas) {
+    axios.get(Routing.generate('api_classes_teacher', {'id': teacherId}), {})
+        .then(function (response) {
+            switch (cas) {
+                case "centers":
+                    let classes = response.data;
+                    let centers = [];
+
+                    classes.forEach(classe => {
+                        let find = false;
+                        centers.forEach(center => {
+                            if(center.value === classe.center.id){
+                                find = true;
+                            }
+                        })
+                        if(!find){
+                            centers.push({ value: classe.center.id, label: classe.center.name, identifiant: "center-" + classe.center.id });
+                        }
+                    })
+
+                    self.setState({ classes: response.data, centers: centers })
+                    break;
+                default:
+                    self.setState({ classes: response.data })
+                    break;
+            }
+        })
+        .catch(function (error) {
+            Formulaire.displayErrors(self, error);
+        })
+    ;
+}
+
 module.exports = {
-    getTeachers
+    getTeachers,
+    getClassesByTeacher
 }
