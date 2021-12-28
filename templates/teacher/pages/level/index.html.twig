@@ -4,8 +4,8 @@
 {% set submenuActive = "Niveaux" %}
 
 {% block main_content %}
-    <div id="level" data-role="teacher" data-is-open-level="{{ isOpenLevel }}" data-developer="{{ app.user.highRoleCode }}"
-        data-teacher-id="{{ teacher.id }}">
+    <div id="level" data-role="teacher" data-developer="{{ app.user.highRoleCode }}"
+         data-is-open-level="{{ isOpenLevel }}" data-teacher-id="{{ teacher.id }}">
         {% include "dashboard/layout/components/spinner.html.twig" %}
     </div>
 {% endblock %}

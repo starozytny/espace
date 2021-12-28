@@ -87,7 +87,44 @@ function getClassesByTeacher(self, teacherId, cas) {
     ;
 }
 
+function getPlanning (self, teacherId) {
+    let days = [
+        { id: 1, name: 'Lundi',   },
+        { id: 2, name: 'Mardi',   },
+        { id: 3, name: 'Mercredi',},
+        { id: 4, name: 'Jeudi',   },
+        { id: 5, name: 'Vendredi',},
+        { id: 6, name: 'Samedi',  },
+    ];
+
+    axios.get(Routing.generate('api_plannings_teacher', {'teacher': teacherId, 'actuel': false}), {})
+        .then(function (response) {
+            let resp = response.data;
+            let slots = JSON.parse(resp.slots);
+
+            let dayActive = 1;
+            days.map(elem => {
+                slots.forEach(el => {
+                    if(el.day === elem.id){
+                        dayActive = elem.id;
+                    }
+                })
+            })
+
+            self.setState({ dayActive, slots })
+        })
+        .catch(function (error) {
+            self.setState({ loadPageError: true });
+        })
+        .then(function () {
+            self.setState({ loadData: false });
+            Formulaire.loader(false); // usefull when is admin who select teacher
+        })
+    ;
+}
+
 module.exports = {
     getTeachers,
-    getClassesByTeacher
+    getClassesByTeacher,
+    getPlanning
 }

@@ -27,8 +27,7 @@ export class SelectTeacher extends Component {
             value = e.value
             if(value !== teacher){
                 Formulaire.loader(true);
-                // this.props.onChangePlanning(value);
-                // this.props.onSaveNameTeacher(e.label, value);
+                this.props.onChangePlanning(value);
             }
         }
 

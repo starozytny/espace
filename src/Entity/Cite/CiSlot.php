@@ -6,6 +6,7 @@ use App\Repository\Cite\CiSlotRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CiSlotRepository::class)
@@ -16,6 +17,7 @@ class CiSlot
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"user:read"})
      */
     private $id;
 
@@ -46,6 +48,7 @@ class CiSlot
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"user:read"})
      */
     private $day;
 

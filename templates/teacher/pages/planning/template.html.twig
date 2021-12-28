@@ -1,0 +1,11 @@
+{% extends 'teacher/layout/layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('cite_planning') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('cite_planning') }}
+{% endblock %}
