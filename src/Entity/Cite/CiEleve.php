@@ -2,21 +2,25 @@
 
 namespace App\Entity\Cite;
 
+use App\Entity\DataEntity;
 use App\Entity\Prev\PrGroup;
 use App\Repository\Cite\CiEleveRepository;
+use Carbon\Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CiEleveRepository::class)
  */
-class CiEleve
+class CiEleve extends DataEntity
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"group:read"})
      */
     private $id;
 
@@ -52,11 +56,13 @@ class CiEleve
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"group:read"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"group:read"})
      */
     private $lastname;
 
@@ -275,6 +281,14 @@ class CiEleve
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getFullname(): string
+    {
+        return $this->getFullNameString($this->lastname, $this->firstname);
+    }
+
     public function getFirstname(): ?string
     {
         return $this->firstname;
@@ -321,6 +335,20 @@ class CiEleve
         $this->email = $email;
 
         return $this;
+    }
+
+    /**
+     * Get age of eleve
+     *
+     * @return int
+     * @Groups({"group:read"})
+     */
+    public function getAge(): int
+    {
+        if($this->getBirthday()){
+            return Carbon::createFromTimestamp($this->getBirthday()->getTimestamp())->age;
+        }
+        return 0;
     }
 
     public function getBirthday(): ?\DateTimeInterface

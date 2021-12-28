@@ -30,14 +30,25 @@ function getTeachers(self, cas) {
 }
 
 function getClassesByTeacher(self, teacherId, cas) {
-    axios.get(Routing.generate('api_classes_teacher', {'id': teacherId}), {})
+    let url = Routing.generate('api_classes_teacher', {'id': teacherId});
+    switch (cas) {
+        case "centers":
+            url = Routing.generate('api_classes_teacher_up', {'id': teacherId})
+            break;
+        default:
+            break;
+    }
+    axios.get(url, {})
         .then(function (response) {
             switch (cas) {
                 case "centers":
-                    let classes = response.data;
+                    let data = JSON.parse(response.data.donnees);
+                    let groupes = JSON.parse(response.data.groupes);
                     let centers = [];
 
-                    classes.forEach(classe => {
+                    data.forEach(item => {
+                        let classe = item.classe;
+
                         let find = false;
                         centers.forEach(center => {
                             if(center.value === classe.center.id){
@@ -47,16 +58,25 @@ function getClassesByTeacher(self, teacherId, cas) {
                         if(!find){
                             centers.push({ value: classe.center.id, label: classe.center.name, identifiant: "center-" + classe.center.id });
                         }
+
+                        //groupes
+                        classe.groupes = [];
+                        groupes.forEach(grp => {
+                            if(grp.classe.id === classe.id){
+                                classe.groupes.push(grp);
+                            }
+                        })
                     })
 
-                    self.setState({ classes: response.data, centers: centers })
+                    self.setState({ classes: data, centers: centers })
                     break;
                 default:
-                    self.setState({ classes: response.data })
+                    self.setState({ classes: response.data.donnees })
                     break;
             }
         })
         .catch(function (error) {
+            console.log(error)
             Formulaire.displayErrors(self, error);
         })
         .then(function () {

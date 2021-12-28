@@ -7,12 +7,15 @@ use App\Repository\Cite\CiGroupRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CiGroupRepository::class)
  */
 class CiGroup
 {
+    const GROUP_READ = ["group:read"];
+
     const TO_SET = 0;
     const STAY = 1;
     const LEVEL_UP = 2;
@@ -30,11 +33,13 @@ class CiGroup
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"group:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"group:read"})
      */
     private $status = self::TO_SET;
 
@@ -45,11 +50,13 @@ class CiGroup
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"group:read"})
      */
     private $isGiven = false;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"group:read"})
      */
     private $givenGroup;
 
@@ -60,33 +67,39 @@ class CiGroup
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"group:read"})
      */
     private $isSuspended = false;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"group:read"})
      */
     private $isFinal = false;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"group:read"})
      */
     private $renewAnswer = self::ANSWER_NONE;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiEleve::class, inversedBy="groups")
+     * @ORM\ManyToOne(targetEntity=CiEleve::class, fetch="EAGER", inversedBy="groups")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"group:read"})
      */
     private $eleve;
 
     /**
      * @ORM\ManyToOne(targetEntity=CiClasse::class, inversedBy="groups")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"group:read"})
      */
     private $classe;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiClasse::class)
+     * @ORM\ManyToOne(targetEntity=CiClasse::class, fetch="EAGER")
+     * @Groups({"group:read"})
      */
     private $classeTo;
 
