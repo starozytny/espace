@@ -151,7 +151,7 @@ class CiTeacher extends DataEntity
 
     /**
      * @return string
-     * @Groups({"user:read"})
+     * @Groups({"user:read", "group:read"})
      */
     public function getFullnameCivility(): string
     {

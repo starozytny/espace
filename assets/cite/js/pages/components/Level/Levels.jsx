@@ -20,7 +20,7 @@ export class Levels extends Component {
             loadData: true,
             data: [],
             teacher: props.teacherId ? parseInt(this.props.teacherId) : "",
-            center: 9,
+            center: "",
             teachers: [],
             centers: [],
             classes: [],
@@ -46,20 +46,28 @@ export class Levels extends Component {
     handleUpdateData = (data) => { this.setState({ currentData: data })  }
 
     handleChangeSelect = (name, e) => {
+        const { center } = this.state;
+
+        let nCenter;
         let value = e !== undefined ? e.value : "";
 
         if(name === "teacher"){
-            Data.getClassesByTeacher(this, value, "centers")
+            Data.getClassesByTeacher(this, value, "centers");
+            let element = document.querySelector("label[for='center'] + .react-selectize .simple-value > span");
+            element ? element.innerHTML = "" : "";
+            nCenter = "";
+        }else{
+            nCenter = value;
         }
 
-        this.setState({ [name]: value });
+        this.setState({ [name]: value, center: nCenter });
     }
 
     handleSwitchManage = () => { Manage.switchLevel(this, this.state.isOpen); }
 
     render () {
         const { role, developer } = this.props; // developer = string number | 1 = developer
-        const { isOpen, loadData, loadPageError, errors, data, teacher, center, teachers, centers, classes } = this.state;
+        const { isOpen, loadData, loadPageError, errors, data, teacher, center, teachers, centers } = this.state;
 
         let toolbar = <div className="toolbar">
             {role === "admin" && <div className="item select">

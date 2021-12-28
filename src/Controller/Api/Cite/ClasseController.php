@@ -76,6 +76,7 @@ class ClasseController extends AbstractController
 
         $grps = $serializer->serialize($grps, "json", ['groups' => CiGroup::GROUP_READ]);
 
+        // récupération des classes supérieures logiques à la classe current.
         $planningPrev = $em->getRepository(CiPlanning::class)->findOneBy(['isActual' => false]);
         $slotsPrev = $em->getRepository(CiSlot::class)->findBy(
             ['planning' => $planningPrev], ['start' => 'ASC', 'end' => 'DESC']

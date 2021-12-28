@@ -23,7 +23,7 @@ class CiClasse
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user:read"})
+     * @Groups({"user:read", "group:read"})
      */
     private $name;
 
@@ -55,14 +55,14 @@ class CiClasse
     /**
      * @ORM\ManyToOne(targetEntity=CiTeacher::class, fetch="EAGER", inversedBy="classes")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"user:read"})
+     * @Groups({"user:read", "group:read"})
      */
     private $teacher;
 
     /**
      * @ORM\ManyToOne(targetEntity=CiCenter::class, fetch="EAGER", inversedBy="classes")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"user:read"})
+     * @Groups({"user:read", "group:read"})
      */
     private $center;
 
@@ -297,7 +297,7 @@ class CiClasse
 
     /**
      * @return string
-     * @Groups({"user:read"})
+     * @Groups({"user:read", "group:read"})
      */
     public function getNameCycleLevel(): string
     {

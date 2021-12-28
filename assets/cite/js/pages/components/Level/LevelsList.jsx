@@ -28,7 +28,7 @@ export class LevelsList extends Component {
     }
 
     render () {
-        const { role, classes, center } = this.props;
+        const { role, developer, classes, center } = this.props;
         const { classe, choiceActive } = this.state;
 
         let data = classes;
@@ -99,9 +99,9 @@ export class LevelsList extends Component {
 
                                 // multiple choice with teacher
 
-                                nextClasses.classes.forEach(choice => {
+                                nextClasses.classes.forEach((choice, index) => {
                                     //display possibilities = no action so admin and user
-                                    possibilities.push(<div className="choice" key={choice.id}>
+                                    possibilities.push(<div className="choice" key={index}>
                                         <div className="infos">
                                             <div className="infos-title">[{choice.center.name}] {choice.nameCycleLevel}</div>
                                             <div className="total">
@@ -111,7 +111,7 @@ export class LevelsList extends Component {
                                     </div>)
 
                                     //display choice = action possible so admin only
-                                    choicesAdmin.push(<div className={"choice choice-select" + (choiceActive === choice ? " active" : "")} onClick={() => this.handleSelect(choice)} key={choice.id}>
+                                    choicesAdmin.push(<div className={"choice choice-select" + (choiceActive === choice ? " active" : "")} onClick={() => this.handleSelect(choice)} key={index}>
                                         <div className="infos">
                                             <div className="infos-title">[{choice.center.name}] {choice.nameCycleLevel}</div>
                                             <div className="total">
@@ -183,7 +183,10 @@ export class LevelsList extends Component {
                                                 <div className="col-4">Etat de la proposition</div>
                                             </div>
                                             {(elem.groups && elem.groups.length !== 0) ? elem.groups.map((grp, index) => {
-                                                return <LevelsItem elem={grp} key={index}/>
+                                                return <div className="tmCours" key={index}>
+                                                    <div className="name">Année</div>
+                                                    <div className="eleves"><LevelsItem elem={grp} nextClasse={nextClasses} role={role} developer={developer} key={index}/></div>
+                                                </div>
                                             }) : <Alert>Aucun élève dans cette classe.</Alert>}
                                         </div>
                                     </div>

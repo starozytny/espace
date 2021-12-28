@@ -5,8 +5,19 @@ import { LoaderElement }      from "@dashboardComponents/Layout/Loader";
 import { Button, ButtonIcon } from "@dashboardComponents/Tools/Button";
 
 export class LevelsItem extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            loadElemId: 0
+        }
+    }
+
     render () {
-        const { elem } = this.props;
+        const { role, developer, elem, nextClasses } = this.props;
+        const { loadElemId } = this.state;
+
+        // console.log(elem)
 
         // let liste = []; let nbAlreadyResponse = 0; let nbTmCours = 0;
         // if(elem.groups){
@@ -45,14 +56,6 @@ export class LevelsItem extends Component {
         //         let listeEleves = [];
         //         byGrp.eleves.forEach(elv => {
         //
-        //             let assigned = 0;
-        //             let assignedMsg = "";
-        //             let assignedLesson = "";
-        //             let assignedLevel = "";
-        //             let status = "", statusDisabled = "", actions = "";
-        //             let teacher = el.classe.teacher.id;
-        //             let teacherName = "";
-        //
         //             elv.tmGroups.forEach(tmG => {
         //                 if(tmG.classeFrom.id === el.classe.id){
         //                     assignedLevel = tmG.classe.nameCycleLevel;
@@ -89,101 +92,7 @@ export class LevelsItem extends Component {
         //                     }
         //                 }
         //             })
-        //
-        //             if(haveLevelUp){
-        //                 if(((elv.isFm && !elv.dispenseFm) || !elv.isFm) && !elv.isSuspended && !elv.isFinal){
-        //
-        //                     status =(elv.status === 1 || elv.status === 2) ? <div className="status">
-        //                         {elv.status === 1 ? <><span className="icon-dot" />  {assignedLevel}</> : <><span className="icon-up-arrow" /> {assignedLevel}</>}
-        //                         <div className="name-teacher">{teacherName}</div>
-        //                     </div> : "";
-        //
-        //                     actions = loadElem === elv.id ? <LoaderElement /> : (elv.status === 0 ? (next && <>
-        //
-        //                         {next && next.id !== el.classe.id && <div className="monter" onClick={(() => onLevelUp(elv.idGroup, elv, next, classe))}>Monter</div>}
-        //                         <div className="garder" onClick={(() => onStay(elv.idGroup, elv, classe, classe))}>Garder</div>
-        //                         <div className="stop" onClick={(() => onFinal(elv.idGroup, elv, classe))}>Ne continue pas</div>
-        //
-        //                         {role === "admin" && <div className="actions-admin">
-        //                             {!elv.isGiven && <div className="donner">
-        //                                 <ButtonIcon tooltipDirection="bottom" icon="heart" onClick={() => onGive(elv.idGroup, elv, classe, classe)}>
-        //                                     Déléguer
-        //                                 </ButtonIcon>
-        //                             </div>}
-        //                             <div className="disabled">
-        //                                 <ButtonIcon tooltipDirection="bottom" icon="disabled" onClick={() => onChangeSuspended(elv.idGroup, elv)}>
-        //                                     Suspendre
-        //                                 </ButtonIcon>
-        //                             </div>
-        //                             {elv.isFm && <div className="dispensed">
-        //                                 <ButtonIcon tooltipDirection="bottom" icon="certificate" onClick={() => onChangeDispensed(elv.idGroup, elv)}>
-        //                                     Dispenser
-        //                                 </ButtonIcon>
-        //                             </div>}
-        //                             {developer === 1 && elv.status === 0 && <div className="dispensed">
-        //                                 <ButtonIcon tooltipDirection="bottom" icon="trash" onClick={() => onDelete(elv.idGroup, elv)}>
-        //                                     Supprimer
-        //                                 </ButtonIcon>
-        //                             </div>}
-        //                         </div>}
-        //
-        //                     </>) : (assigned !== 2 && <div className="modifier" onClick={(() => onEdit(elv.idGroup, elv, next, classe))}>{elv.status === 3 ? "Récuperer" : "Modifier"}</div>))
-        //                 }else{
-        //                     statusDisabled = " eleve-status-disabled";
-        //                     if(elv.dispenseFm && elv.isFm){
-        //                         status = <div className="status"><span className="icon-certificate" />Dispensé de formation musicale</div>
-        //                         assignedMsg = <div className="disabled">Dispensé</div>
-        //                         if(role === "admin"){
-        //                             actions = loadElem === elv.id ? <LoaderElement /> :
-        //                                 <div className="disabled" onClick={(() => onChangeDispensed(elv.idGroup, elv))}>Annuler la dispense</div>
-        //                         }
-        //                     }else if(elv.isSuspended){
-        //                         status = <div className="status"><span className="icon-disabled" /> Suspendu</div>
-        //                         assignedMsg = <div className="disabled">Suspendu</div>
-        //                         if(role === "admin"){
-        //                             actions = loadElem === elv.id ? <LoaderElement /> :
-        //                                 <div className="disabled" onClick={(() => onChangeSuspended(elv.idGroup, elv))}>Annuler la suspension</div>
-        //                         }
-        //                     }else if(elv.isFinal){
-        //                         status = <div className="status"><span className="icon-disabled" /> Ne continue pas</div>
-        //                         assignedMsg = <div className="disabled">Ne continue pas</div>
-        //                         actions = loadElem === elv.id ? <LoaderElement /> :
-        //                             <div className="disabled" onClick={(() => onFinal(elv.idGroup, elv, classe))}>Rétablir</div>
-        //                     }
-        //                 }
-        //             }
-        //
-        //             if(elv.status !== 0 || elv.dispenseFm || elv.isSuspended || elv.isFinal){
-        //                 nbAlreadyResponse++;
-        //             }
-        //
-        //             //**
-        //             //**  GIVEN
-        //             //**
-        //             if(!elv.isGiven || (elv.isGiven && (role === "admin" || elv.status === 3)) ){
-        //                 listeEleves.push(<div className={"eleve eleve-status-" + elv.status + statusDisabled } key={elv.id}>
-        //                     <div className="col-1 eleve-infos">
-        //                         <div className="name">
-        //                             <b className={elv.isGiven ? "given" : ""}>{elv.isGiven && <span className="icon-heart" />} {elv.lastname}</b> {elv.firstname}
-        //                         </div>
-        //                         <div className="age">{elv.age} ans</div>
-        //
-        //                     </div>
-        //
-        //                     <div className="col-2 eleve-levels">
-        //                         {status}
-        //                     </div>
-        //
-        //                     <div className="col-3 actions-level">
-        //                         {actions}
-        //                     </div>
-        //
-        //                     <div className="col-4 eleve-place">
-        //                         <div className={"eleve-place-status eleve-place-status-" + assigned}>{assignedMsg}</div>
-        //                         <div>{assignedLesson}</div>
-        //                     </div>
-        //                 </div>)
-        //             }
+
         //         })
         //
         //         //**
@@ -203,32 +112,140 @@ export class LevelsItem extends Component {
         // }
 
         let eleve = elem.eleve;
+        let classe = elem.classe;
+        let classeTo = elem.classeTo;
 
-        return <>
-            <div className="tmCours">
-                <div className={"eleve eleve-status-" + elem.status } key={elem.id}>
-                    <div className="col-1 eleve-infos">
-                        <div className="name">
-                            <b className={elem.isGiven ? "given" : ""}>{elem.isGiven && <span className="icon-heart" />} {eleve.lastname}</b> {eleve.firstname}
-                        </div>
-                        <div className="age">{eleve.age} ans</div>
+        let status = null, actions = null;
+        let statusDisabled = "";
 
+        let assignedMsg = "", assignedLesson = "", teacherName = "";
+
+        if(elem.status === 1 || elem.status === 2){
+            teacherName = classe.teacher.id !== classeTo.teacher.id && classeTo.teacher.fullnameCivility;
+        }
+
+        switch (elem.renewAnswer) {
+            case 1: // accept
+                assignedMsg = "Place confirmée";
+                // assignedLesson = tmG.assignation.lesson.slot.dayString + " de " + tmG.assignation.lesson.startShortString + " à " + tmG.assignation.lesson.endShortString;
+                break;
+            case 2: // refuse
+                assignedMsg = "Place refusée";
+                // if(tmG.assignationRefused){
+                //     assignedLesson = tmG.assignationRefused.lesson.slot.dayString + " de " + tmG.assignationRefused.lesson.startShortString + " à " + tmG.assignationRefused.lesson.endShortString;
+                // }
+                break;
+            case 3: // waiting
+            case 4: // priority waiting
+                assignedMsg = "N'a pas confirmé";
+                assignedLesson = "Choix donné à l'élève";
+                teacherName = "";
+                break;
+            case 5: // wait september
+                assignedMsg = "Attend septembre";
+                break;
+            case 6: // asked
+                assignedMsg = "N'a pas confirmé";
+                // assignedLesson = tmG.assignation.lesson.slot.dayString + " de " + tmG.assignation.lesson.startShortString + " à " + tmG.assignation.lesson.endShortString;
+                break;
+            default:
+                break;
+        }
+
+        ///
+        /// Affichage des data
+        ///
+
+        if(elem.isSuspended || (elem.dispenseFm && elem.isFm) || elem.isFinal){
+            statusDisabled = " eleve-status-disabled";
+            if(elem.dispenseFm && elem.isFm){
+                status = <StatusHtml icon="certificate">Dispensé de formation musicale</StatusHtml>
+                assignedMsg = <div className="disabled">Dispensé</div>
+                if(role === "admin"){
+                    actions = <ButtonCustom loadElemId={loadElemId} eleve={eleve}>Annuler la dispense</ButtonCustom>
+                }
+            }else if(elem.isSuspended){
+                status = <StatusHtml icon="disabled">Suspendu</StatusHtml>
+                assignedMsg = <div className="disabled">Suspendu</div>
+                if(role === "admin"){
+                    actions = <ButtonCustom loadElemId={loadElemId} eleve={eleve}>Annuler la suspension</ButtonCustom>
+                }
+            }else if(elem.isFinal){
+                status = <StatusHtml icon="disabled">Ne continue pas</StatusHtml>
+                assignedMsg = <div className="disabled">Ne continue pas</div>
+                actions = <ButtonCustom loadElemId={loadElemId} eleve={eleve}>Rétablir</ButtonCustom>
+            }
+        }else{
+
+            status =(elem.status === 1 || elem.status === 2) ? <div className="status">
+                <span className={"icon-" + (elem.status === 1 ? "dot" : "up-arrow")} /> {classeTo.nameCycleLevel}
+                <div className="name-teacher">{teacherName}</div>
+            </div> : "";
+
+            actions = loadElemId === eleve.id ? <LoaderElement /> : (elem.status === 0 ? (nextClasses && <>
+                {nextClasses.id !== classe.id && <div className="monter">Monter</div>}
+                <div className="garder">Garder</div>
+                <div className="stop">Ne continue pas</div>
+
+                {role === "admin" && <div className="actions-admin">
+                    {!elem.isGiven && <div className="donner">
+                        <ButtonIcon tooltipDirection="bottom" icon="heart">
+                            Déléguer
+                        </ButtonIcon>
+                    </div>}
+                    <div className="disabled">
+                        <ButtonIcon tooltipDirection="bottom" icon="disabled">
+                            Suspendre
+                        </ButtonIcon>
                     </div>
+                    {elem.isFm && <div className="dispensed">
+                        <ButtonIcon tooltipDirection="bottom" icon="certificate">
+                            Dispenser
+                        </ButtonIcon>
+                    </div>}
+                    {developer === 1 && elem.status === 0 && <div className="dispensed">
+                        <ButtonIcon tooltipDirection="bottom" icon="trash">
+                            Supprimer
+                        </ButtonIcon>
+                    </div>}
+                </div>}
+            </>) : (elem.renewAnswer !== 1 && <div className="modifier">{elem.status === 3 ? "Récupérer" : "Modifier"}</div>))
+        }
 
-                    <div className="col-2 eleve-levels">
-
+        let item = "";
+        if(!elem.isGiven || (elem.isGiven && (role === "admin" || elem.status === 3)) ){
+            item =  <div className={"eleve eleve-status-" + elem.status + statusDisabled } key={elem.id}>
+                <div className="col-1 eleve-infos">
+                    <div className="name">
+                        <b className={elem.isGiven ? "given" : ""}>{elem.isGiven && <span className="icon-heart" />} {eleve.lastname}</b> {eleve.firstname}
                     </div>
+                    <div className="age">{eleve.age} ans</div>
+                </div>
 
-                    <div className="col-3 actions-level">
+                <div className="col-2 eleve-levels">
+                    {status}
+                </div>
 
-                    </div>
+                <div className="col-3 actions-level">
+                    {actions}
+                </div>
 
-                    <div className="col-4 eleve-place">
-                        <div className={"eleve-place-status eleve-place-status-"}></div>
-                        <div></div>
-                    </div>
+                <div className="col-4 eleve-place">
+                    <div className={"eleve-place-status eleve-place-status-" + elem.renewAnswer}>{assignedMsg}</div>
+                    <div>{assignedLesson}</div>
                 </div>
             </div>
-        </>
+        }
+
+        return <>{item}</>
     }
+}
+
+function StatusHtml ({ icon, children }) {
+    return <div className="status"><span className={"icon-" + icon} /> {children}</div>
+}
+
+function ButtonCustom ({ loadElemId, eleve, children }) {
+    return loadElemId === eleve.id ? <LoaderElement /> :
+        <div className="disabled">{children}</div>
 }

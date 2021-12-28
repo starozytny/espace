@@ -45,6 +45,7 @@ class CiGroup
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"group:read"})
      */
     private $isFm;
 

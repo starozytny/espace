@@ -38,6 +38,8 @@ function getClassesByTeacher(self, teacherId, cas) {
         default:
             break;
     }
+
+    Formulaire.loader(true);
     axios.get(url, {})
         .then(function (response) {
             switch (cas) {
@@ -76,11 +78,11 @@ function getClassesByTeacher(self, teacherId, cas) {
             }
         })
         .catch(function (error) {
-            console.log(error)
             Formulaire.displayErrors(self, error);
         })
         .then(function () {
             self.setState({ loadData: false })
+            Formulaire.loader(false);
         })
     ;
 }
