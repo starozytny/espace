@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 
 import { Alert } from "@dashboardComponents/Tools/Alert";
-import {LevelsItem} from "./LevelsItem";
+
+import { LevelsItem } from "./LevelsItem";
 
 export class LevelsList extends Component {
     constructor(props) {
@@ -187,18 +188,6 @@ export class LevelsList extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                {/*<div className={"classe" + activeClasse + full}>*/}
-                                {/*        <div className={"liste liste-" + (nbTmCours > 1 ? "2" : "1")}>*/}
-                                {/*            <div className="name name-header">*/}
-                                {/*                <div className="col-1">Elève</div>*/}
-                                {/*                <div className="col-2">Niveau l'année prochaine</div>*/}
-                                {/*                <div className="col-3">Actions l'année prochaine</div>*/}
-                                {/*                <div className="col-4">Etat de la proposition</div>*/}
-                                {/*            </div>*/}
-                                {/*            {liste}*/}
-                                {/*        </div>*/}
-                                {/*    </div>*/}
-                                {/*</div>*/}
                             </div>
                         }
                     }) : <Alert>Aucun résultat</Alert>}
