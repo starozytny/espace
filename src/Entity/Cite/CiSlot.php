@@ -74,35 +74,41 @@ class CiSlot
     private $planning;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiTeacher::class, inversedBy="slots")
+     * @ORM\ManyToOne(targetEntity=CiTeacher::class, fetch="EAGER", inversedBy="slots")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"user:read"})
      */
     private $teacher;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiCenter::class, inversedBy="slots")
+     * @ORM\ManyToOne(targetEntity=CiCenter::class, fetch="EAGER", inversedBy="slots")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"user:read"})
      */
     private $center;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiActivity::class, inversedBy="slots")
+     * @ORM\ManyToOne(targetEntity=CiActivity::class, fetch="EAGER", inversedBy="slots")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"user:read"})
      */
     private $activity;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiCycle::class, inversedBy="slots")
+     * @ORM\ManyToOne(targetEntity=CiCycle::class, fetch="EAGER",  inversedBy="slots")
+     * @Groups({"user:read"})
      */
     private $cycle;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiLevel::class, inversedBy="slots")
+     * @ORM\ManyToOne(targetEntity=CiLevel::class, fetch="EAGER",  inversedBy="slots")
+     * @Groups({"user:read"})
      */
     private $level;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiClassroom::class, inversedBy="slots")
+     * @ORM\ManyToOne(targetEntity=CiClassroom::class, fetch="EAGER",  inversedBy="slots")
+     * @Groups({"user:read"})
      */
     private $classroom;
 
@@ -193,6 +199,12 @@ class CiSlot
         return $this;
     }
 
+    /**
+     * Return start time in string format H:i:s
+     *
+     * @return false|string|null
+     * @Groups({"user:read"})
+     */
     public function getStartString(){
         if($this->start == null){
             return null;
@@ -211,6 +223,20 @@ class CiSlot
         $this->start = $start;
 
         return $this;
+    }
+
+    /**
+     * Return end time in string format H:i:s
+     *
+     * @return false|string|null
+     * @Groups({"user:read"})
+     */
+    public function getEndString(){
+        if($this->end == null){
+            return null;
+        }
+
+        return date_format($this->end, 'H:i:s');
     }
 
     public function getEnd(): ?\DateTimeInterface

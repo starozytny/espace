@@ -11,6 +11,7 @@ import { LoaderElement } from "@dashboardComponents/Layout/Loader";
 import Data from "@citeComponents/functions/data";
 
 import { SelectTeacher } from "./SelectTeacher";
+import { Slots }         from "./Slots";
 
 function handleGetPlanning(){
 
@@ -21,6 +22,8 @@ export class Planning extends Component {
         super(props);
 
         this.state = {
+            isOnInstru: props.isOpenInstru === "1",
+            isOnFm: props.isOpenFm === "1",
             context: "list",
             loadPageError: false,
             loadData: true,
@@ -46,6 +49,10 @@ export class Planning extends Component {
 
     handleSelectDay = (dayActive, atLeastOne) => { if(atLeastOne) { this.setState({ dayActive }) } }
 
+    handleChangeContext = (context, slot=null, lesson=null) => {
+        this.setState({ context, slot, lesson });
+    }
+
     render () {
         const { role, developer } = this.props;
         const { loadPageError, loadData, context, teachers, dayActive, slots } = this.state;
@@ -56,7 +63,7 @@ export class Planning extends Component {
                 content = loadData ? <LoaderElement /> : <>
                     {role !== "teacher" && <SelectTeacher role={role} developer={developer} teachers={teachers} onChangePlanning={this.handleChangePlanning}/>}
                     <Days dayActive={dayActive} data={slots} onSelectDay={this.handleSelectDay} />
-                    {/*<Slot {...this.state} developer={developer} onChangeContext={this.handleChangeContext} onDelete={this.handleDelete} onReOrder={this.handleReOrder}/>*/}
+                    <Slots {...this.state} developer={developer} onChangeContext={this.handleChangeContext} />
                 </>
                 break;
         }
