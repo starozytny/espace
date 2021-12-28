@@ -26,4 +26,17 @@ class CommonRoute
             'teacher' => $teacher
         ];
     }
+
+    public function returnPlanningPage(User $user): array
+    {
+        $authorization = $this->em->getRepository(CiAuthorization::class)->findOneBy(['rank' => 0]);
+        $teacher = $this->em->getRepository(CiTeacher::class)->findOneBy(['oldId' => $user->getWho()]);
+
+        return [
+            'isOpen' => $authorization->getIsOpenPlanning(),
+            'isOpenInstru' => $authorization->getIsOpenPlanningInstru(),
+            'isOpenFm' => $authorization->getIsOpenPlanningFm(),
+            'teacher' => $teacher
+        ];
+    }
 }

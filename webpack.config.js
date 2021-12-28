@@ -74,6 +74,7 @@ Encore
     .addEntry('user_profil', './assets/user/js/pages/profil.js')
 
     .addEntry('cite_level', './assets/cite/js/pages/level.js')
+    .addEntry('cite_planning', './assets/cite/js/pages/planning.js')
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     //.enableStimulusBridge('./assets/controllers.json')

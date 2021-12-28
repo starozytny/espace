@@ -162,4 +162,16 @@ class AdminController extends AbstractController
         $user = $this->getUser();
         return $this->render('admin/pages/level/index.html.twig', $commonRoute->returnLevelPage($user));
     }
+
+    /**
+     * @Route("/gestion-planning", name="planning_index")
+     * @param CommonRoute $commonRoute
+     * @return Response
+     */
+    public function planning(CommonRoute $commonRoute): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        return $this->render('admin/pages/planning/index.html.twig', $commonRoute->returnPlanningPage($user));
+    }
 }
