@@ -105,10 +105,9 @@ function getPlanning (self, teacherId) {
             let assignations = JSON.parse(resp.assignations);
 
             slots.forEach(slot => {
+                slot.lessons = [];
                 lessons.forEach(lesson => {
-                    slot.lessons = [];
                     if(lesson.slot.id === slot.id){
-
                         lesson.assignations = [];
                         assignations.forEach(assign => {
                             if(assign.lesson.id === lesson.id){
