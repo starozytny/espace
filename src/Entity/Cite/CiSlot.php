@@ -43,6 +43,7 @@ class CiSlot
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"user:read"})
      */
     private $max;
 

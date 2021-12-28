@@ -49,6 +49,7 @@ class CiActivity
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user:read"})
      */
     private $type;
 

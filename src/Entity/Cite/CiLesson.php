@@ -6,6 +6,7 @@ use App\Repository\Cite\CiLessonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CiLessonRepository::class)
@@ -16,11 +17,13 @@ class CiLesson
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"user:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="time")
+     * @Groups({"user:read"})
      */
     private $start;
 
@@ -51,6 +54,7 @@ class CiLesson
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"user:read"})
      */
     private $isMixte = false;
 
@@ -60,8 +64,9 @@ class CiLesson
     private $slotIdentifiant;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiSlot::class, inversedBy="lessons")
+     * @ORM\ManyToOne(targetEntity=CiSlot::class, fetch="EAGER", inversedBy="lessons")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"user:read"})
      */
     private $slot;
 
@@ -72,23 +77,23 @@ class CiLesson
     private $teacher;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiClasse::class)
+     * @ORM\ManyToOne(targetEntity=CiClasse::class, fetch="EAGER");
      * @ORM\JoinColumn(nullable=false)
      */
     private $classe;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiClasse::class)
+     * @ORM\ManyToOne(targetEntity=CiClasse::class, fetch="EAGER")
      */
     private $classeSecond;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiClasse::class)
+     * @ORM\ManyToOne(targetEntity=CiClasse::class, fetch="EAGER")
      */
     private $classeThird;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiClasse::class)
+     * @ORM\ManyToOne(targetEntity=CiClasse::class, fetch="EAGER")
      */
     private $classeFour;
 
@@ -107,6 +112,20 @@ class CiLesson
         return $this->id;
     }
 
+    /**
+     * Get format time start lesson
+     *
+     * @return false|string|null
+     * @Groups({"user:read"})
+     */
+    public function getStartString(){
+        if($this->start){
+            return date_format($this->start, 'H:i:s');
+        }
+
+        return null;
+    }
+
     public function getStart(): ?\DateTimeInterface
     {
         return $this->start;
@@ -120,13 +139,14 @@ class CiLesson
     }
 
     /**
-     * Get format time start lesson
+     * Get format time end lesson
      *
      * @return false|string|null
+     * @Groups({"user:read"})
      */
-    public function getStartString(){
-        if($this->start){
-            return date_format($this->start, 'H:i:s');
+    public function getEndString(){
+        if($this->end){
+            return date_format($this->end, 'H:i:s');
         }
 
         return null;
@@ -316,5 +336,95 @@ class CiLesson
         }
 
         return $this;
+    }
+
+    /**
+     * Get full name lesson
+     *
+     * @Groups({"user:read"})
+     */
+    public function getNameLesson(): string
+    {
+        if($this->getClasse()){
+            $obj = $this->getClasse();
+        }else{
+            $obj = $this->getSlot();
+        }
+
+        $activityName = $obj->getActivity() ? $obj->getActivity()->getName() : null;
+        $cycleName = $obj->getCycle() ? " - " . $obj->getCycle()->getName() : null;
+        $levelName = $obj->getLevel() ? " - " . $obj->getLevel()->getName() : null;
+        if($this->getClasseSecond()){
+            $suite = $this->getNameCycleLevel();
+
+            return $activityName . " " . $suite;
+        }
+        return $activityName . $cycleName . $levelName;
+    }
+
+    /**
+     * Get short name lesson
+     *
+     * @Groups({"user:read"})
+     */
+    public function getNameCycleLevel(): string
+    {
+        if($this->getClasse()){
+            $obj = $this->getClasse();
+        }else{
+            $obj = $this->getSlot();
+        }
+
+        $oriCycle = $obj->getCycle() ? $obj->getCycle() : null;
+
+        $cycleName = $obj->getCycle() ? $obj->getCycle()->getName() : null;
+        $levelName = $obj->getLevel() ? " - " . $obj->getLevel()->getName() : null;
+
+        $name1 = $cycleName . $levelName;
+        $name2 = "";
+        $name3 = "";
+        $name4 = "";
+        $obj2CycleName = null;
+        $obj3CycleName = null;
+        if($this->getClasseSecond()){
+            $obj2 = $this->getClasseSecond();
+
+            $obj2CycleName = "";
+            if($oriCycle && $oriCycle !== $obj2->getCycle()){
+                $obj2CycleName = $obj2->getCycle() ? $obj2->getCycle()->getName() : null;
+            }
+            $levelName = $obj2->getLevel() ? ($this->getClasseThird() ? " - " : "") . $obj2->getLevel()->getName() : null;
+
+            if($obj2CycleName == "" && $levelName != ""){
+                $name2 = ($this->getClasseThird() ? ", " : " et ") . $obj2CycleName . $levelName;
+            }
+        }
+
+        if($this->getClasseThird()){
+            $obj3 = $this->getClasseThird();
+
+            $obj3CycleName = "";
+            if($obj2CycleName && $obj2CycleName !== $obj3->getCycle()){
+                $obj3CycleName = $obj3->getCycle() ? $obj3->getCycle()->getName() : null;
+            }
+            $levelName = $obj3->getLevel() ? " - " . $obj3->getLevel()->getName() : null;
+
+            if($obj3CycleName == "" && $levelName != ""){
+                $name3 = ($this->getClasseFour() ? ", " : " et ") . $obj3CycleName . $levelName;
+            }
+        }
+
+        if($this->getClasseFour()){
+            $obj4 = $this->getClasseFour();
+
+            if($obj3CycleName && $obj3CycleName !== $obj4->getCycle()){
+                $cycleName = $obj4->getCycle() ? $obj4->getCycle()->getName() : null;
+            }
+            $levelName = $obj4->getLevel() ? " - " . $obj4->getLevel()->getName() : null;
+
+            $name4 = " et " . $cycleName . $levelName;
+        }
+
+        return $name1 . $name2 . $name3 . $name4;
     }
 }

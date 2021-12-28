@@ -4,6 +4,7 @@ namespace App\Entity\Cite;
 
 use App\Repository\Cite\CiAssignationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CiAssignationRepository::class)
@@ -18,11 +19,13 @@ class CiAssignation
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"user:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"user:read"})
      */
     private $status = self::STATUS_NONE;
 
@@ -47,20 +50,23 @@ class CiAssignation
     private $tarif;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiEleve::class, inversedBy="assignations")
+     * @ORM\ManyToOne(targetEntity=CiEleve::class, fetch="EAGER", inversedBy="assignations")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"user:read"})
      */
     private $eleve;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiClasse::class, inversedBy="assignations")
+     * @ORM\ManyToOne(targetEntity=CiClasse::class, fetch="EAGER", inversedBy="assignations")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"user:read"})
      */
     private $classe;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiLesson::class, inversedBy="assignations")
+     * @ORM\ManyToOne(targetEntity=CiLesson::class, fetch="EAGER", inversedBy="assignations")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"user:read"})
      */
     private $lesson;
 

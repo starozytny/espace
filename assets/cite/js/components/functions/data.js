@@ -101,6 +101,29 @@ function getPlanning (self, teacherId) {
         .then(function (response) {
             let resp = response.data;
             let slots = JSON.parse(resp.slots);
+            let lessons = JSON.parse(resp.lessons);
+            let assignations = JSON.parse(resp.assignations);
+
+            slots.forEach(slot => {
+                lessons.forEach(lesson => {
+                    slot.lessons = [];
+                    if(lesson.slot.id === slot.id){
+
+                        lesson.assignations = [];
+                        assignations.forEach(assign => {
+                            if(assign.lesson.id === lesson.id){
+                                lesson.assignations.push(assign);
+
+                                assignations = assignations.filter(a => a.id !== assign.id); //improve perf
+                            }
+                        })
+
+                        slot.lessons.push(lesson);
+
+                        lessons = lessons.filter(l => l.id !== lesson.id); //improve perf
+                    }
+                })
+            })
 
             let dayActive = 1;
             days.map(elem => {

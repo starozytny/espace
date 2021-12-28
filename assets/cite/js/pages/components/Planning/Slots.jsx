@@ -77,144 +77,121 @@ export class Slots extends Component {
                     //---------------------------------------------------------
                     //----------------- Lessons slots
                     //---------------------------------------------------------
-                    // let lessons = [], last_end = null;
-                    // if(elem.lessons){
-                    //     let ls = [];
-                    //     if(!Array.isArray(elem.lessons)){
-                    //         let tab = Object.values(elem.lessons)
-                    //         tab.forEach(el => { ls.push(el) })
-                    //     }else{
-                    //         ls = elem.lessons
-                    //     }
-                    //     ls.sort(TimeHelper.compareStartString)
-                    //     ls.forEach((lesson, index) => {
-                    //         let nextLesson = ls[index + 1] ? ls[index + 1] : null;
-                    //         let prevLesson = ls[index - 1] ? ls[index - 1] : null;
-                    //         last_end = lesson.endString
-                    //
-                    //         let canEdit = true;
-                    //         if(elem.activity && role !== "admin"){
-                    //             if(elem.activity.departement === "Formation musicale"){
-                    //                 if(!isOnFm){
-                    //                     canEdit = false;
-                    //                 }
-                    //             }else{
-                    //                 if(!isOnInstru){
-                    //                     canEdit = false;
-                    //                 }
-                    //             }
-                    //         }
-                    //
-                    //         let assignations = lesson.assignations.sort(Sort.compareEleveLastname);
-                    //         let nbAccepted = 0, nbValidatePay = 0;
-                    //         if(lesson.assignations.length !== 0){
-                    //             lesson.assignations.forEach(assi => {
-                    //                 if(assi.isAccepted){
-                    //                     nbAccepted++;
-                    //                 }
-                    //
-                    //                 if(assi.eleve.canPay === 2){
-                    //                     nbAccepted--;
-                    //                     nbValidatePay++;
-                    //                 }
-                    //             })
-                    //         }
-                    //
-                    //         let classMax = lesson.classe.max;
-                    //         let assignationLength = lesson.assignations.length;
-                    //
-                    //         let total = <span className="total">
-                    //             <div><span className="icon-user" /> {assignationLength} / {classMax}</div>
-                    //             {nbAccepted > 0 && <div><span className="icon-time" /> {nbAccepted}</div>}
-                    //             {nbValidatePay > 0 && <div><span className="icon-check" /> {nbValidatePay}</div>}
-                    //         </span>
-                    //
-                    //         if(nbAccepted === classMax){
-                    //             total = <span className="total">
-                    //                 <div><span className="icon-time" /> {assignationLength} / {classMax}</div>
-                    //                 {nbValidatePay > 0 && <div><span className="icon-check" /> {nbValidatePay}</div>}
-                    //             </span>
-                    //         }
-                    //
-                    //         if(nbValidatePay === classMax){
-                    //             total = <span className="total">
-                    //                 <div><span className="icon-check" /> {assignationLength} / {classMax}</div>
-                    //                 {nbAccepted > 0 && <div><span className="icon-time" /> {nbAccepted}</div>}
-                    //             </span>
-                    //         }
-                    //
-                    //         lessons.push(<div className="lesson" key={lesson.id}>
-                    //             <div className="lesson-details">
-                    //                 <div className="time">
-                    //                     <span>{TimeHelper.betterDisplayTime(lesson.startString)} à {TimeHelper.betterDisplayTime(lesson.endString)}</span>
-                    //                     {role !== "manager" && canEdit && <div className="lesson-actions">
-                    //                         {prevLesson && <ButtonIcon onClick={() => onReOrder(elem, lesson, prevLesson)} icon="up-arrow">Monter</ButtonIcon>}
-                    //                         {nextLesson && <ButtonIcon onClick={() => onReOrder(elem, nextLesson, lesson)} icon="down-arrow">Descendre</ButtonIcon>}
-                    //                         <ButtonIcon icon="pencil" onClick={() => onChangeContext("update", elem, lesson)}>Modifier</ButtonIcon>
-                    //                         {nbAccepted === 0 && <ButtonIcon icon="trash" onClick={() => onDelete(elem, lesson)}>Supprimer</ButtonIcon>}
-                    //                     </div>}
-                    //                 </div>
-                    //                 <div className="infos">
-                    //                     <div className="lesson-infos">
-                    //                         {parseInt(developer) === 1 &&  <div className="activity">#{lesson.id}</div>}
-                    //                         <span className="activity">{lesson.nameCycleLevel}</span>
-                    //                         <div className="lesson-assignations">
-                    //                             {total}
-                    //                             {lesson.assignations && <div className="lesson-infos-eleves">
-                    //                                 <div className={"lesson-infos-eleves-container" + (lesson.assignations.length > 3 ? " expand" : "")}>
-                    //                                     {assignations.map(el => {
-                    //                                         console.log(el)
-                    //                                         if(el.isSuspended){
-                    //                                             return null
-                    //                                         }else{
-                    //                                             let eleve = el.eleve;
-                    //
-                    //                                             let icon = el.eleve.canPay === 2 ? "icon-check" : "icon-time";
-                    //                                             if(!el.isAccepted){
-                    //                                                 icon = "";
-                    //                                             }
-                    //
-                    //                                             return <div key={el.id} className={"lesson-infos-eleves-name " + (el.isAccepted ? "eleve-checked" : "")}>
-                    //                                                 <span><span className={icon}/>{eleve.lastname} {eleve.firstname}</span>
-                    //                                                 {lesson.isMixte && <span className="details-classe">{el.classe.nameCycleLevel}</span>}
-                    //                                             </div>
-                    //                                         }
-                    //                                     })}
-                    //                                 </div>
-                    //                             </div>}
-                    //                         </div>
-                    //                     </div>
-                    //                 </div>
-                    //             </div>
-                    //         </div>)
-                    //     })
-                    // }
+                    let lessons = [], last_end = null;
+                    elem.lessons.length !== 0 ? elem.lessons.sort(Sort.compareStart) : null;
+                    elem.lessons.forEach((lesson, index) => {
+                        console.log(lesson)
+                        let nextLesson = elem.lessons[index + 1] ? elem.lessons[index + 1] : null;
+                        let prevLesson = elem.lessons[index - 1] ? elem.lessons[index - 1] : null;
+                        last_end = lesson.endString
+
+                        let canEdit = true;
+                        if(role !== "admin"){
+                            if(elem.activity.type === 2){
+                                if(!isOnFm){ canEdit = false; }
+                            }else{
+                                if(!isOnInstru){ canEdit = false; }
+                            }
+                        }
+
+
+                        let nbAccepted = 0, nbValidatePay = 0;
+
+                        lesson.assignations.length !== 0 ? lesson.assignations.sort(Sort.compareEleveLastname) : null;
+                        lesson.assignations.forEach(assign => {
+                            if(assign.status === 1){
+                                nbAccepted++;
+                            }
+
+                            if(assign.eleve.canPay === 2){
+                                nbAccepted--;
+                                nbValidatePay++;
+                            }
+                        })
+
+                        let max = elem.max;
+                        let assignationLength = lesson.assignations.length;
+
+                        let total = <span className="total">
+                            <div><span className="icon-user" /> {assignationLength} / {max}</div>
+                            {nbAccepted > 0 && <div><span className="icon-time" /> {nbAccepted}</div>}
+                            {nbValidatePay > 0 && <div><span className="icon-check" /> {nbValidatePay}</div>}
+                        </span>
+
+                        if(nbAccepted === max){
+                            total = <span className="total">
+                                <div><span className="icon-time" /> {assignationLength} / {max}</div>
+                                {nbValidatePay > 0 && <div><span className="icon-check" /> {nbValidatePay}</div>}
+                            </span>
+                        }
+
+                        if(nbValidatePay === max){
+                            total = <span className="total">
+                                <div><span className="icon-check" /> {assignationLength} / {max}</div>
+                                {nbAccepted > 0 && <div><span className="icon-time" /> {nbAccepted}</div>}
+                            </span>
+                        }
+
+                        lessons.push(<div className="lesson" key={lesson.id}>
+                            <div className="lesson-details">
+                                <div className="time">
+                                    <span>{TimeHelper.betterDisplayTime(lesson.startString)} à {TimeHelper.betterDisplayTime(lesson.endString)}</span>
+                                    {role !== "manager" && canEdit && <div className="lesson-actions">
+                                        {prevLesson && <ButtonIcon icon="up-arrow">Monter</ButtonIcon>}
+                                        {nextLesson && <ButtonIcon icon="down-arrow">Descendre</ButtonIcon>}
+                                        <ButtonIcon icon="pencil" onClick={() => onChangeContext("update", elem, lesson)}>Modifier</ButtonIcon>
+                                        {nbAccepted === 0 && <ButtonIcon icon="trash">Supprimer</ButtonIcon>}
+                                    </div>}
+                                </div>
+                                <div className="infos">
+                                    <div className="lesson-infos">
+                                        {parseInt(developer) === 1 &&  <div className="activity">#{lesson.id}</div>}
+                                        <span className="activity">{lesson.nameCycleLevel}</span>
+                                        <div className="lesson-assignations">
+                                            {total}
+                                            {lesson.assignations && <div className="lesson-infos-eleves">
+                                                <div className={"lesson-infos-eleves-container" + (lesson.assignations.length > 3 ? " expand" : "")}>
+                                                    {lesson.assignations.map(assign => {
+                                                        if(assign.isSuspended){
+                                                            return null
+                                                        }else{
+                                                            let eleve = assign.eleve;
+
+                                                            let icon = eleve.canPay === 2 ? "icon-check" : "icon-time";
+                                                            if(assign.status !== 1){
+                                                                icon = "";
+                                                            }
+
+                                                            return <div key={assign.id} className={"lesson-infos-eleves-name " + (assign.status === 1 ? "eleve-checked" : "")}>
+                                                                <span><span className={icon}/>{eleve.fullname}</span>
+                                                                {lesson.isMixte && <span className="details-classe">{elem.classe.nameCycleLevel}</span>}
+                                                            </div>
+                                                        }
+                                                    })}
+                                                </div>
+                                            </div>}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>)
+                    })
 
                     let add = <div className="group-add" onClick={() => onChangeContext("create", elem)}>
                         <div> <span className="icon-plus" /><span>Ajouter un cours</span> </div>
                     </div>
 
-                    // if(last_end){
-                    //     if(last_end >= end){
-                    //         add = null
-                    //     }
-                    // }
+                    if((last_end && last_end >= end) || role === "manager"){
+                        add = null
+                    }
 
-                    // if(elem.activity && role !== "admin"){
-                    //     if(elem.activity.departement === "Formation musicale"){
-                    //         if(!isOnFm){
-                    //             add = null
-                    //         }
-                    //     }else{
-                    //         if(!isOnInstru){
-                    //             add = null
-                    //         }
-                    //     }
-                    // }
-                    //
-                    // if(role === "manager"){
-                    //     add = null;
-                    // }
+                    if(role !== "admin"){
+                        if(elem.activity.type === 2){ //is fm
+                            if(!isOnFm){ add = null }
+                        }else{
+                            if(!isOnInstru){ add = null }
+                        }
+                    }
 
                     // ---------------------------------------------------------
                     // ----------------- push render slot
@@ -234,7 +211,7 @@ export class Slots extends Component {
                                 </div>
                                 {classroomName !== "Salle indéfinie" && <span className="classroom">[{classroomName}]</span>}
                             </div>
-                            {/*{lessons.length !== 0 ? <div className="lessons">{lessons}</div> : null}*/}
+                            {lessons.length !== 0 ? <div className="lessons">{lessons}</div> : null}
 
                             {add}
                         </div>

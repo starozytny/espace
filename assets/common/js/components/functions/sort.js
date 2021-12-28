@@ -30,6 +30,14 @@ function compareEmail(a, b){
     return comparison(a.email, b.email);
 }
 
+function compareStart(a, b){
+    return comparison(a.start, b.start);
+}
+
+function compareEleveLastname(a, b){
+    return comparison(a.eleve.lastname, b.eleve.lastname);
+}
+
 function comparison (objA, objB){
     let comparison = 0;
     if (objA > objB) {
@@ -48,5 +56,7 @@ module.exports = {
     compareName,
     compareCreatedAt,
     compareCreatedAtInverse,
-    compareEmail
+    compareEmail,
+    compareStart,
+    compareEleveLastname
 }

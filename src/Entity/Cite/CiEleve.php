@@ -20,7 +20,7 @@ class CiEleve extends DataEntity
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"group:read"})
+     * @Groups({"user:read", "group:read"})
      */
     private $id;
 
@@ -41,6 +41,7 @@ class CiEleve extends DataEntity
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"user:read"})
      */
     private $canPay = 0;
 
@@ -283,6 +284,8 @@ class CiEleve extends DataEntity
 
     /**
      * @return string
+     *
+     * @Groups({"user:read"})
      */
     public function getFullname(): string
     {
