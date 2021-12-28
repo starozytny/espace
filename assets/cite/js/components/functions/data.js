@@ -43,7 +43,7 @@ function getClassesByTeacher(self, teacherId, cas) {
             switch (cas) {
                 case "centers":
                     let data = JSON.parse(response.data.donnees);
-                    let groupes = JSON.parse(response.data.groupes);
+                    let groups = JSON.parse(response.data.groupes);
                     let centers = [];
 
                     data.forEach(item => {
@@ -60,10 +60,10 @@ function getClassesByTeacher(self, teacherId, cas) {
                         }
 
                         //groupes
-                        classe.groupes = [];
-                        groupes.forEach(grp => {
+                        classe.groups = [];
+                        groups.forEach(grp => {
                             if(grp.classe.id === classe.id){
-                                classe.groupes.push(grp);
+                                classe.groups.push(grp);
                             }
                         })
                     })

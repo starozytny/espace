@@ -4,7 +4,7 @@ import { Page }           from "@dashboardComponents/Layout/Page";
 import { Alert }          from "@dashboardComponents/Tools/Alert";
 import { SwitcherButton } from "@dashboardComponents/Tools/Button";
 import { LoaderElement }  from "@dashboardComponents/Layout/Loader";
-import { Select, SelectReactSelectize } from "@dashboardComponents/Tools/Fields";
+import { SelectReactSelectize } from "@dashboardComponents/Tools/Fields";
 
 import Manage from "@citeComponents/functions/manage";
 import Data from "@citeComponents/functions/data";
@@ -85,7 +85,7 @@ export class Levels extends Component {
             </div> : <>{toolbar}</>}
 
             {teacher === "" ? <Alert>Veuillez sélectionner un professeur.</Alert> : (
-                center === "" ? <Alert>Veuillez sélectionner un centre</Alert> : <LevelsList {...this.state} />
+                center === "" ? <Alert>Veuillez sélectionner un centre</Alert> : <LevelsList role={role} {...this.state} />
             )}
         </div>
 

@@ -202,7 +202,6 @@ export class LevelsItem extends Component {
         //     })
         // }
 
-
         let eleve = elem.eleve;
 
         return <>

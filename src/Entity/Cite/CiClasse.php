@@ -294,4 +294,16 @@ class CiClasse
 
         return $this;
     }
+
+    /**
+     * @return string
+     * @Groups({"user:read"})
+     */
+    public function getNameCycleLevel(): string
+    {
+        $cycleName = $this->getCycle() ? " " . $this->getCycle()->getName() : null;
+        $levelName = $this->getLevel() ? " - " . $this->getLevel()->getName() : null;
+
+        return $cycleName . $levelName;
+    }
 }
