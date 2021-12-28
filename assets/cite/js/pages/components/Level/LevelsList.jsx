@@ -28,7 +28,7 @@ export class LevelsList extends Component {
     }
 
     render () {
-        const { role, developer, classes, center } = this.props;
+        const { role, developer, classes, center, onUpdateClasse } = this.props;
         const { classe, choiceActive } = this.state;
 
         let data = classes;
@@ -185,7 +185,9 @@ export class LevelsList extends Component {
                                             {(elem.groups && elem.groups.length !== 0) ? elem.groups.map((grp, index) => {
                                                 return <div className="tmCours" key={index}>
                                                     <div className="name">Année</div>
-                                                    <div className="eleves"><LevelsItem elem={grp} nextClasse={nextClasses} role={role} developer={developer} key={index}/></div>
+                                                    <div className="eleves"><LevelsItem role={role} developer={developer} key={index}
+                                                                                        elem={grp} nextClasse={nextClasses}
+                                                                                        onUpdateClasse={onUpdateClasse}/></div>
                                                 </div>
                                             }) : <Alert>Aucun élève dans cette classe.</Alert>}
                                         </div>

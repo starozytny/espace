@@ -6,9 +6,10 @@ import { SwitcherButton } from "@dashboardComponents/Tools/Button";
 import { LoaderElement }  from "@dashboardComponents/Layout/Loader";
 import { SelectReactSelectize } from "@dashboardComponents/Tools/Fields";
 
-import Manage from "@citeComponents/functions/manage";
-import Data from "@citeComponents/functions/data";
-import {LevelsList} from "./LevelsList";
+import Manage   from "@citeComponents/functions/manage";
+import Data     from "@citeComponents/functions/data";
+
+import { LevelsList } from "./LevelsList";
 
 export class Levels extends Component {
     constructor(props) {
@@ -30,6 +31,7 @@ export class Levels extends Component {
         this.page = React.createRef();
 
         this.handleUpdateData = this.handleUpdateData.bind(this);
+        this.handleUpdateClasse = this.handleUpdateClasse.bind(this);
 
         this.handleChangeSelect = this.handleChangeSelect.bind(this);
         this.handleSwitchManage = this.handleSwitchManage.bind(this);
@@ -43,11 +45,25 @@ export class Levels extends Component {
         }
     }
 
-    handleUpdateData = (data) => { this.setState({ currentData: data })  }
+    handleUpdateData = (data) => { this.setState({ currentData: data }) }
+
+    handleUpdateClasse = (classe, groups) => {
+        const { classes } = this.state;
+
+        let newClasses = [];
+        classes.forEach(elem => {
+            if(elem.classe.id === classe.id){
+                elem.classe = classe
+                elem.classe.groups = groups
+            }
+
+            newClasses.push(elem)
+        })
+
+        this.setState({ classe: newClasses });
+    }
 
     handleChangeSelect = (name, e) => {
-        const { center } = this.state;
-
         let nCenter;
         let value = e !== undefined ? e.value : "";
 
@@ -93,7 +109,11 @@ export class Levels extends Component {
             </div> : <>{toolbar}</>}
 
             {teacher === "" ? <Alert>Veuillez sélectionner un professeur.</Alert> : (
-                center === "" ? <Alert>Veuillez sélectionner un centre</Alert> : <LevelsList role={role} {...this.state} />
+                center === "" ? <Alert>Veuillez sélectionner un centre</Alert>
+                    : <LevelsList
+                        {...this.state} role={role} developer={developer}
+                        onUpdateClasse={this.handleUpdateClasse}
+                    />
             )}
         </div>
 

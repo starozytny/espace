@@ -1,8 +1,32 @@
 import React, { Component } from "react";
 
+import axios             from "axios";
+import Routing           from '@publicFolder/bundles/fosjsrouting/js/router.min.js';
+
 import { Alert }              from "@dashboardComponents/Tools/Alert";
 import { LoaderElement }      from "@dashboardComponents/Layout/Loader";
 import { Button, ButtonIcon } from "@dashboardComponents/Tools/Button";
+
+import Formulaire         from "@dashboardComponents/functions/Formulaire";
+
+function process (self, url, eleve, data) {
+    self.setState({ loadElemId: eleve.id })
+    axios.post(url, data)
+        .then(function (response) {
+            let resp = response.data;
+            self.handleUpdateClasse(JSON.parse(resp.classe), JSON.parse(resp.groupes))
+            self.setState({ loadElem: 0 })
+        })
+        .catch(function (error) {
+            Formulaire.displayErrors(self, error);
+        })
+        .then(function () {})
+    ;
+}
+
+function getUrl(urlName, groupId, eleve){
+    return Routing.generate(urlName, {'group': groupId, 'eleve': eleve.id})
+}
 
 export class LevelsItem extends Component {
     constructor(props) {
@@ -11,6 +35,13 @@ export class LevelsItem extends Component {
         this.state = {
             loadElemId: 0
         }
+
+        this.handleReset = this.handleReset.bind(this);
+    }
+
+    handleReset = (groupId, eleve) => {
+        process(this, getUrl('api_level_reset', groupId, eleve), eleve, {})
+        this.props.onUpdateClasse();
     }
 
     render () {
@@ -209,7 +240,7 @@ export class LevelsItem extends Component {
                         </ButtonIcon>
                     </div>}
                 </div>}
-            </>) : (elem.renewAnswer !== 1 && <div className="modifier">{elem.status === 3 ? "Récupérer" : "Modifier"}</div>))
+            </>) : (elem.renewAnswer !== 1 && <div className="modifier" onClick={(() => this.handleReset(elem.id, eleve))}>{elem.status === 3 ? "Récupérer" : "Modifier"}</div>))
         }
 
         let item = "";
