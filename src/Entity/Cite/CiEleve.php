@@ -20,7 +20,7 @@ class CiEleve extends DataEntity
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"user:read", "group:read"})
+     * @Groups({"user:read", "group:read", "prgroup-planning:read"})
      */
     private $id;
 
@@ -41,7 +41,7 @@ class CiEleve extends DataEntity
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"user:read"})
+     * @Groups({"user:read", "prgroup-planning:read"})
      */
     private $canPay = 0;
 
@@ -57,13 +57,13 @@ class CiEleve extends DataEntity
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"group:read"})
+     * @Groups({"group:read", "prgroup-planning:read"})
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"group:read"})
+     * @Groups({"group:read", "prgroup-planning:read"})
      */
     private $lastname;
 

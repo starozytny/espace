@@ -35,6 +35,9 @@ function getClassesByTeacher(self, teacherId, cas) {
         case "centers":
             url = Routing.generate('api_classes_teacher_up', {'id': teacherId})
             break;
+        case "planning":
+            url = Routing.generate('api_classes_planning', {'id': teacherId})
+            break;
         default:
             break;
     }
@@ -42,9 +45,10 @@ function getClassesByTeacher(self, teacherId, cas) {
     Formulaire.loader(true);
     axios.get(url, {})
         .then(function (response) {
+            let data;
             switch (cas) {
                 case "centers":
-                    let data = JSON.parse(response.data.donnees);
+                    data = JSON.parse(response.data.donnees);
                     let groups = JSON.parse(response.data.groupes);
                     let centers = [];
 
@@ -72,8 +76,23 @@ function getClassesByTeacher(self, teacherId, cas) {
 
                     self.setState({ classes: data, centers: centers })
                     break;
+                case "planning":
+                    data = JSON.parse(response.data.donnees);
+                    let prGroups = JSON.parse(response.data.prGroups);
+
+                    data.forEach(classe => {
+                        classe.prGroups = [];
+                        prGroups.forEach(prGrp => {
+                            if(prGrp.classe.id === classe.id){
+                                classe.prGroups.push(prGrp);
+                            }
+                        })
+                    })
+
+                    self.setState({ classes: data })
+                    break;
                 default:
-                    self.setState({ classes: response.data.donnees })
+                    self.setState({ classes: JSON.parse(response.data.donnees) })
                     break;
             }
         })
@@ -133,7 +152,7 @@ function getPlanning (self, teacherId) {
                 })
             })
 
-            self.setState({ dayActive, slots })
+            self.setState({ dayActive, slots, teacher: teacherId })
         })
         .catch(function (error) {
             self.setState({ loadPageError: true });

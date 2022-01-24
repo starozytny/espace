@@ -9,6 +9,7 @@ use App\Entity\Cite\CiLevel;
 use App\Entity\Cite\CiPlanning;
 use App\Entity\Cite\CiSlot;
 use App\Entity\Cite\CiTeacher;
+use App\Entity\Prev\PrGroup;
 use App\Entity\User;
 use App\Service\ApiResponse;
 use App\Service\Cite\LevelUp;
@@ -52,6 +53,33 @@ class ClasseController extends AbstractController
 
         return $apiResponse->apiJsonResponseCustom([
             "donnees" => $objs
+        ]);
+    }
+
+    /**
+     * Get array of classes of teacher
+     *
+     * @Route("/planning-teacher/{id}", name="planning", options={"expose"=true}, methods={"GET"})
+     *
+     * @OA\Tag(name="Classes")
+     *
+     * @param CiTeacher $obj
+     * @param ApiResponse $apiResponse
+     * @param SerializerInterface $serializer
+     * @return JsonResponse
+     */
+    public function planning(CiTeacher $obj, ApiResponse $apiResponse, SerializerInterface $serializer): JsonResponse
+    {
+        $em = $this->doctrine->getManager();
+        $objs = $em->getRepository(CiClasse::class)->findBy(['teacher' => $obj]);
+        $prGroups = $em->getRepository(PrGroup::class)->findBy(['classe' => $objs]);
+
+        $objs = $serializer->serialize($objs, "json", ['groups' => CiClasse::CLASS_PLANNING_READ]);
+        $prGroups = $serializer->serialize($prGroups, "json", ['groups' => PrGroup::PRGROUP_PLANNING_READ]);
+
+        return $apiResponse->apiJsonResponseCustom([
+            "donnees" => $objs,
+            "prGroups" => $prGroups
         ]);
     }
 

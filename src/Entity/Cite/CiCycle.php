@@ -25,7 +25,7 @@ class CiCycle
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"user:read"})
+     * @Groups({"user:read", "classe-planning:read"})
      */
     private $id;
 

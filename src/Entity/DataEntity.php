@@ -95,4 +95,17 @@ class DataEntity
         $civility = $civility != null && $civility != "" ? $civility . " " : "";
         return $civility . $lastname . " " . $firstname;
     }
+
+    public function getStringTime($time): string
+    {
+        $hours = intval(date_format($time, 'H'));
+        $min = intval(date_format($time, 'i'));
+        $sec = intval(date_format($time, 's'));
+
+        $hours = $hours != '00' ? $hours . 'h' : null;
+        $min = $min != '00' ? ' ' . $min . 'min' : null;
+        $sec = $sec != '00' ? ' ' . $sec . 'sec' : null;
+
+        return $hours . $min . $sec;
+    }
 }

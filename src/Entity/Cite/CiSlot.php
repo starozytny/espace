@@ -2,6 +2,7 @@
 
 namespace App\Entity\Cite;
 
+use App\Entity\DataEntity;
 use App\Repository\Cite\CiSlotRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,7 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=CiSlotRepository::class)
  */
-class CiSlot
+class CiSlot extends DataEntity
 {
     /**
      * @ORM\Id
@@ -186,6 +187,16 @@ class CiSlot
         $this->max = $max;
 
         return $this;
+    }
+
+    /**
+     * @Groups({"user:read"})
+     */
+    public function getDayString(): string
+    {
+        $d = ["", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+
+        return $d[$this->getDay()];
     }
 
     public function getDay(): ?int
@@ -376,5 +387,31 @@ class CiSlot
         }
 
         return $this;
+    }
+
+    /**
+     * Get duration format 10 hours 20 minutes 10 seconds
+     *
+     * @Groups({"classe-planning:read"})
+     */
+    public function getDurationLongString(): ?string
+    {
+        if($this->duration){
+            return $this->getStringTime($this->duration);
+        }
+        return null;
+    }
+
+    /**
+     * Get duration format 10:20:10
+     *
+     * @Groups({"classe-planning:read"})
+     */
+    public function getDurationString(): ?string
+    {
+        if($this->duration){
+            return date_format($this->duration, "H:i:s");
+        }
+        return null;
     }
 }

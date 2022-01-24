@@ -2,6 +2,7 @@
 
 namespace App\Entity\Cite;
 
+use App\Entity\DataEntity;
 use App\Repository\Cite\CiClasseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,19 +12,21 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=CiClasseRepository::class)
  */
-class CiClasse
+class CiClasse extends DataEntity
 {
+    const CLASS_PLANNING_READ = ['classe-planning:read'];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"user:read", "group:read"})
+     * @Groups({"user:read", "group:read", "classe-planning:read", "prgroup-planning:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user:read", "group:read"})
+     * @Groups({"user:read", "group:read", "classe-planning:read"})
      */
     private $name;
 
@@ -34,21 +37,25 @@ class CiClasse
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"user:read", "classe-planning:read"})
      */
     private $max;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"classe-planning:read"})
      */
     private $mode;
 
     /**
      * @ORM\Column(type="time", nullable=true)
+     * @Groups({"classe-planning:read"})
      */
     private $duration;
 
     /**
      * @ORM\Column(type="time", nullable=true)
+     * @Groups({"classe-planning:read"})
      */
     private $durationTotal;
 
@@ -62,23 +69,26 @@ class CiClasse
     /**
      * @ORM\ManyToOne(targetEntity=CiCenter::class, fetch="EAGER", inversedBy="classes")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"user:read", "group:read"})
+     * @Groups({"user:read", "group:read", "classe-planning:read"})
      */
     private $center;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiActivity::class, inversedBy="classes")
+     * @ORM\ManyToOne(targetEntity=CiActivity::class, fetch="EAGER", inversedBy="classes")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"classe-planning:read"})
      */
     private $activity;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiCycle::class, inversedBy="classes")
+     * @ORM\ManyToOne(targetEntity=CiCycle::class, fetch="EAGER", inversedBy="classes")
+     * @Groups({"classe-planning:read"})
      */
     private $cycle;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiLevel::class, inversedBy="classes")
+     * @ORM\ManyToOne(targetEntity=CiLevel::class, fetch="EAGER", inversedBy="classes")
+     * @Groups({"classe-planning:read"})
      */
     private $level;
 
@@ -297,7 +307,7 @@ class CiClasse
 
     /**
      * @return string
-     * @Groups({"user:read", "group:read"})
+     * @Groups({"user:read", "group:read", "classe-planning:read"})
      */
     public function getNameCycleLevel(): string
     {
@@ -305,5 +315,31 @@ class CiClasse
         $levelName = $this->getLevel() ? " - " . $this->getLevel()->getName() : null;
 
         return $cycleName . $levelName;
+    }
+
+    /**
+     * Get duration format 10 hours 20 minutes 10 seconds
+     *
+     * @Groups({"classe-planning:read"})
+     */
+    public function getDurationLongString(): ?string
+    {
+        if($this->duration){
+            return $this->getStringTime($this->duration);
+        }
+        return null;
+    }
+
+    /**
+     * Get duration format 10:20:10
+     *
+     * @Groups({"classe-planning:read"})
+     */
+    public function getDurationString(): ?string
+    {
+        if($this->duration){
+            return date_format($this->duration, "H:i:s");
+        }
+        return null;
     }
 }

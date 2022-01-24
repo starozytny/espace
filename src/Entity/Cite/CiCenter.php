@@ -17,7 +17,7 @@ class CiCenter
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"user:read"})
+     * @Groups({"user:read", "classe-planning:read"})
      */
     private $id;
 
@@ -28,7 +28,7 @@ class CiCenter
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user:read", "group:read"})
+     * @Groups({"user:read", "group:read", "classe-planning:read"})
      */
     private $name;
 

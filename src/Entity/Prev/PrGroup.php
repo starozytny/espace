@@ -8,16 +8,19 @@ use App\Entity\Cite\CiEleve;
 use App\Entity\Cite\CiGroup;
 use App\Repository\Prev\PrGroupRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PrGroupRepository::class)
  */
 class PrGroup
 {
+    const PRGROUP_PLANNING_READ = ["prgroup-planning:read"];
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"prgroup-planning:read"})
      */
     private $id;
 
@@ -33,6 +36,7 @@ class PrGroup
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"prgroup-planning:read"})
      */
     private $isHidden = false;
 
@@ -43,16 +47,19 @@ class PrGroup
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"prgroup-planning:read"})
      */
     private $isRefused = false;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"prgroup-planning:read"})
      */
     private $isMultiple = false;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"prgroup-planning:read"})
      */
     private $isWaiting = false;
 
@@ -62,14 +69,16 @@ class PrGroup
     private $isFree = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiEleve::class, inversedBy="prGroups")
+     * @ORM\ManyToOne(targetEntity=CiEleve::class, fetch="EAGER", inversedBy="prGroups")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"prgroup-planning:read"})
      */
     private $eleve;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CiClasse::class)
+     * @ORM\ManyToOne(targetEntity=CiClasse::class, fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"prgroup-planning:read"})
      */
     private $classe;
 

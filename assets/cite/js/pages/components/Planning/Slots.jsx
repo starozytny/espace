@@ -80,7 +80,6 @@ export class Slots extends Component {
                     let lessons = [], last_end = null;
                     elem.lessons.length !== 0 ? elem.lessons.sort(Sort.compareStart) : null;
                     elem.lessons.forEach((lesson, index) => {
-                        console.log(lesson)
                         let nextLesson = elem.lessons[index + 1] ? elem.lessons[index + 1] : null;
                         let prevLesson = elem.lessons[index - 1] ? elem.lessons[index - 1] : null;
                         last_end = lesson.endString
